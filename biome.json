@@ -25,6 +25,9 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
+			"style": {
+				"useImportType": "off"
+			},
 			"correctness": {
 				"noUnusedVariables": "warn"
 			},

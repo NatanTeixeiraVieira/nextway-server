@@ -1,5 +1,8 @@
 import { ConfigService } from '@nestjs/config';
-import { EnvConfig } from 'src/shared/application/env-config/env-config';
+import {
+	EnvConfig,
+	NodeEnv,
+} from 'src/shared/application/env-config/env-config';
 
 export class EnvConfigService implements EnvConfig {
 	constructor(private readonly configService: ConfigService) {}
@@ -13,7 +16,7 @@ export class EnvConfigService implements EnvConfig {
 	}
 
 	getDbPort(): number {
-		return +this.configService.get<string>('DB_PORT');
+		return Number(this.configService.get<string>('DB_PORT'));
 	}
 
 	getDbName(): string {
@@ -36,8 +39,8 @@ export class EnvConfigService implements EnvConfig {
 		return this.configService.get<string>('DB_SCHEMA');
 	}
 
-	getNodeEnv(): 'production' | 'development' {
-		return this.configService.get<'production' | 'development'>('NODE_ENV');
+	getNodeEnv(): NodeEnv {
+		return this.configService.get<NodeEnv>('NODE_ENV');
 	}
 
 	getMigrationRun(): boolean {

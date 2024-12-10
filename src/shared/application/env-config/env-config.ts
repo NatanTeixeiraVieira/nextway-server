@@ -1,3 +1,5 @@
+export type NodeEnv = 'production' | 'development' | 'test';
+
 export interface EnvConfig {
 	getPort(): number;
 	getDbHost(): string;
@@ -7,6 +9,6 @@ export interface EnvConfig {
 	getDbPassword(): string;
 	getDbSchema(): string;
 	getDbLogs(): boolean;
-	getNodeEnv(): 'production' | 'development';
+	getNodeEnv(): NodeEnv;
 	getMigrationRun(): boolean;
 }

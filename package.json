@@ -13,11 +13,13 @@
 		"debug": "npx dotenv-cli -e .env.development -- nest start --debug --watch",
 		"prod": "node dist/main",
 		"lint": "",
-		"test": "jest",
+		"test": "npx dotenv-cli -e .env.test -- jest --runInBand",
+		"test:unit": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.unit.config.ts",
+		"test:int": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.int.config.ts",
 		"test:watch": "jest --watch",
-		"test:cov": "jest --coverage",
+		"test:cov": "npx dotenv-cli -e .env.test -- jest --runInBand --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-		"test:e2e": "jest --config ./test/jest-e2e.json",
+		"test:e2e": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.e2e.config.ts",
 		"containers:dev": "npx dotenv-cli -e .env.development -- docker compose up -d"
 	},
 	"dependencies": {

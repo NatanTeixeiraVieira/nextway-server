@@ -1,7 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
-import { connectionSource, dataSourceOptions } from './typeorm/config';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import {
+	connectionSource,
+	dataSourceOptions,
+	setupDatabase,
+} from './typeorm/config';
 
 @Module({
 	imports: [
@@ -12,6 +17,8 @@ import { connectionSource, dataSourceOptions } from './typeorm/config';
 				if (!options) {
 					throw new Error('Invalid options passed');
 				}
+
+				await setupDatabase(options as PostgresConnectionOptions);
 
 				return addTransactionalDataSource(connectionSource);
 			},

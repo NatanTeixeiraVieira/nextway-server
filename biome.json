@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": ["dist/*", "node_modules", "*.spec.ts"]
+		"ignore": ["dist/*", "node_modules"]
 	},
 	"formatter": {
 		"enabled": true,
@@ -23,6 +23,7 @@
 		"enabled": true
 	},
 	"linter": {
+		"ignore": ["*.spec.ts"],
 		"enabled": true,
 		"rules": {
 			"style": {

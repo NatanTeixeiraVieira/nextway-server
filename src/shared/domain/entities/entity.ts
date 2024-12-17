@@ -1,22 +1,47 @@
-type EntityProps = Record<string, unknown>;
+export type Audit = {
+	createdAt: Date;
+	updatedAt: Date;
+	deletedAt: Date | null;
+};
 
-export abstract class Entity<Props extends EntityProps> {
-	private readonly _id: string;
-	private readonly props: Props;
+export type EntityProps = {
+	id: string;
+	audit: Audit;
+};
 
-	constructor(props: Props, id?: string) {
-		this.props = props;
-		this._id = id ?? crypto.randomUUID().toString();
+type ConstructorEntityProps = {
+	id?: string;
+	audit?: Partial<Audit>;
+};
+
+type BaseProps = Record<string, unknown>;
+
+export abstract class Entity<Props extends BaseProps> {
+	private readonly props: Props & EntityProps;
+
+	constructor(props: Props & ConstructorEntityProps) {
+		this.props = {
+			...props,
+			id: props?.id ?? crypto.randomUUID().toString(),
+			audit: {
+				createdAt: props.audit?.createdAt ?? new Date(),
+				updatedAt: props.audit?.updatedAt ?? new Date(),
+				deletedAt: props.audit?.deletedAt ?? null,
+			},
+		};
 	}
 
 	get id() {
-		return this._id;
+		return this.props.id;
 	}
 
-	toJSON(): Props & { id: string } {
+	get audit() {
+		return this.props.audit;
+	}
+
+	toJSON(): Props & EntityProps {
 		return {
 			...this.props,
-			id: this._id,
 		};
 	}
 
@@ -28,15 +53,13 @@ export abstract class Entity<Props extends EntityProps> {
 	 *
 	 * @this {new (props: Props) => Ent} - The constructor of the subclass that calls this method.
 	 */
-	static with<Props extends EntityProps, Ent extends Entity<Props>>(
+	static with<Props extends BaseProps, Ent extends Entity<Props>>(
 		this: new (
-			props: Props,
-			id?: string,
+			props: Props & EntityProps,
 		) => Ent,
-		entireProps: Props & { id: string },
+		props: Props & EntityProps,
 	): Ent {
-		const { id, ...props } = entireProps;
 		// biome-ignore lint/complexity/noThisInStatic: Using `this` in a static method to dynamically reference the subclass constructor and create instances.
-		return new this(props as unknown as Props, id);
+		return new this(props);
 	}
 }

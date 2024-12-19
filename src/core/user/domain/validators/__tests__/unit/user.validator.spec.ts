@@ -165,8 +165,6 @@ describe('UserValidator unit tests', () => {
 
 	it('should test valid cases for user rules', () => {
 		const isValid = sut.validate(props);
-		console.log('🚀 ~ it ~ props:', props.phoneNumber);
-		console.log(sut.errors);
 		expect(isValid).toBeTruthy();
 		expect(sut.validatedData).toStrictEqual(new UserRules(props));
 	});

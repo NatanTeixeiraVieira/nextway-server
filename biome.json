@@ -23,7 +23,7 @@
 		"enabled": true
 	},
 	"linter": {
-		"ignore": ["*.spec.ts"],
+		"ignore": ["*.spec.ts", "*.int-spec.ts"],
 		"enabled": true,
 		"rules": {
 			"style": {

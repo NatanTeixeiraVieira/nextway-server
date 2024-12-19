@@ -24,7 +24,6 @@ export async function setupDatabase(options: PostgresConnectionOptions) {
 		);
 		if (dbResult.rowCount === 0) {
 			await client.query(`CREATE DATABASE "${options.database}"`);
-			console.log(`Database "${options.database}" was created successful.`);
 		}
 
 		await client.end();
@@ -48,7 +47,6 @@ export async function setupDatabase(options: PostgresConnectionOptions) {
 
 		if (schemaExists.rowCount === 0) {
 			await dbClient.query(`CREATE SCHEMA IF NOT EXISTS "${options.schema}"`);
-			console.log(`Schema "${options.schema}" criado com sucesso.`);
 		}
 	} catch (error) {
 		console.error('Error while create database or schema:', error);

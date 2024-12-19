@@ -22,7 +22,7 @@ export abstract class Entity<Props extends BaseProps> {
 	constructor(props: Props & ConstructorEntityProps) {
 		this.props = {
 			...props,
-			id: props?.id ?? crypto.randomUUID().toString(),
+			id: props.id ?? crypto.randomUUID().toString(),
 			audit: {
 				createdAt: props.audit?.createdAt ?? new Date(),
 				updatedAt: props.audit?.updatedAt ?? new Date(),
@@ -48,7 +48,7 @@ export abstract class Entity<Props extends BaseProps> {
 	/**
 	 * Static method to create instances of a subclass of `Entity` from the provided properties.
 	 *
-	 * @param {Props} entireProps - An object containing the properties required to create the entity instance. Should contain at least the `id` property.
+	 * @param {Props} props - An object containing the properties required to create the entity instance. Should contain at least the `id` property.
 	 * @returns {Ent} - A new instance of the subclass, created with the provided properties.
 	 *
 	 * @this {new (props: Props) => Ent} - The constructor of the subclass that calls this method.

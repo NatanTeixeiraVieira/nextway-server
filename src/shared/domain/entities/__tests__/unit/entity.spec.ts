@@ -41,7 +41,11 @@ describe('Entity unit tests', () => {
 
 		const id = '25113aa4-a82a-4018-9726-ed9606afcb91';
 
-		const entity = StubEntity.with({ ...props, id, audit });
+		const entity = StubEntity.with<StubProps, StubEntity>({
+			...props,
+			id,
+			audit,
+		});
 
 		expect(entity['props']).toStrictEqual({ ...props, id, audit });
 	});
@@ -57,7 +61,7 @@ describe('Entity unit tests', () => {
 				deletedAt: new Date(),
 			},
 		};
-		const entity = StubEntity.with(props);
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
 
 		expect(entity.toJSON()).toStrictEqual(props);
 	});
@@ -73,7 +77,7 @@ describe('Entity unit tests', () => {
 				deletedAt: new Date(),
 			},
 		};
-		const entity = StubEntity.with(props);
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
 
 		expect(entity.id).toBe(props.id);
 	});
@@ -89,7 +93,7 @@ describe('Entity unit tests', () => {
 				deletedAt: new Date(),
 			},
 		};
-		const entity = StubEntity.with(props);
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
 
 		expect(entity.audit).toStrictEqual(props.audit);
 

@@ -174,4 +174,12 @@ describe('UserEntity integration tests', () => {
 			user.updateProfile({ name: 'new name', phoneNumber: '5542988887777' });
 		});
 	});
+
+	describe('deleteAccount method', () => {
+		it('Should delete user account', () => {
+			expect.assertions(0);
+			const user = new User(UserDataBuilder());
+			user.deleteAccount();
+		});
+	});
 });

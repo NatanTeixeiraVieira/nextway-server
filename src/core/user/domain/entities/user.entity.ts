@@ -60,6 +60,12 @@ export class User extends Entity<UserProps> {
 		this.updateTimestamp();
 	}
 
+	deleteAccount(): void {
+		User.validate(this.props);
+		this.markAsDeleted();
+		this.updateTimestamp();
+	}
+
 	private set emailVerified(date: Date) {
 		this.props.emailVerified = date;
 	}

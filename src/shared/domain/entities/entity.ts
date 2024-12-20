@@ -40,7 +40,7 @@ type BaseProps = Record<string, unknown>;
  * Use the static method `with` or an appropriated method to create instances of subclasses instead.
  */
 export abstract class Entity<Props extends BaseProps> {
-	protected readonly props: Props & EntityProps;
+	readonly props: Props & EntityProps;
 
 	/**
 	 * Constructor of the `Entity` class that initializes the entity's properties.
@@ -78,9 +78,16 @@ export abstract class Entity<Props extends BaseProps> {
 	}
 
 	/**
+	 * Method to mark the entity as deleted by setting the `deletedAt` timestamp to the current date and time.
+	 */
+	protected markAsDeleted() {
+		this.audit.deletedAt = new Date();
+	}
+
+	/**
 	 * Method to update the updatedAt timestamp to the current date and time.
 	 */
-	updateTimestamp() {
+	protected updateTimestamp() {
 		if (this.props.audit) {
 			this.props.audit.updatedAt = new Date();
 		}

@@ -66,6 +66,40 @@ describe('Entity unit tests', () => {
 		expect(entity.toJSON()).toStrictEqual(props);
 	});
 
+	it('Should mark entity as deleted', () => {
+		const props = {
+			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
+			prop1: 'value1',
+			prop2: 21,
+			audit: {
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				deletedAt: null,
+			},
+		};
+
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
+		entity['markAsDeleted']();
+		expect(entity.audit.deletedAt).toBeInstanceOf(Date);
+	});
+
+	it('Should update the entity updatedAt', () => {
+		const props = {
+			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
+			prop1: 'value1',
+			prop2: 21,
+			audit: {
+				createdAt: new Date(),
+				updatedAt: 'new Date()' as any,
+				deletedAt: new Date(),
+			},
+		};
+
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
+		entity['updateTimestamp']();
+		expect(entity.audit.updatedAt).toBeInstanceOf(Date);
+	});
+
 	it('Should get id (getter)', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',

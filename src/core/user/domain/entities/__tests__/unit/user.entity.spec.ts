@@ -56,6 +56,17 @@ describe('UserEntity unit tests', () => {
 		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
 	});
 
+	it('should delete user account', () => {
+		sut = new User({
+			...props,
+			audit: { updatedAt: 'false updatedAt' as any },
+		});
+		sut.deleteAccount();
+		expect(User['validate']).toHaveBeenCalledTimes(1);
+		expect(sut['props'].audit.deletedAt).toBeInstanceOf(Date);
+		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
+	});
+
 	it('Should test Setter of emailVerified field', () => {
 		sut = new User({ ...props, emailVerified: null });
 		sut['emailVerified'] = new Date();

@@ -9,6 +9,7 @@ describe('UserEntity unit tests', () => {
 		User['validate'] = jest.fn();
 		props = UserDataBuilder();
 		sut = new User(props);
+		sut.audit.updatedAt = null;
 		jest.clearAllMocks();
 	});
 
@@ -43,7 +44,16 @@ describe('UserEntity unit tests', () => {
 	it('should change user password', () => {
 		sut.changePassword('other password');
 		expect(User['validate']).toHaveBeenCalledTimes(1);
-		expect(sut['props'].password).toEqual('other password');
+		expect(sut['props'].password).toBe('other password');
+		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
+	});
+
+	it('should update user profile', () => {
+		sut.updateProfile({ name: 'other name', phoneNumber: '5542988887777' });
+		expect(User['validate']).toHaveBeenCalledTimes(1);
+		expect(sut['props'].name).toBe('other name');
+		expect(sut['props'].phoneNumber).toBe('5542988887777');
+		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
 	});
 
 	it('Should test Setter of emailVerified field', () => {
@@ -59,9 +69,21 @@ describe('UserEntity unit tests', () => {
 		expect(typeof sut['props'].active).toBe('boolean');
 	});
 
+	it('Should test Setter of name field', () => {
+		sut['name'] = 'setter name test';
+		expect(sut['props'].name).toBe('setter name test');
+		expect(typeof sut['props'].name).toBe('string');
+	});
+
+	it('Should test Setter of phoneNumber field', () => {
+		sut['phoneNumber'] = '5542988887777';
+		expect(sut['props'].phoneNumber).toBe('5542988887777');
+		expect(typeof sut['props'].phoneNumber).toBe('string');
+	});
+
 	it('Should test Setter of password field', () => {
 		sut['password'] = 'setter password test';
-		expect(sut['props'].password).toEqual('setter password test');
+		expect(sut['props'].password).toBe('setter password test');
 		expect(typeof sut['props'].password).toBe('string');
 	});
 });

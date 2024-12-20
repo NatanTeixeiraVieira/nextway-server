@@ -18,6 +18,11 @@ export type RegisterProps = {
 	password: string;
 };
 
+type UpdateProfileProps = {
+	name: string;
+	phoneNumber: string;
+};
+
 export class User extends Entity<UserProps> {
 	static register(registerProps: RegisterProps): User {
 		const userProps: UserProps = {
@@ -48,12 +53,27 @@ export class User extends Entity<UserProps> {
 		this.updateTimestamp();
 	}
 
+	updateProfile(updateProfileProps: UpdateProfileProps): void {
+		User.validate({ ...this.props, ...updateProfileProps });
+		this.name = updateProfileProps.name;
+		this.phoneNumber = updateProfileProps.phoneNumber;
+		this.updateTimestamp();
+	}
+
 	private set emailVerified(date: Date) {
 		this.props.emailVerified = date;
 	}
 
 	private set active(status: boolean) {
 		this.props.active = status;
+	}
+
+	private set name(name: string) {
+		this.props.name = name;
+	}
+
+	private set phoneNumber(phoneNumber: string) {
+		this.props.phoneNumber = phoneNumber;
 	}
 
 	private set password(password: string) {

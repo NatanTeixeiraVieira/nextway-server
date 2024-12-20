@@ -1,8 +1,14 @@
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { UserDataBuilder } from '../../../testing/helpers/user-data-builder';
-import { RegisterProps, User } from '../../user.entity';
+import { RegisterProps, User, UserProps } from '../../user.entity';
 
 describe('UserEntity integration tests', () => {
+	let sut: User;
+
+	beforeEach(() => {
+		sut = new User(UserDataBuilder());
+	});
+
 	describe('Register method', () => {
 		it('Should throw an error when register with invalid name', () => {
 			let props: RegisterProps = {
@@ -86,6 +92,86 @@ describe('UserEntity integration tests', () => {
 				password: 'a'.repeat(101),
 			};
 			expect(() => User.register(props)).toThrow(EntityValidationError);
+		});
+
+		it('Should register user', () => {
+			expect.assertions(0);
+
+			const props: UserProps = {
+				...UserDataBuilder(),
+			};
+			User.register(props);
+		});
+	});
+
+	describe('CheckEmail method', () => {
+		it('Should check email', () => {
+			expect.assertions(0);
+			const user = new User(UserDataBuilder());
+
+			user.checkEmail();
+		});
+	});
+
+	describe('ChangePassword method', () => {
+		it('Should throw an error when register with invalid password ', () => {
+			expect(() => sut.changePassword(null)).toThrow(EntityValidationError);
+			expect(() => sut.changePassword('')).toThrow(EntityValidationError);
+			expect(() => sut.changePassword(10 as any)).toThrow(
+				EntityValidationError,
+			);
+			expect(() => sut.changePassword('a'.repeat(101))).toThrow(
+				EntityValidationError,
+			);
+		});
+
+		it('Should change user password', () => {
+			expect.assertions(0);
+			const user = new User(UserDataBuilder());
+
+			user.changePassword('new password');
+		});
+	});
+
+	describe('UpdateProfile method', () => {
+		it('Should throw an error when update profile with invalid name', () => {
+			expect(() =>
+				sut.updateProfile({ name: null, phoneNumber: '5542988887777' }),
+			).toThrow(EntityValidationError);
+			expect(() =>
+				sut.updateProfile({ name: '', phoneNumber: '5542988887777' }),
+			).toThrow(EntityValidationError);
+			expect(() =>
+				sut.updateProfile({ name: 10 as any, phoneNumber: '5542988887777' }),
+			).toThrow(EntityValidationError);
+			expect(() =>
+				sut.updateProfile({
+					name: 'a'.repeat(256),
+					phoneNumber: '5542988887777',
+				}),
+			).toThrow(EntityValidationError);
+		});
+
+		it('Should throw an error when update profile with invalid phoneNumber', () => {
+			expect(() =>
+				sut.updateProfile({ name: 'other name', phoneNumber: '' }),
+			).toThrow(EntityValidationError);
+			expect(() =>
+				sut.updateProfile({ name: 'other name', phoneNumber: 10 as any }),
+			).toThrow(EntityValidationError);
+			expect(() =>
+				sut.updateProfile({
+					name: 'other name',
+					phoneNumber: '55429888877771',
+				}),
+			).toThrow(EntityValidationError);
+		});
+
+		it('Should update user profile', () => {
+			expect.assertions(0);
+			const user = new User(UserDataBuilder());
+
+			user.updateProfile({ name: 'new name', phoneNumber: '5542988887777' });
 		});
 	});
 });

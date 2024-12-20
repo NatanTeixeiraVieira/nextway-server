@@ -35,6 +35,31 @@ export class User extends Entity<UserProps> {
 		return new User(userProps);
 	}
 
+	checkEmail(): void {
+		User.validate(this.props);
+		this.emailVerified = new Date();
+		this.active = true;
+		this.updateTimestamp();
+	}
+
+	changePassword(password: string): void {
+		User.validate({ ...this.props, password });
+		this.password = password;
+		this.updateTimestamp();
+	}
+
+	private set emailVerified(date: Date) {
+		this.props.emailVerified = date;
+	}
+
+	private set active(status: boolean) {
+		this.props.active = status;
+	}
+
+	private set password(password: string) {
+		this.props.password = password;
+	}
+
 	private static validate(props: UserProps) {
 		const userValidatorFactory = new UserValidatorFactory();
 		const validator = userValidatorFactory.create();

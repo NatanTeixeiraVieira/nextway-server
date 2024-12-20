@@ -40,7 +40,7 @@ type BaseProps = Record<string, unknown>;
  * Use the static method `with` or an appropriated method to create instances of subclasses instead.
  */
 export abstract class Entity<Props extends BaseProps> {
-	private readonly props: Props & EntityProps;
+	protected readonly props: Props & EntityProps;
 
 	/**
 	 * Constructor of the `Entity` class that initializes the entity's properties.
@@ -75,6 +75,15 @@ export abstract class Entity<Props extends BaseProps> {
 	 */
 	get audit() {
 		return this.props.audit;
+	}
+
+	/**
+	 * Method to update the updatedAt timestamp to the current date and time.
+	 */
+	updateTimestamp() {
+		if (this.props.audit) {
+			this.props.audit.updatedAt = new Date();
+		}
 	}
 
 	/**

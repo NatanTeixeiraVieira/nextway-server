@@ -30,7 +30,7 @@ type ConstructorEntityProps = {
  * A generic type representing the custom properties specific to each subclass.
  * This type can be extended by subclasses to define their own properties.
  */
-type BaseProps = Record<string, unknown>;
+export type BaseProps = Record<string, unknown>;
 
 /**
  * Abstract class that serves as a base for creating entities with audit properties.

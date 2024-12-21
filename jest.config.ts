@@ -8,9 +8,13 @@ export default {
 	}),
 	testRegex: '.*\\..*spec\\.ts$',
 	transform: {
-		'^.+\\.(t|j)s$': 'ts-jest',
+		// If you want to use js, you need to change the regex to include ts files
+		// '^.+\\.(t|j)s$': 'ts-jest',
+		'^.+\\.ts$': 'ts-jest',
 	},
-	collectCoverageFrom: ['**/*.(t|j)s'],
+	// If you want to use js, you need to change the regex to include ts files
+	// collectCoverageFrom: ['**/*.(t|j)s'],
+	collectCoverageFrom: ['**/*.ts'],
 	coverageDirectory: '../coverage',
 	testEnvironment: 'node',
 };

@@ -1,6 +1,9 @@
+import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { HashService } from '@/shared/application/services/hash.service';
+import { JwtService } from '@/shared/application/services/jwt.service';
+import { MailService } from '@/shared/application/services/mail.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { User } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
@@ -20,6 +23,9 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		private readonly userRepository: UserRepository,
 		private readonly userQuery: UserQuery,
 		private readonly hashService: HashService,
+		private readonly mailService: MailService,
+		private readonly jwtService: JwtService,
+		private readonly envConfigService: EnvConfig,
 		private readonly userOutputMapper: UserOutputMapper,
 	) {}
 
@@ -38,7 +44,11 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 			password: hashedPassword,
 		});
 
+		const activateAccountToken = await this.generateActivateAccountToken(user);
+
 		await this.userRepository.create(user);
+
+		await this.sendActivateAccountEmail(name, email, activateAccountToken);
 
 		return this.userOutputMapper.toOutput(user);
 	}
@@ -63,5 +73,46 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		if (emailExists) {
 			throw new BadRequestError(ErrorMessages.EMAIL_ALREADY_EXISTS);
 		}
+	}
+
+	private async generateActivateAccountToken(user: User): Promise<string> {
+		const payload = {
+			sub: user.id,
+			email: user.email,
+		};
+
+		const jwtActivateAccountSecret =
+			this.envConfigService.getJwtActiveAccountSecret();
+
+		const jwtActivateAccountExpiresInInSeconds =
+			this.envConfigService.getJwtActiveAccountExpiresIn();
+
+		const activateAccountToken = await this.jwtService.generateJwt<
+			typeof payload
+		>(payload, jwtActivateAccountSecret, {
+			expiresIn: jwtActivateAccountExpiresInInSeconds,
+		});
+
+		return activateAccountToken.token;
+	}
+
+	private async sendActivateAccountEmail(
+		userName: string,
+		userEmail: string,
+		activateAccountToken: string,
+	): Promise<void> {
+		const baseUrl = this.envConfigService.getBaseUrl();
+		const content = `
+      Olá ${userName}, para ativar sua conta no Nextway clique no link abaixo: <br>
+      ${baseUrl}/activate-account/${activateAccountToken}
+    `;
+
+		const mailOptions = {
+			to: userEmail,
+			subject: 'Ative seu cadastro no Nextway',
+			content,
+		};
+
+		await this.mailService.sendMail(mailOptions);
 	}
 }

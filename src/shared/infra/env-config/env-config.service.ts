@@ -46,4 +46,18 @@ export class EnvConfigService implements EnvConfig {
 	getMigrationRun(): boolean {
 		return this.configService.get<string>('MIGRATION_RUN') === 'true';
 	}
+
+	getBaseUrl(): string {
+		return this.configService.get<string>('BASE_URL');
+	}
+
+	getJwtActiveAccountSecret(): string {
+		return this.configService.get<string>('JWT_ACTIVATE_ACCOUNT_SECRET');
+	}
+
+	getJwtActiveAccountExpiresIn(): number {
+		return Number(
+			this.configService.get<string>('JWT_ACTIVATE_ACCOUNT_EXPIRES_IN'),
+		);
+	}
 }

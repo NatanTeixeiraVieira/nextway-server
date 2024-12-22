@@ -66,6 +66,10 @@ export class User extends Entity<UserProps> {
 		this.updateTimestamp();
 	}
 
+	get email(): string {
+		return this.props.email;
+	}
+
 	private set emailVerified(date: Date) {
 		this.props.emailVerified = date;
 	}

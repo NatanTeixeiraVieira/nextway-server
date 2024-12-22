@@ -11,4 +11,7 @@ export interface EnvConfig {
 	getDbLogs(): boolean;
 	getNodeEnv(): NodeEnv;
 	getMigrationRun(): boolean;
+	getBaseUrl(): string;
+	getJwtActiveAccountSecret(): string;
+	getJwtActiveAccountExpiresIn(): number;
 }

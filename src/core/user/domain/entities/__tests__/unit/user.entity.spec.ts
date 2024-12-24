@@ -67,34 +67,75 @@ describe('UserEntity unit tests', () => {
 		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
 	});
 
-	it('Should test Setter of emailVerified field', () => {
+	it('should set emailVerified field', () => {
 		sut = new User({ ...props, emailVerified: null });
 		sut['emailVerified'] = new Date();
 		expect(sut['props'].emailVerified).toBeInstanceOf(Date);
 	});
 
-	it('Should test Setter of active field', () => {
+	it('should set active field', () => {
 		sut = new User({ ...props, active: false });
 		sut['active'] = true;
 		expect(sut['props'].active).toBeTruthy();
 		expect(typeof sut['props'].active).toBe('boolean');
 	});
 
-	it('Should test Setter of name field', () => {
+	it('should set name field', () => {
 		sut['name'] = 'setter name test';
 		expect(sut['props'].name).toBe('setter name test');
 		expect(typeof sut['props'].name).toBe('string');
 	});
 
-	it('Should test Setter of phoneNumber field', () => {
+	it('should set phoneNumber field', () => {
 		sut['phoneNumber'] = '5542988887777';
 		expect(sut['props'].phoneNumber).toBe('5542988887777');
 		expect(typeof sut['props'].phoneNumber).toBe('string');
 	});
 
-	it('Should test Setter of password field', () => {
+	it('should set password field', () => {
 		sut['password'] = 'setter password test';
 		expect(sut['props'].password).toBe('setter password test');
 		expect(typeof sut['props'].password).toBe('string');
+	});
+
+	it('should get email field', () => {
+		expect(sut.email).toBeDefined();
+		expect(sut.email).toEqual(props.email);
+		expect(typeof sut.email).toBe('string');
+	});
+
+	it('should get emailVerified field', () => {
+		expect(sut.emailVerified).toBeDefined();
+		expect(sut.emailVerified).toEqual(props.emailVerified);
+		console.log('🚀 ~ it ~ emailVerified:', props.emailVerified);
+		expect(sut.emailVerified).toBeInstanceOf(Date);
+	});
+
+	it('should get active field', () => {
+		expect(sut.active).toEqual(props.active);
+	});
+
+	it('should get name field', () => {
+		expect(sut.name).toBeDefined();
+		expect(sut.name).toEqual(props.name);
+		expect(typeof sut.name).toBe('string');
+	});
+
+	it('should get phoneNumber field', () => {
+		expect(sut.phoneNumber).toBeDefined();
+		expect(sut.phoneNumber).toEqual(props.phoneNumber);
+		expect(typeof sut.phoneNumber).toBe('string');
+	});
+
+	it('should get password field', () => {
+		expect(sut.password).toBeDefined();
+		expect(sut.password).toEqual(props.password);
+		expect(typeof sut.password).toBe('string');
+	});
+
+	it('should get forgotPasswordEmailVerificationToken field', () => {
+		expect(sut.forgotPasswordEmailVerificationToken).toEqual(
+			props.forgotPasswordEmailVerificationToken,
+		);
 	});
 });

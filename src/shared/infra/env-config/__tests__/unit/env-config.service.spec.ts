@@ -21,6 +21,10 @@ describe('EnvConfigService unit tests', () => {
 		}).compile();
 
 		sut = module.get<EnvConfigService>(EnvConfigService);
+
+		process.env.DB_NAME = 'db_test';
+		process.env.DB_PASSWORD = 'db_password_test';
+		process.env.DB_USERNAME = 'test_db_username';
 	});
 
 	it('should be defined', () => {
@@ -28,11 +32,11 @@ describe('EnvConfigService unit tests', () => {
 	});
 
 	it('should return the variable PORT', () => {
-		expect(sut.getPort()).toBe(8080);
+		expect(sut.getPort()).toBe(3334);
 	});
 
 	it('should return the variable DB_HOST', () => {
-		expect(sut.getDbHost()).toBe('host_test');
+		expect(sut.getDbHost()).toBe('localhost');
 	});
 
 	it('should return the variable DB_PORT', () => {

@@ -70,6 +70,30 @@ export class User extends Entity<UserProps> {
 		return this.props.email;
 	}
 
+	get emailVerified(): Date | null {
+		return this.props.emailVerified;
+	}
+
+	get active(): boolean {
+		return this.props.active;
+	}
+
+	get name(): string {
+		return this.props.name;
+	}
+
+	get phoneNumber(): string | null {
+		return this.props.phoneNumber;
+	}
+
+	get password(): string {
+		return this.props.password;
+	}
+
+	get forgotPasswordEmailVerificationToken(): string | null {
+		return this.props.forgotPasswordEmailVerificationToken;
+	}
+
 	private set emailVerified(date: Date) {
 		this.props.emailVerified = date;
 	}

@@ -1,8 +1,10 @@
+import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { ConfigService, registerAs } from '@nestjs/config';
 import { Client } from 'pg';
+import 'tsconfig-paths/register';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { EnvConfigService } from '../../env-config/env-config.service';
 
 const envConfig = new EnvConfigService(new ConfigService());
 
@@ -63,7 +65,7 @@ export const dataSourceOptions: DataSourceOptions = {
 	password: envConfig.getDbPassword(),
 	database: envConfig.getDbName(),
 	schema: envConfig.getDbSchema(),
-	entities: [],
+	entities: [UserSchema],
 	migrations: [`${__dirname}/migrations/*.ts`],
 	synchronize: false,
 };

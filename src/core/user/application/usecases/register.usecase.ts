@@ -89,8 +89,9 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 
 		const activateAccountToken = await this.jwtService.generateJwt<
 			typeof payload
-		>(payload, jwtActivateAccountSecret, {
+		>(payload, {
 			expiresIn: jwtActivateAccountExpiresInInSeconds,
+			secret: jwtActivateAccountSecret,
 		});
 
 		return activateAccountToken.token;

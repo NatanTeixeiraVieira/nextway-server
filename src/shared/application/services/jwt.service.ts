@@ -1,21 +1,25 @@
-type GenerateJwtToken = {
+export type GenerateJwtToken = {
 	token: string;
 };
 
-type Options = {
+export type JwtGenerateOptions = {
 	expiresIn: string | number;
+	secret: string;
 };
 
-type Payload = Record<string, unknown>;
+export type JwtVerifyOptions = {
+	secret: string;
+};
+
+export type Payload = Record<string, unknown>;
 
 export interface JwtService {
 	generateJwt<P extends Payload>(
 		payload: P,
-		secret: string,
-		options: Options,
+		options: JwtGenerateOptions,
 	): Promise<GenerateJwtToken>;
 
-	verifyJwt(token: string, secret: string): Promise<boolean>;
+	verifyJwt(token: string, options: JwtVerifyOptions): Promise<boolean>;
 
 	decodeJwt<P extends Payload>(token: string): Promise<P>;
 }

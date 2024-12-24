@@ -11,5 +11,6 @@ import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
 		}),
 	],
 	providers: [JwtNestjsService],
+	exports: [JwtNestjsService],
 })
 export class JwtServiceModule {}

@@ -70,4 +70,8 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable MIGRATION_RUN', () => {
 		expect(sut.getMigrationRun()).toBeTruthy();
 	});
+
+	it('should return the variable ENCRYPTION_SALTS', () => {
+		expect(sut.getEncryptionSalts()).toBe(4);
+	});
 });

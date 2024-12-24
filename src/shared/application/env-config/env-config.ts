@@ -14,4 +14,5 @@ export interface EnvConfig {
 	getBaseUrl(): string;
 	getJwtActiveAccountSecret(): string;
 	getJwtActiveAccountExpiresIn(): number;
+	getEncryptionSalts(): number;
 }

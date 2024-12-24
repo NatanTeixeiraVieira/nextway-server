@@ -8,4 +8,4 @@ export const ErrorMessages = {
 	INVALID_CPF: 'CPF inválido',
 	INVALID_PHONE: 'Telefone inválido',
 	EMAIL_ALREADY_EXISTS: 'Email já cadastrado',
-};
+} as const;

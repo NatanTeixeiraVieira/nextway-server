@@ -60,4 +60,8 @@ export class EnvConfigService implements EnvConfig {
 			this.configService.get<string>('JWT_ACTIVATE_ACCOUNT_EXPIRES_IN'),
 		);
 	}
+
+	getEncryptionSalts(): number {
+		return Number(this.configService.get<string>('ENCRYPTION_SALTS'));
+	}
 }

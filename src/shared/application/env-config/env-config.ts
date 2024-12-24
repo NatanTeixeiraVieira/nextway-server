@@ -15,4 +15,6 @@ export interface EnvConfig {
 	getJwtActiveAccountSecret(): string;
 	getJwtActiveAccountExpiresIn(): number;
 	getEncryptionSalts(): number;
+	getApplicationMailUser(): string;
+	getApplicationMailPassword(): string;
 }

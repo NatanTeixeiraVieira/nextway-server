@@ -74,4 +74,12 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable ENCRYPTION_SALTS', () => {
 		expect(sut.getEncryptionSalts()).toBe(4);
 	});
+
+	it('should return the variable APPLICATION_MAIL_USER', () => {
+		expect(sut.getApplicationMailUser()).toBe('test_mail_user');
+	});
+
+	it('should return the variable APPLICATION_MAIL_PASSWORD', () => {
+		expect(sut.getApplicationMailPassword()).toBe('test_mail_password');
+	});
 });

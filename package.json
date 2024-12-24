@@ -14,18 +14,18 @@
 		"prod": "node dist/main",
 		"lint": "",
 		"test": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.config.ts",
-		"test:unit": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.unit.config.ts",
-		"test:int": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.int.config.ts",
+		"test:unit": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.unit.config.ts --watch",
+		"test:int": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.int.config.ts --detectOpenHandles --watch",
 		"test:watch": "jest --watch",
 		"test:cov": "npx dotenv-cli -e .env.test -- jest --runInBand --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "npx dotenv-cli -e .env.test -- jest --runInBand --config ./jest.e2e.config.ts",
 		"containers:dev": "npx dotenv-cli -e .env.development -- docker compose up -d",
 		"typeorm": "ts-node ./node_modules/typeorm/cli",
-		"migration-run:dev": "npx dotenv-cli -e .env.development -- npm run typeorm migration:run -- -d ./src/shared/infra/database/typeorm/config.ts",
-		"migration-generate:dev": "npx dotenv-cli -e .env.development -- npm run typeorm -- -d ./src/shared/infra/database/typeorm/config.ts migration:generate ./src/shared/infra/database/typeorm/migrations/$npm_config_name",
+		"migration-run:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:run",
+		"migration-generate:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:generate ./src/shared/infra/database/typeorm/migrations/$npm_config_name",
 		"migration-create:dev": "npx dotenv-cli -e .env.development -- npm run typeorm -- migration:create ./src/shared/infra/database/typeorm/migrations/$npm_config_name",
-		"migration-revert:dev": "npx dotenv-cli -e .env.development -- npm run typeorm -- -d ./src/shared/infra/database/typeorm/config.ts migration:revert"
+		"migration-revert:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:revert"
 	},
 	"dependencies": {
 		"@nestjs/common": "^10.0.0",

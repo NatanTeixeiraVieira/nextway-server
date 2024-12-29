@@ -17,4 +17,6 @@ export interface EnvConfig {
 	getEncryptionSalts(): number;
 	getApplicationMailUser(): string;
 	getApplicationMailPassword(): string;
+	getOrigin(): string;
+	getAllowedMethods(): string;
 }

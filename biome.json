@@ -23,7 +23,7 @@
 		"enabled": true
 	},
 	"linter": {
-		"ignore": ["*.spec.ts", "*.int-spec.ts"],
+		"ignore": ["*.spec.ts", "*.int-spec.ts", "*.e2e-spec.ts"],
 		"enabled": true,
 		"rules": {
 			"style": {
@@ -37,6 +37,9 @@
 		}
 	},
 	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		},
 		"formatter": {
 			"enabled": true,
 			"quoteStyle": "single",

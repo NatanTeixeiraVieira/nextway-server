@@ -33,6 +33,10 @@ describe('UserTypeOrmRepository integration tests', () => {
 		await userRepository.clear();
 	});
 
+	afterAll(async () => {
+		await module.close();
+	});
+
 	it('should return null when user not found', async () => {
 		const user = await sut.findById('561c23cb-73ba-4138-bada-704d5d49d0c3');
 

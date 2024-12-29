@@ -1,11 +1,11 @@
 import { MailOptions } from '@/shared/application/services/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
-import { EmailNestService } from '../../mail-nestjs.service';
+import { MailNestjsService } from '../../mail-nestjs.service';
 
 jest.mock('@nestjs-modules/mailer');
 
 describe('EmailNestService unit tests', () => {
-	let sut: EmailNestService;
+	let sut: MailNestjsService;
 	let mailerService: MailerService;
 
 	beforeEach(() => {
@@ -23,7 +23,7 @@ describe('EmailNestService unit tests', () => {
 			},
 			{ createTransport: () => {} },
 		);
-		sut = new EmailNestService(mailerService);
+		sut = new MailNestjsService(mailerService);
 	});
 
 	it('should send an email', async () => {

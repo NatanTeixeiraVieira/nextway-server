@@ -7,5 +7,5 @@ export const ErrorMessages = {
 	INVALID_NAME: 'Nome inválido',
 	INVALID_CPF: 'CPF inválido',
 	INVALID_PHONE: 'Telefone inválido',
-	EMAIL_ALREADY_EXISTS: 'Email já cadastrado',
+	EMAIL_ALREADY_EXISTS: 'Email já em uso',
 } as const;

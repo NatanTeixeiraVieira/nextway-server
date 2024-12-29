@@ -1,3 +1,4 @@
+import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
@@ -29,12 +30,13 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		private readonly userOutputMapper: UserOutputMapper,
 	) {}
 
+	@Transactional()
 	async execute(input: Input): Promise<Output> {
 		this.validateInput(input);
 
 		const { email, name, password } = input;
 
-		await this.validateEmailExists(email);
+		await this.validateEmailAlreadyInUse(email);
 
 		const hashedPassword = await this.hashService.generate(password);
 
@@ -53,22 +55,22 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		return this.userOutputMapper.toOutput(user);
 	}
 
-	private validateInput(input: Input): void {
-		if (!input.email) {
+	private validateInput(input?: Partial<Input>): void {
+		if (!input?.email) {
 			throw new BadRequestError(ErrorMessages.EMAIL_NOT_INFORMED);
 		}
 
-		if (!input.name) {
+		if (!input?.name) {
 			throw new BadRequestError(ErrorMessages.NAME_NOT_INFORMED);
 		}
 
-		if (!input.password) {
+		if (!input?.password) {
 			throw new BadRequestError(ErrorMessages.PASSWORD_NOT_INFORMED);
 		}
 	}
 
-	private async validateEmailExists(email: string): Promise<void> {
-		const emailExists = await this.userQuery.emailExists(email);
+	private async validateEmailAlreadyInUse(email: string): Promise<void> {
+		const emailExists = await this.userQuery.emailAccountActiveExists(email);
 
 		if (emailExists) {
 			throw new BadRequestError(ErrorMessages.EMAIL_ALREADY_EXISTS);

@@ -1,3 +1,3 @@
 export interface UserQuery {
-	emailExists(email: string): Promise<boolean>;
+	emailAccountActiveExists(email: string): Promise<boolean>;
 }

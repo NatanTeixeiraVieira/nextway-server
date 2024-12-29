@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
 
 @Module({
@@ -10,7 +10,15 @@ import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
 			}),
 		}),
 	],
-	providers: [JwtNestjsService],
+	providers: [
+		{
+			provide: JwtNestjsService,
+			useFactory: (jwtService: JwtService) => {
+				return new JwtNestjsService(jwtService);
+			},
+			inject: [JwtService],
+		},
+	],
 	exports: [JwtNestjsService],
 })
 export class JwtServiceModule {}

@@ -1,17 +1,7 @@
 import { validateSync } from 'class-validator';
 import { FieldsErrors, IValidator } from './validator-fields.interface';
 
-export {
-	IsBoolean,
-	IsDate,
-	IsEmail,
-	IsInt,
-	IsNotEmpty,
-	IsOptional,
-	IsPhoneNumber,
-	IsString,
-	MaxLength,
-} from 'class-validator';
+export * from 'class-validator';
 
 export abstract class ValidatorFields<PropsValidated extends object>
 	implements IValidator<PropsValidated>

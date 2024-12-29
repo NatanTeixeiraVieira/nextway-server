@@ -82,4 +82,12 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable APPLICATION_MAIL_PASSWORD', () => {
 		expect(sut.getApplicationMailPassword()).toBe('test_mail_password');
 	});
+
+	it('should return the variable ORIGIN', () => {
+		expect(sut.getOrigin()).toBe('localhost:3000');
+	});
+
+	it('should return the variable ALLOWED_METHODS', () => {
+		expect(sut.getAllowedMethods()).toBe('GET,POST,PUT,DELETE');
+	});
 });

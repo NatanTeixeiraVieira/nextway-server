@@ -5,10 +5,11 @@ import {
 	IsNotEmpty,
 	IsOptional,
 	IsString,
+	Length,
+	Matches,
 	MaxLength,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
-import { Length, Matches } from 'class-validator';
 import { UserProps } from '../entities/user.entity';
 
 export class UserRules {

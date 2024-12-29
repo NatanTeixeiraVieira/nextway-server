@@ -22,7 +22,7 @@ async function bootstrap() {
 
 	const envConfigService = app.get(EnvConfigService);
 
-	applyGlobalConfigs();
+	applyGlobalConfigs(app, envConfigService);
 
 	await app.listen(envConfigService.getPort(), '0.0.0.0');
 }

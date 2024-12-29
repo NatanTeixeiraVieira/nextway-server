@@ -1,5 +1,6 @@
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
+import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
@@ -11,6 +12,16 @@ import { UserQuery } from '../../../queries/user.query';
 import { Input, RegisterUseCase } from '../../register.usecase';
 
 jest.mock('@/core/user/domain/entities/user.entity');
+jest.mock(
+	'@/shared/application/database/decorators/transactional.decorator',
+	() => ({
+		Transactional: jest.fn(
+			() =>
+				(target: any, propertyKey: string, descriptor: PropertyDescriptor) =>
+					descriptor,
+		),
+	}),
+);
 
 describe('RegisterUseCase unit tests', () => {
 	let registerUseCase: RegisterUseCase;
@@ -28,7 +39,7 @@ describe('RegisterUseCase unit tests', () => {
 		} as unknown as UserRepository;
 
 		userQuery = {
-			emailExists: jest.fn(),
+			emailAccountActiveExists: jest.fn(),
 		} as unknown as UserQuery;
 
 		hashService = {
@@ -104,7 +115,7 @@ describe('RegisterUseCase unit tests', () => {
 			password: 'password123',
 		};
 
-		(userQuery.emailExists as jest.Mock).mockResolvedValue(true);
+		(userQuery.emailAccountActiveExists as jest.Mock).mockResolvedValue(true);
 
 		await expect(registerUseCase.execute(input)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.EMAIL_ALREADY_EXISTS),
@@ -141,7 +152,7 @@ describe('RegisterUseCase unit tests', () => {
       ${baseUrl}/activate-account/activateAccountToken
     `;
 
-		(userQuery.emailExists as jest.Mock).mockResolvedValue(false);
+		(userQuery.emailAccountActiveExists as jest.Mock).mockResolvedValue(false);
 		(hashService.generate as jest.Mock).mockResolvedValue(hashedPassword);
 		(userOutputMapper.toOutput as jest.Mock).mockReturnValue(userOutput);
 		(envConfigService.getBaseUrl as jest.Mock).mockReturnValue(baseUrl);
@@ -153,6 +164,8 @@ describe('RegisterUseCase unit tests', () => {
 		const output = await registerUseCase.execute(input);
 
 		expect(output).toEqual(userOutput);
+
+		expect(Transactional).toHaveBeenCalledTimes(1);
 
 		expect(hashService.generate).toHaveBeenCalledTimes(1);
 		expect(hashService.generate).toHaveBeenCalledWith(input.password);

@@ -72,4 +72,12 @@ export class EnvConfigService implements EnvConfig {
 	getApplicationMailPassword(): string {
 		return this.configService.get<string>('APPLICATION_MAIL_PASSWORD');
 	}
+
+	getOrigin(): string {
+		return this.configService.get<string>('ORIGIN');
+	}
+
+	getAllowedMethods(): string {
+		return this.configService.get<string>('ALLOWED_METHODS');
+	}
 }

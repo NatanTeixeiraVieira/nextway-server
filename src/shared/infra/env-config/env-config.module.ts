@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import {
 	ConfigModule,
 	ConfigModuleOptions,
@@ -7,6 +7,7 @@ import {
 import { join } from 'node:path';
 import { EnvConfigService } from './env-config.service';
 
+@Global()
 @Module({
 	imports: [ConfigModule, EnvConfigModule],
 	providers: [

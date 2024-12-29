@@ -4,7 +4,7 @@ import {
 } from '@/shared/application/services/mail.service';
 import { MailerService } from '@nestjs-modules/mailer';
 
-export class EmailNestService implements MailService {
+export class MailNestjsService implements MailService {
 	constructor(private readonly mailerService: MailerService) {}
 
 	async sendMail(mailOptions: MailOptions): Promise<void> {

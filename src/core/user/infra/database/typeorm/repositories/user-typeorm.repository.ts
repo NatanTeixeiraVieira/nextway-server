@@ -10,8 +10,16 @@ export class UserTypeOrmRepository implements UserRepository {
 		private readonly userRepositoryMapper: UserTypeormRepositoryMapper,
 	) {}
 
-	async findById(id: string): Promise<User | null> {
+	async getById(id: string): Promise<User | null> {
 		const userSchema = await this.userRepository.findOneBy({ id });
+
+		if (!userSchema) return null;
+
+		return this.userRepositoryMapper.toEntity(userSchema);
+	}
+
+	async getByEmail(email: string): Promise<User | null> {
+		const userSchema = await this.userRepository.findOneBy({ email });
 
 		if (!userSchema) return null;
 

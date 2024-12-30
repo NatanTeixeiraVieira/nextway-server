@@ -13,7 +13,7 @@ describe('UserEntity unit tests', () => {
 		jest.clearAllMocks();
 	});
 
-	it('should register user', () => {
+	it('should register a non-existent user', () => {
 		sut = User.register(props);
 
 		expect(User['validate']).toHaveBeenCalledTimes(1);
@@ -30,6 +30,18 @@ describe('UserEntity unit tests', () => {
 		expect(sut['props'].audit.createdAt).toBeInstanceOf(Date);
 		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
 		expect(sut['props'].audit.deletedAt).toBeNull();
+	});
+
+	it('should register an existente user', () => {
+		sut.register({
+			name: 'New Name',
+			email: 'test@email.com',
+			password: 'newHashedPassword',
+		});
+
+		expect(sut['props'].name).toBe('New Name');
+		expect(sut['props'].email).toBe('test@email.com');
+		expect(sut['props'].password).toBe('newHashedPassword');
 	});
 
 	it('should check user email', () => {
@@ -96,6 +108,12 @@ describe('UserEntity unit tests', () => {
 		sut['password'] = 'setter password test';
 		expect(sut['props'].password).toBe('setter password test');
 		expect(typeof sut['props'].password).toBe('string');
+	});
+
+	it('should set email field', () => {
+		sut['email'] = 'setter email test';
+		expect(sut['props'].email).toBe('setter email test');
+		expect(typeof sut['props'].email).toBe('string');
 	});
 
 	it('should get email field', () => {

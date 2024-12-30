@@ -40,6 +40,13 @@ export class User extends Entity<UserProps> {
 		return new User(userProps);
 	}
 
+	register(registerProps: RegisterProps): void {
+		User.validate({ ...this.props, ...registerProps });
+		this.name = registerProps.name;
+		this.email = registerProps.email;
+		this.password = registerProps.password;
+	}
+
 	checkEmail(): void {
 		User.validate(this.props);
 		this.emailVerified = new Date();
@@ -112,6 +119,10 @@ export class User extends Entity<UserProps> {
 
 	private set password(password: string) {
 		this.props.password = password;
+	}
+
+	private set email(email: string) {
+		this.props.email = email;
 	}
 
 	private static validate(props: UserProps) {

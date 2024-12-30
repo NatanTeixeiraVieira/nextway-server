@@ -61,7 +61,7 @@ describe('UserController register e2e tests', () => {
 
 	// TODO Config a local email server to run this test
 
-	// it('should register a user', async () => {
+	// it('should register a non-existent user', async () => {
 	// 	const response = await request(app.getHttpServer())
 	// 		.post('/api/user/v1/register')
 	// 		.send(registerDto)
@@ -69,6 +69,51 @@ describe('UserController register e2e tests', () => {
 
 	// 	const output = response.body;
 	// 	const user = await userRepository.findById(output.id);
+
+	// 	expect(output.id).toBeTruthy();
+	// 	expect(typeof output.id).toBe('string');
+	// 	expect(output.password).toBeUndefined();
+
+	// 	expect(user).toBeDefined();
+	// 	expect(user.id).toBe(output.id);
+	// 	expect(user.email).toBe(registerDto.email);
+	// 	expect(user.name).toBe(registerDto.name);
+	// 	expect(user.active).toBeFalsy();
+	// 	expect(user.emailVerified).toBeFalsy();
+	// 	expect(user.forgotPasswordEmailVerificationToken).toBeNull();
+	// 	const isPasswordValid = await bcrypt.compare(
+	// 		registerDto.password,
+	// 		user.password,
+	// 	);
+	// 	expect(isPasswordValid).toBeTruthy();
+
+	// 	const presenter = new RegisterPresenter(user.toJSON());
+	// 	const serialized = instanceToPlain(presenter);
+	// 	expect(output).toStrictEqual(serialized);
+	// });
+
+	// TODO Config a local email server to run this test
+
+	// it('should register an existent user', async () => {
+	// 	const userId = 'cd6393fd-2617-4bda-92d4-6b684010f80d';
+	// 	await typeOrmUserRepository.save({
+	// 		...UserDataBuilder({
+	// 			email: registerDto.email,
+	// 			emailVerified: null,
+	// 			forgotPasswordEmailVerificationToken: null,
+	// 			active: false,
+	// 			phoneNumber: null,
+	// 		}),
+	// 		id: userId,
+	// 	});
+
+	// 	const response = await request(app.getHttpServer())
+	// 		.post('/api/user/v1/register')
+	// 		.send(registerDto)
+	// 		.expect(201);
+
+	// 	const output = response.body;
+	// 	const user = await userRepository.getByEmail('test@email.com');
 
 	// 	expect(output.id).toBeTruthy();
 	// 	expect(typeof output.id).toBe('string');

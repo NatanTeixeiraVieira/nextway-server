@@ -38,7 +38,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 	});
 
 	it('should return null when user not found', async () => {
-		const user = await sut.findById('561c23cb-73ba-4138-bada-704d5d49d0c3');
+		const user = await sut.getById('561c23cb-73ba-4138-bada-704d5d49d0c3');
 
 		expect(user).toBeNull();
 	});
@@ -53,7 +53,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 		};
 		await userRepository.save(props);
 
-		const user = await sut.findById(props.id);
+		const user = await sut.getById(props.id);
 
 		expect(user).not.toBeNull();
 		expect(user.toJSON()).toStrictEqual({
@@ -168,7 +168,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 		});
 		expect(deletedUser).toBeNull();
 
-		const userAfterDelete = await sut.findById(props.id);
+		const userAfterDelete = await sut.getById(props.id);
 		expect(userAfterDelete).toBeNull();
 
 		const deletedUserNotNull = await userRepository.findOne({

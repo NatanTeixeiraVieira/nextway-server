@@ -1,4 +1,5 @@
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
+import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { UserTypeOrmQuery } from '@/core/user/infra/database/typeorm/queries/user-typeorm.query';
 import { UserTypeormRepositoryMapper } from '@/core/user/infra/database/typeorm/repositories/user-typeorm-repository-mapper';
 import { UserTypeOrmRepository } from '@/core/user/infra/database/typeorm/repositories/user-typeorm.repository';
@@ -88,7 +89,7 @@ describe('RegisterUseCase integration tests', () => {
 		await module.close();
 	});
 
-	it('should register a user', async () => {
+	it('should register a non-existent user', async () => {
 		const input = {
 			email: 'test@email.com',
 			name: 'Test',
@@ -116,6 +117,71 @@ describe('RegisterUseCase integration tests', () => {
 			output.password,
 		);
 		expect(isPasswordValid).toBe(true);
+		expect(output.phoneNumber).toBeNull();
+
+		expect(user.id).toBeTruthy();
+		expect(typeof user.id).toBe('string');
+		expect(user.active).toBeFalsy();
+		expect(user.createdAt).toBeInstanceOf(Date);
+		expect(user.updatedAt).toBeInstanceOf(Date);
+		expect(user.deletedAt).toBeNull();
+		expect(user.email).toBe(input.email);
+		expect(user.emailVerified).toBeFalsy();
+		expect(user.forgotPasswordEmailVerificationToken).toBeNull();
+		expect(user.name).toBe(input.name);
+		expect(user.password).toBeTruthy();
+		expect(user.password).not.toBe(input.password);
+		const isDbUserPasswordValid = await bcrypt.compare(
+			input.password,
+			user.password,
+		);
+		expect(isDbUserPasswordValid).toBe(true);
+		expect(user.phoneNumber).toBeNull();
+	});
+
+	it('should register a existent user', async () => {
+		const userId = 'cd6393fd-2617-4bda-92d4-6b684010f80d';
+		await typeOrmRepositoryUser.save({
+			...UserDataBuilder({
+				email: 'test@email.com',
+				emailVerified: null,
+				forgotPasswordEmailVerificationToken: null,
+				active: false,
+				phoneNumber: null,
+			}),
+			id: userId,
+		});
+
+		const input = {
+			email: 'test@email.com',
+			name: 'Test',
+			password: '12345678',
+		};
+
+		const output = await sut.execute(input);
+
+		const allUsers = await typeOrmRepositoryUser.findBy({ id: userId });
+		const user = allUsers[0];
+
+		expect(allUsers.length).toBe(1);
+		expect(output.id).toBeTruthy();
+		expect(typeof output.id).toBe('string');
+
+		expect(output.active).toBeFalsy();
+		expect(output.audit.createdAt).toBeInstanceOf(Date);
+		expect(output.audit.updatedAt).toBeInstanceOf(Date);
+		expect(output.audit.deletedAt).toBeNull();
+		expect(output.email).toBe(input.email);
+		expect(output.emailVerified).toBeFalsy();
+		expect(output.forgotPasswordEmailVerificationToken).toBeNull();
+		expect(output.name).toBe(input.name);
+		expect(output.password).toBeTruthy();
+		expect(output.password).not.toBe(input.password);
+		const isPasswordValid = await bcrypt.compare(
+			input.password,
+			output.password,
+		);
+		expect(isPasswordValid).toBeTruthy();
 		expect(output.phoneNumber).toBeNull();
 
 		expect(user.id).toBeTruthy();

@@ -38,17 +38,9 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 
 		await this.validateEmailAlreadyInUse(email);
 
-		const hashedPassword = await this.hashService.generate(password);
-
-		const user = User.register({
-			name,
-			email,
-			password: hashedPassword,
-		});
+		const user = await this.createUser(name, email, password);
 
 		const activateAccountToken = await this.generateActivateAccountToken(user);
-
-		await this.userRepository.create(user);
 
 		await this.sendActivateAccountEmail(name, email, activateAccountToken);
 
@@ -75,6 +67,32 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		if (emailExists) {
 			throw new BadRequestError(ErrorMessages.EMAIL_ALREADY_EXISTS);
 		}
+	}
+
+	private async createUser(
+		name: string,
+		email: string,
+		password: string,
+	): Promise<User> {
+		const hashedPassword = await this.hashService.generate(password);
+
+		const registerProps = {
+			name,
+			email,
+			password: hashedPassword,
+		};
+
+		const userFound = await this.userRepository.getByEmail(email);
+
+		if (userFound) {
+			userFound.register(registerProps);
+			await this.userRepository.update(userFound);
+			return userFound;
+		}
+
+		const user = User.register(registerProps);
+		await this.userRepository.create(user);
+		return user;
 	}
 
 	private async generateActivateAccountToken(user: User): Promise<string> {

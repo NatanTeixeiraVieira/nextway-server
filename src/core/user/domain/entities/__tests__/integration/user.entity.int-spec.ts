@@ -9,7 +9,7 @@ describe('UserEntity integration tests', () => {
 		sut = new User(UserDataBuilder());
 	});
 
-	describe('Register method', () => {
+	describe('static Register method', () => {
 		it('Should throw an error when register with invalid name', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
@@ -101,6 +101,101 @@ describe('UserEntity integration tests', () => {
 				...UserDataBuilder(),
 			};
 			User.register(props);
+		});
+	});
+
+	describe('Register method', () => {
+		it('Should throw an error when register with invalid name', () => {
+			let props: RegisterProps = {
+				...UserDataBuilder(),
+				name: null,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				name: '',
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				name: 10 as any,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				name: 'a'.repeat(256),
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+		});
+
+		it('Should throw an error when register with invalid email', () => {
+			let props: RegisterProps = {
+				...UserDataBuilder(),
+				email: null,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				email: '',
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				email: 10 as any,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				email: 'a'.repeat(256),
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				email: 'email@email.c',
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+		});
+
+		it('Should throw an error when register with invalid password', () => {
+			let props: RegisterProps = {
+				...UserDataBuilder(),
+				password: null,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				password: '',
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				password: 10 as any,
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+
+			props = {
+				...UserDataBuilder(),
+				password: 'a'.repeat(101),
+			};
+			expect(() => sut.register(props)).toThrow(EntityValidationError);
+		});
+
+		it('Should register user', () => {
+			expect.assertions(0);
+
+			const props: UserProps = {
+				...UserDataBuilder(),
+			};
+			sut.register(props);
 		});
 	});
 

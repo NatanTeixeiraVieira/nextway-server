@@ -6,11 +6,16 @@ export function UserDataBuilder(props?: Partial<UserProps>): UserProps {
 		name: props?.name ?? faker.person.fullName(),
 		email: props?.email ?? faker.internet.email(),
 		password: props?.password ?? faker.internet.password(),
-		phoneNumber: props?.phoneNumber ?? faker.string.numeric(13),
-		emailVerified: props?.emailVerified ?? new Date(),
+		phoneNumber:
+			props?.phoneNumber === undefined
+				? faker.string.numeric(13)
+				: props.phoneNumber,
+		emailVerified:
+			props?.emailVerified === undefined ? new Date() : props?.emailVerified,
 		forgotPasswordEmailVerificationToken:
-			props?.forgotPasswordEmailVerificationToken ??
-			crypto.randomUUID().toString(),
+			props?.forgotPasswordEmailVerificationToken === undefined
+				? crypto.randomUUID().toString()
+				: props.forgotPasswordEmailVerificationToken,
 		active: props?.active ?? faker.datatype.boolean(),
 	};
 }

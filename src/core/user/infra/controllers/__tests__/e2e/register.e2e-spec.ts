@@ -1,18 +1,11 @@
-import { AppModule } from '@/app.module';
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { applyGlobalConfigs } from '@/global-configs';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
-import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
+import { appFastifyConfigTest } from '@/testing/app-config-test';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';
-import {
-	initializeTransactionalContext,
-	StorageDriver,
-} from 'typeorm-transactional';
 import { UserTypeOrmRepository } from '../../../database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '../../../database/typeorm/schemas/user.schema';
 import { RegisterDto } from '../../../dtos/register.dto';
@@ -21,27 +14,19 @@ type Mutable<T> = {
 	-readonly [P in keyof T]: T[P];
 };
 
-describe('UserController register e2e tests', () => {
-	let app: INestApplication;
+describe('UserController registerUser e2e tests', () => {
+	let app: NestFastifyApplication;
 	let dataSource: DataSource;
 	let typeOrmUserRepository: Repository<UserSchema>;
 	let userRepository: UserRepository;
 	let registerDto: Mutable<RegisterDto>;
 
 	beforeAll(async () => {
-		initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
-
-		const module: TestingModule = await Test.createTestingModule({
-			imports: [AppModule],
-		}).compile();
-
-		app = module.createNestApplication();
-		const envConfigService = module.get(EnvConfigService);
-		applyGlobalConfigs(app, envConfigService);
-
-		await app.init();
+		const { fastifyApp, module } = await appFastifyConfigTest();
+		app = fastifyApp;
 
 		dataSource = module.get<DataSource>(DataSource);
+		typeOrmUserRepository = dataSource.getRepository(UserSchema);
 		userRepository = module.get<UserRepository>(UserTypeOrmRepository);
 	});
 
@@ -55,7 +40,6 @@ describe('UserController register e2e tests', () => {
 			name: 'Test User',
 			password: '12345678',
 		};
-		typeOrmUserRepository = dataSource.getRepository(UserSchema);
 		await typeOrmUserRepository.clear();
 	});
 
@@ -145,6 +129,7 @@ describe('UserController register e2e tests', () => {
 			.send(registerDto)
 			.expect(400);
 
+		expect(response.statusCode).toBe(400);
 		expect(response.body).toStrictEqual({
 			statusCode: 400,
 			error: 'Bad Request Error',

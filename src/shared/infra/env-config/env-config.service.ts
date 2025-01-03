@@ -11,6 +11,26 @@ export class EnvConfigService implements EnvConfig {
 		return Number(this.configService.get<string>('PORT'));
 	}
 
+	getJwtSecret(): string {
+		return this.configService.get<string>('JWT_SECRET');
+	}
+
+	getJwtExpiresIn(): number {
+		return Number(this.configService.get<string>('JWT_EXPIRES_IN'));
+	}
+
+	getRefreshTokenSecret(): string {
+		return this.configService.get<string>('REFRESH_TOKEN_SECRET');
+	}
+
+	getRefreshTokenExpiresIn(): number {
+		return Number(this.configService.get<string>('REFRESH_TOKEN_EXPIRES_IN'));
+	}
+
+	getCookiesSecret(): string {
+		return this.configService.get<string>('COOKIE_SECRET');
+	}
+
 	getDbHost(): string {
 		return this.configService.get<string>('DB_HOST');
 	}

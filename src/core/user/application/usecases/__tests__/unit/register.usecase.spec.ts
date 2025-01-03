@@ -1,5 +1,6 @@
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
+import { mockTransactionTest } from '@/shared/application/database/decorators/testing/mock-transaction-test';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
@@ -13,17 +14,11 @@ import { Input, RegisterUseCase } from '../../register.usecase';
 jest.mock('@/core/user/domain/entities/user.entity');
 jest.mock(
 	'@/shared/application/database/decorators/transactional.decorator',
-	() => ({
-		Transactional: jest.fn(
-			() =>
-				(target: any, propertyKey: string, descriptor: PropertyDescriptor) =>
-					descriptor,
-		),
-	}),
+	() => mockTransactionTest(),
 );
 
 describe('RegisterUseCase unit tests', () => {
-	let registerUseCase: RegisterUseCase;
+	let sut: RegisterUseCase;
 	let userRepository: UserRepository;
 	let userQuery: UserQuery;
 	let hashService: HashService;
@@ -67,7 +62,7 @@ describe('RegisterUseCase unit tests', () => {
 			getBaseUrl: jest.fn(),
 		} as unknown as EnvConfig;
 
-		registerUseCase = new RegisterUseCase(
+		sut = new RegisterUseCase(
 			userRepository,
 			userQuery,
 			hashService,
@@ -84,7 +79,7 @@ describe('RegisterUseCase unit tests', () => {
 			password: 'password123',
 		} as Input;
 
-		await expect(registerUseCase.execute(input)).rejects.toThrow(
+		await expect(sut.execute(input)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.EMAIL_NOT_INFORMED),
 		);
 	});
@@ -95,7 +90,7 @@ describe('RegisterUseCase unit tests', () => {
 			password: 'password123',
 		} as Input;
 
-		await expect(registerUseCase.execute(input)).rejects.toThrow(
+		await expect(sut.execute(input)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.NAME_NOT_INFORMED),
 		);
 	});
@@ -106,7 +101,7 @@ describe('RegisterUseCase unit tests', () => {
 			name: 'Test User',
 		} as Input;
 
-		await expect(registerUseCase.execute(input)).rejects.toThrow(
+		await expect(sut.execute(input)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.PASSWORD_NOT_INFORMED),
 		);
 	});
@@ -120,7 +115,7 @@ describe('RegisterUseCase unit tests', () => {
 
 		(userQuery.emailAccountActiveExists as jest.Mock).mockResolvedValue(true);
 
-		await expect(registerUseCase.execute(input)).rejects.toThrow(
+		await expect(sut.execute(input)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.EMAIL_ALREADY_EXISTS),
 		);
 	});
@@ -164,7 +159,7 @@ describe('RegisterUseCase unit tests', () => {
 		});
 		(User.register as jest.Mock).mockReturnValue(user);
 
-		const output = await registerUseCase.execute(input);
+		const output = await sut.execute(input);
 
 		expect(output).toEqual(userOutput);
 
@@ -235,7 +230,7 @@ describe('RegisterUseCase unit tests', () => {
 		});
 		(userRepository.getByEmail as jest.Mock).mockResolvedValue(existingUser);
 
-		const output = await registerUseCase.execute(input);
+		const output = await sut.execute(input);
 
 		expect(output).toEqual(userOutput);
 

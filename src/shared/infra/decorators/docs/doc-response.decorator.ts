@@ -15,7 +15,7 @@ type DocResponseOptions = {
 export function DocResponse({
 	operation,
 	success,
-	responses,
+	responses = [],
 }: DocResponseOptions) {
 	return applyDecorators(
 		ApiOperation(operation),

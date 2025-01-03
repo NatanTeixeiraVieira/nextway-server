@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import {
 	FastifyAdapter,
-	type NestFastifyApplication,
+	NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import {
 	initializeTransactionalContext,
@@ -22,7 +22,7 @@ async function bootstrap() {
 
 	const envConfigService = app.get(EnvConfigService);
 
-	applyGlobalConfigs(app, envConfigService);
+	await applyGlobalConfigs(app, envConfigService);
 
 	await app.listen(envConfigService.getPort(), '0.0.0.0');
 }

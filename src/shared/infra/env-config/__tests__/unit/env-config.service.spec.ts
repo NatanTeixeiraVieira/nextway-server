@@ -90,4 +90,24 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable ALLOWED_METHODS', () => {
 		expect(sut.getAllowedMethods()).toBe('GET,POST,PUT,DELETE');
 	});
+
+	it('should return the variable JWT_SECRET', () => {
+		expect(sut.getJwtSecret()).toBe('secret_jwt');
+	});
+
+	it('should return the variable JWT_EXPIRES_IN', () => {
+		expect(sut.getJwtExpiresIn()).toBe(600);
+	});
+
+	it('should return the variable REFRESH_TOKEN_SECRET', () => {
+		expect(sut.getRefreshTokenSecret()).toBe('secret_refresh_token');
+	});
+
+	it('should return the variable REFRESH_TOKEN_EXPIRES_IN', () => {
+		expect(sut.getRefreshTokenExpiresIn()).toBe(6000);
+	});
+
+	it('should return the variable COOKIE_SECRET', () => {
+		expect(sut.getCookiesSecret()).toBe('secret_cookies');
+	});
 });

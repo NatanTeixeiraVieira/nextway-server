@@ -1,8 +1,11 @@
 import { EnvConfig } from '@/shared/application/env-config/env-config';
+import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
+import { AuthAppJwtService } from '@/shared/infra/services/auth-service/app-jwt-service/auth-app-jwt-service.service';
+import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
 import { HashBcryptService } from '@/shared/infra/services/hash-service/bcrypt/hash-bcrypt.service';
 import { HashServiceModule } from '@/shared/infra/services/hash-service/hash-service.module';
 import { JwtServiceModule } from '@/shared/infra/services/jwt-service/jwt-service.module';
@@ -14,6 +17,7 @@ import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { UserOutputMapper } from '../application/outputs/user-output';
 import { UserQuery } from '../application/queries/user.query';
+import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
 import { RegisterUseCase } from '../application/usecases/register.usecase';
 import { UserRepository } from '../domain/repositories/user.repository';
 import { UserController } from './controllers/user.controller';
@@ -28,6 +32,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		HashServiceModule,
 		MailServiceModule,
 		JwtServiceModule,
+		AuthServiceModule,
 	],
 	controllers: [UserController],
 	providers: [
@@ -85,6 +90,29 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				JwtNestjsService,
 				EnvConfigService,
 				UserOutputMapper,
+			],
+		},
+
+		{
+			provide: CheckEmailUseCase,
+			useFactory: (
+				envConfigService: EnvConfig,
+				jwtService: JwtService,
+				userRepository: UserRepository,
+				authService: AuthService,
+			) => {
+				return new CheckEmailUseCase(
+					envConfigService,
+					jwtService,
+					userRepository,
+					authService,
+				);
+			},
+			inject: [
+				EnvConfigService,
+				JwtNestjsService,
+				UserTypeOrmRepository,
+				AuthAppJwtService,
 			],
 		},
 	],

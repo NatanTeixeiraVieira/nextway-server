@@ -6,6 +6,8 @@ export const ErrorMessages = {
 	INVALID_PASSWORD: 'Senha inválida',
 	INVALID_NAME: 'Nome inválido',
 	INVALID_CPF: 'CPF inválido',
+	INVALID_TOKEN: 'Token inválido',
 	INVALID_PHONE: 'Telefone inválido',
+	USER_NOT_FOUND: 'Usuário não encontrado',
 	EMAIL_ALREADY_EXISTS: 'Email já em uso',
 } as const;

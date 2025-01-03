@@ -19,6 +19,11 @@ export type Input = {
 
 export type Output = UserOutput;
 
+export type RegisterPayload = {
+	sub: string;
+	email: string;
+};
+
 export class RegisterUseCase implements UseCase<Input, Output> {
 	constructor(
 		private readonly userRepository: UserRepository,
@@ -96,7 +101,7 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 	}
 
 	private async generateActivateAccountToken(user: User): Promise<string> {
-		const payload = {
+		const payload: RegisterPayload = {
 			sub: user.id,
 			email: user.email,
 		};
@@ -107,12 +112,11 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		const jwtActivateAccountExpiresInInSeconds =
 			this.envConfigService.getJwtActiveAccountExpiresIn();
 
-		const activateAccountToken = await this.jwtService.generateJwt<
-			typeof payload
-		>(payload, {
-			expiresIn: jwtActivateAccountExpiresInInSeconds,
-			secret: jwtActivateAccountSecret,
-		});
+		const activateAccountToken =
+			await this.jwtService.generateJwt<RegisterPayload>(payload, {
+				expiresIn: jwtActivateAccountExpiresInInSeconds,
+				secret: jwtActivateAccountSecret,
+			});
 
 		return activateAccountToken.token;
 	}

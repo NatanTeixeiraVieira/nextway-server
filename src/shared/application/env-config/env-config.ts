@@ -2,6 +2,11 @@ export type NodeEnv = 'production' | 'development' | 'test';
 
 export interface EnvConfig {
 	getPort(): number;
+	getJwtSecret(): string;
+	getJwtExpiresIn(): number;
+	getRefreshTokenSecret(): string;
+	getRefreshTokenExpiresIn(): number;
+	getCookiesSecret(): string;
 	getDbHost(): string;
 	getDbPort(): number;
 	getDbName(): string;

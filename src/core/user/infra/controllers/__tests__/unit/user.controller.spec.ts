@@ -1,11 +1,16 @@
 import { CheckEmailUseCase } from '@/core/user/application/usecases/check-email.usecase';
 import {
-	Input,
+	Input as LoginInput,
+	LoginUseCase,
+} from '@/core/user/application/usecases/login.usecase';
+import {
 	Output,
+	Input as RegisterInput,
 	RegisterUseCase,
 } from '@/core/user/application/usecases/register.usecase';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { CheckEmailPresenter } from '../../../presenters/check-email.presenter';
+import { LoginPresenter } from '../../../presenters/login.presenter';
 import { RegisterPresenter } from '../../../presenters/register.presenter';
 import { UserController } from '../../user.controller';
 
@@ -14,6 +19,7 @@ describe('UserController unit tests', () => {
 	let output: Output;
 	let mockRegisterUseCase: RegisterUseCase;
 	let mockCheckEmailUseCase: CheckEmailUseCase;
+	let mockLoginUseCase: LoginUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -35,16 +41,23 @@ describe('UserController unit tests', () => {
 			execute: jest.fn().mockResolvedValue(output),
 		} as unknown as CheckEmailUseCase;
 
-		sut = new UserController(mockRegisterUseCase, mockCheckEmailUseCase);
+		mockLoginUseCase = {
+			execute: jest.fn().mockResolvedValue(output),
+		} as unknown as LoginUseCase;
+
+		sut = new UserController(
+			mockRegisterUseCase,
+			mockCheckEmailUseCase,
+			mockLoginUseCase,
+		);
+	});
+	it('should be defined', () => {
+		expect(sut).toBeDefined();
 	});
 
 	describe('registerUser method', () => {
-		it('should be defined', () => {
-			expect(sut).toBeDefined();
-		});
-
 		it('should create a user', async () => {
-			const input: Input = {
+			const input: RegisterInput = {
 				name: 'test',
 				email: 'test@email.com',
 				password: '12345678',
@@ -60,10 +73,6 @@ describe('UserController unit tests', () => {
 	});
 
 	describe('checkUserEmail method', () => {
-		it('should be defined', () => {
-			expect(sut).toBeDefined();
-		});
-
 		it('should check a user email', async () => {
 			const setCookie = jest.fn();
 			const replyMock = { setCookie };
@@ -73,6 +82,28 @@ describe('UserController unit tests', () => {
 			expect(mockCheckEmailUseCase.execute).toHaveBeenCalledTimes(1);
 			expect(mockCheckEmailUseCase.execute).toHaveBeenCalledWith({
 				checkEmailToken: 'token',
+				setCookies: expect.any(Function),
+			});
+		});
+	});
+
+	describe('userLogin method', () => {
+		it('should do user login', async () => {
+			const setCookie = jest.fn();
+			const input: LoginInput = {
+				email: 'test@email.com',
+				password: '12345678',
+				setCookies: setCookie,
+			};
+
+			const replyMock = { setCookie };
+			const presenter = await sut.userLogin(replyMock, input);
+			expect(presenter).toBeInstanceOf(LoginPresenter);
+			expect(presenter).toStrictEqual(new LoginPresenter(output));
+			expect(mockLoginUseCase.execute).toHaveBeenCalledTimes(1);
+			expect(mockLoginUseCase.execute).toHaveBeenCalledWith({
+				email: 'test@email.com',
+				password: '12345678',
 				setCookies: expect.any(Function),
 			});
 		});

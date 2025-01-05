@@ -3,10 +3,10 @@ import { Output } from '../../application/usecases/register.usecase';
 
 export class CheckEmailPresenter {
 	@ApiProperty({ description: 'User ID' })
-	id: string;
+	readonly id: string;
 
 	@ApiProperty({ description: 'User email' })
-	email: string;
+	readonly email: string;
 
 	constructor(output: Output) {
 		this.id = output.id;

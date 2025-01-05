@@ -1,9 +1,9 @@
 import { Output } from '@/core/user/application/usecases/register.usecase';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { instanceToPlain } from 'class-transformer';
-import { CheckEmailPresenter } from '../../check-email.presenter';
+import { LoginPresenter } from '../../login.presenter';
 
-describe('CheckEmailPresenter unit tests', () => {
+describe('LoginPresenter unit tests', () => {
 	const createdAt = new Date();
 	const updatedAt = new Date();
 	const props: Output = {
@@ -15,10 +15,10 @@ describe('CheckEmailPresenter unit tests', () => {
 			deletedAt: null,
 		},
 	};
-	let sut: CheckEmailPresenter;
+	let sut: LoginPresenter;
 
 	beforeEach(() => {
-		sut = new CheckEmailPresenter(props);
+		sut = new LoginPresenter(props);
 	});
 
 	it('should set values', () => {
@@ -26,7 +26,7 @@ describe('CheckEmailPresenter unit tests', () => {
 		expect(sut.email).toBe(props.email);
 	});
 
-	it('should presenter check email data', () => {
+	it('should presenter login data', () => {
 		const output = instanceToPlain(sut);
 		expect(output).toStrictEqual({
 			id: props.id,

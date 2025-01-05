@@ -54,7 +54,6 @@ describe('RegisterUseCase integration tests', () => {
 
 		const dataSource = module.get<DataSource>(DataSource);
 
-		// Registrar o DataSource no contexto transacional
 		addTransactionalDataSource(dataSource);
 
 		userRepository = new UserTypeOrmRepository(

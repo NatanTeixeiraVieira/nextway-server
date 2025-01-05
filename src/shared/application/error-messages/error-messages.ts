@@ -10,4 +10,5 @@ export const ErrorMessages = {
 	INVALID_PHONE: 'Telefone inválido',
 	USER_NOT_FOUND: 'Usuário não encontrado',
 	EMAIL_ALREADY_EXISTS: 'Email já em uso',
+	INVALID_CREDENTIALS: 'Email ou senha inválidos',
 } as const;

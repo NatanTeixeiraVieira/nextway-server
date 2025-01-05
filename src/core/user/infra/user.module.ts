@@ -18,6 +18,7 @@ import { DataSource } from 'typeorm';
 import { UserOutputMapper } from '../application/outputs/user-output';
 import { UserQuery } from '../application/queries/user.query';
 import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
+import { LoginUseCase } from '../application/usecases/login.usecase';
 import { RegisterUseCase } from '../application/usecases/register.usecase';
 import { UserRepository } from '../domain/repositories/user.repository';
 import { UserController } from './controllers/user.controller';
@@ -114,6 +115,18 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				UserTypeOrmRepository,
 				AuthAppJwtService,
 			],
+		},
+
+		{
+			provide: LoginUseCase,
+			useFactory: (
+				userRepository: UserRepository,
+				hashService: HashService,
+				authService: AuthService,
+			) => {
+				return new LoginUseCase(userRepository, hashService, authService);
+			},
+			inject: [UserTypeOrmRepository, HashBcryptService, AuthAppJwtService],
 		},
 	],
 })

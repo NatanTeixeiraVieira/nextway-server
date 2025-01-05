@@ -6,6 +6,7 @@ import { EnvConfigService } from './shared/infra/env-config/env-config.service';
 import { BadRequestErrorFilter } from './shared/infra/exception-filters/bad-request-error/bad-request-error.filter';
 import { EntityValidationErrorFilter } from './shared/infra/exception-filters/entity-validation-error/entity-validation-error.filter';
 import { GlobalErrorFilter } from './shared/infra/exception-filters/global-error/global-error.filter';
+import { InvalidCredentialsErrorFilter } from './shared/infra/exception-filters/invalid-credentials-error/invalid-credentials-error.filter';
 import { InvalidTokenErrorFilter } from './shared/infra/exception-filters/invalid-token-error/invalid-token-error.filter';
 import { NotFoundErrorFilter } from './shared/infra/exception-filters/not-found-error/not-found-error.filter';
 
@@ -55,5 +56,6 @@ export async function applyGlobalConfigs(
 		new EntityValidationErrorFilter(),
 		new NotFoundErrorFilter(),
 		new InvalidTokenErrorFilter(),
+		new InvalidCredentialsErrorFilter(),
 	);
 }

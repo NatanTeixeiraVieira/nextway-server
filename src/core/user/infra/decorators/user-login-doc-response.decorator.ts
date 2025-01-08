@@ -9,14 +9,14 @@ export function UserLoginDocResponse() {
 				summary: 'It realizes the user login',
 			},
 			success: {
-				status: 201,
+				status: 200,
 				type: LoginPresenter,
 			},
 			responses: [
 				{
 					status: 400,
 					description:
-						'It happens when some properties of provided input is invalid OR when user is not found by provided email',
+						'It happens when some properties of provided input is invalid OR when user is not found by provided email OR user is disabled',
 				},
 				{
 					status: 422,

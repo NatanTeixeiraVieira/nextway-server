@@ -1,5 +1,5 @@
 import { User } from '@/core/user/domain/entities/user.entity';
-import { SetCookies } from '../types/cookies';
+import { ClearCookies, SetCookies } from '../types/cookies';
 
 export type Authenticate = {
 	accessToken: string;
@@ -12,6 +12,10 @@ export type SetTokensInCookiesProps = {
 	setCookies: SetCookies;
 };
 
+export type ClearAuthCookiesProps = {
+	clearCookies: ClearCookies;
+};
+
 export type AuthenticatePayload = {
 	sub: string;
 };
@@ -19,4 +23,5 @@ export type AuthenticatePayload = {
 export interface AuthService {
 	authenticate(user: User): Promise<Authenticate>;
 	setTokensInCookies(props: SetTokensInCookiesProps): void;
+	clearAuthCookies(props: ClearAuthCookiesProps): void;
 }

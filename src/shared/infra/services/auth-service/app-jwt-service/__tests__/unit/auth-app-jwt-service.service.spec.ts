@@ -27,7 +27,7 @@ describe('AuthAppJwtService unit tests', () => {
 		} as unknown as JwtService;
 
 		envConfigService = {
-			getNodeEnv: jest.fn(),
+			getNodeEnv: jest.fn().mockReturnValue('test'),
 			getJwtSecret: jest.fn().mockReturnValue(envConfigValues.jwtSecret),
 			getJwtExpiresIn: jest.fn().mockReturnValue(envConfigValues.jwtExpiresIn),
 			getRefreshTokenSecret: jest
@@ -83,9 +83,6 @@ describe('AuthAppJwtService unit tests', () => {
 
 	it('should set tokens in cookies', () => {
 		const setCookies = jest.fn();
-		(envConfigService.getNodeEnv as jest.Mock)
-			.mockReturnValueOnce('production')
-			.mockReturnValueOnce('test');
 
 		const accessToken = 'accessToken';
 		const refreshToken = 'refreshToken';
@@ -103,7 +100,7 @@ describe('AuthAppJwtService unit tests', () => {
 			accessToken,
 			{
 				httpOnly: true,
-				secure: true,
+				secure: false,
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
 			},
@@ -118,6 +115,32 @@ describe('AuthAppJwtService unit tests', () => {
 				maxAge: envConfigValues.refreshTokenExpiresIn,
 				sameSite: 'Strict',
 			},
+		);
+	});
+
+	it('should clear auth cookies', () => {
+		(envConfigService.getNodeEnv as jest.Mock).mockReturnValue('test');
+		const clearCookies = jest.fn();
+
+		sut.clearAuthCookies({ clearCookies });
+
+		const cookieOptions = {
+			httpOnly: true,
+			secure: false,
+			maxAge: 0,
+			sameSite: 'Strict',
+		};
+
+		expect(clearCookies).toHaveBeenCalledTimes(2);
+		expect(clearCookies).toHaveBeenNthCalledWith(
+			1,
+			CookiesName.ACCESS_TOKEN,
+			cookieOptions,
+		);
+		expect(clearCookies).toHaveBeenNthCalledWith(
+			2,
+			CookiesName.REFRESH_TOKEN,
+			cookieOptions,
 		);
 	});
 });

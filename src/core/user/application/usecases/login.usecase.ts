@@ -25,7 +25,7 @@ export class LoginUseCase implements UseCase<Input, Output> {
 	) {}
 
 	@Transactional()
-	async execute(input: Input): Promise<UserOutput> {
+	async execute(input: Input): Promise<Output> {
 		this.validateInput(input);
 
 		const user = await this.userRepository.getByEmail(input.email);

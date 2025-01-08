@@ -63,7 +63,7 @@ describe('CheckEmailUseCase unit tests', () => {
 			}),
 
 			setTokensInCookies: jest.fn(),
-		};
+		} as unknown as AuthService;
 
 		sut = new CheckEmailUseCase(
 			envConfigService,

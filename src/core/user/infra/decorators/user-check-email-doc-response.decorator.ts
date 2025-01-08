@@ -9,7 +9,7 @@ export function UserCheckEmailDocResponse() {
 				summary: 'It checks user email',
 			},
 			success: {
-				status: 201,
+				status: 200,
 				type: CheckEmailPresenter,
 			},
 			responses: [

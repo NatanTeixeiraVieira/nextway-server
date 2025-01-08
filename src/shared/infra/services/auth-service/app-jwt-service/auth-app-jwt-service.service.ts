@@ -5,6 +5,7 @@ import {
 	Authenticate,
 	AuthenticatePayload,
 	AuthService,
+	ClearAuthCookiesProps,
 	SetTokensInCookiesProps,
 } from '@/shared/application/services/auth.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
@@ -36,18 +37,33 @@ export class AuthAppJwtService implements AuthService {
 		refreshToken,
 		setCookies,
 	}: SetTokensInCookiesProps): void {
+		const isSecure = this.envConfigService.getNodeEnv() === 'production';
+
 		setCookies(CookiesName.ACCESS_TOKEN, accessToken, {
 			httpOnly: true,
-			secure: this.envConfigService.getNodeEnv() === 'production',
+			secure: isSecure,
 			maxAge: this.envConfigService.getJwtExpiresIn(),
 			sameSite: 'Strict',
 		});
 		setCookies(CookiesName.REFRESH_TOKEN, refreshToken, {
 			httpOnly: true,
-			secure: this.envConfigService.getNodeEnv() === 'production',
+			secure: isSecure,
 			maxAge: this.envConfigService.getRefreshTokenExpiresIn(),
 			sameSite: 'Strict',
 		});
+	}
+
+	clearAuthCookies({ clearCookies }: ClearAuthCookiesProps): void {
+		const isProduction = this.envConfigService.getNodeEnv() === 'production';
+		const cookieOptions = {
+			httpOnly: true,
+			secure: isProduction,
+			maxAge: 0,
+			sameSite: 'Strict',
+		};
+
+		clearCookies(CookiesName.ACCESS_TOKEN, cookieOptions);
+		clearCookies(CookiesName.REFRESH_TOKEN, cookieOptions);
 	}
 
 	private async generateAccessToken(

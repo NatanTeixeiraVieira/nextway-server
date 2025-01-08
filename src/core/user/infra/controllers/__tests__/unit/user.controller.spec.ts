@@ -3,12 +3,14 @@ import {
 	Input as LoginInput,
 	LoginUseCase,
 } from '@/core/user/application/usecases/login.usecase';
+import { LogoutUseCase } from '@/core/user/application/usecases/logout.usecase';
 import {
 	Output,
 	Input as RegisterInput,
 	RegisterUseCase,
 } from '@/core/user/application/usecases/register.usecase';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
+import { FastifyReply } from 'fastify/types/reply';
 import { CheckEmailPresenter } from '../../../presenters/check-email.presenter';
 import { LoginPresenter } from '../../../presenters/login.presenter';
 import { RegisterPresenter } from '../../../presenters/register.presenter';
@@ -20,6 +22,7 @@ describe('UserController unit tests', () => {
 	let mockRegisterUseCase: RegisterUseCase;
 	let mockCheckEmailUseCase: CheckEmailUseCase;
 	let mockLoginUseCase: LoginUseCase;
+	let mockLogoutUseCase: LogoutUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -45,10 +48,15 @@ describe('UserController unit tests', () => {
 			execute: jest.fn().mockResolvedValue(output),
 		} as unknown as LoginUseCase;
 
+		mockLogoutUseCase = {
+			execute: jest.fn().mockResolvedValue(output),
+		} as unknown as LogoutUseCase;
+
 		sut = new UserController(
 			mockRegisterUseCase,
 			mockCheckEmailUseCase,
 			mockLoginUseCase,
+			mockLogoutUseCase,
 		);
 	});
 	it('should be defined', () => {
@@ -75,7 +83,7 @@ describe('UserController unit tests', () => {
 	describe('checkUserEmail method', () => {
 		it('should check a user email', async () => {
 			const setCookie = jest.fn();
-			const replyMock = { setCookie };
+			const replyMock = { setCookie } as unknown as FastifyReply;
 			const presenter = await sut.checkUserEmail(replyMock, 'token');
 			expect(presenter).toBeInstanceOf(CheckEmailPresenter);
 			expect(presenter).toStrictEqual(new CheckEmailPresenter(output));
@@ -96,7 +104,7 @@ describe('UserController unit tests', () => {
 				setCookies: setCookie,
 			};
 
-			const replyMock = { setCookie };
+			const replyMock = { setCookie } as unknown as FastifyReply;
 			const presenter = await sut.userLogin(replyMock, input);
 			expect(presenter).toBeInstanceOf(LoginPresenter);
 			expect(presenter).toStrictEqual(new LoginPresenter(output));
@@ -105,6 +113,20 @@ describe('UserController unit tests', () => {
 				email: 'test@email.com',
 				password: '12345678',
 				setCookies: expect.any(Function),
+			});
+		});
+	});
+
+	describe('userLogout method', () => {
+		it('should do user logout', async () => {
+			const clearCookie = jest.fn();
+
+			const replyMock = { clearCookie } as unknown as FastifyReply;
+			const presenter = sut.userLogout(replyMock);
+			expect(presenter).toBeUndefined();
+			expect(mockLogoutUseCase.execute).toHaveBeenCalledTimes(1);
+			expect(mockLogoutUseCase.execute).toHaveBeenCalledWith({
+				clearCookies: expect.any(Function),
 			});
 		});
 	});

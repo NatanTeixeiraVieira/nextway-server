@@ -5,11 +5,14 @@ import {
 	Post,
 	Res,
 } from '@/shared/infra/decorators';
+import { FastifyReply } from 'fastify/types/reply';
 import { CheckEmailUseCase } from '../../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../../application/usecases/login.usecase';
+import { LogoutUseCase } from '../../application/usecases/logout.usecase';
 import { RegisterUseCase } from '../../application/usecases/register.usecase';
 import { UserCheckEmailDocResponse } from '../decorators/user-check-email-doc-response.decorator';
 import { UserLoginDocResponse } from '../decorators/user-login-doc-response.decorator';
+import { UserLogoutDocResponse } from '../decorators/user-logout-doc-response.decorator';
 import { UserRegisterDocResponse } from '../decorators/user-register-doc-response.decorator';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
@@ -23,6 +26,7 @@ export class UserController {
 		private readonly registerUseCase: RegisterUseCase,
 		private readonly checkEmailUseCase: CheckEmailUseCase,
 		private readonly loginUseCase: LoginUseCase,
+		private readonly logoutUseCase: LogoutUseCase,
 	) {}
 
 	@UserRegisterDocResponse()
@@ -38,9 +42,7 @@ export class UserController {
 	@UserCheckEmailDocResponse()
 	@Post('/check-email')
 	async checkUserEmail(
-		// TODO solve fastify setCookie type error
-		// biome-ignore lint/suspicious/noExplicitAny: Fastify do not recognizes the setCookie
-		@Res({ passthrough: true }) reply: any,
+		@Res({ passthrough: true }) reply: FastifyReply,
 		@Body('token') checkEmailToken: string,
 	): Promise<CheckEmailPresenter> {
 		const output = await this.checkEmailUseCase.execute({
@@ -54,9 +56,7 @@ export class UserController {
 	@UserLoginDocResponse()
 	@Post('/login')
 	async userLogin(
-		// TODO solve fastify setCookie type error
-		// biome-ignore lint/suspicious/noExplicitAny: Fastify do not recognizes the setCookie
-		@Res({ passthrough: true }) reply: any,
+		@Res({ passthrough: true }) reply: FastifyReply,
 		@Body() loginDto: LoginDto,
 	): Promise<LoginPresenter> {
 		const output = await this.loginUseCase.execute({
@@ -64,5 +64,14 @@ export class UserController {
 			setCookies: reply.setCookie.bind(reply),
 		});
 		return new LoginPresenter(output);
+	}
+
+	@HttpCode(200)
+	@UserLogoutDocResponse()
+	@Post('/logout')
+	userLogout(@Res({ passthrough: true }) reply: FastifyReply) {
+		this.logoutUseCase.execute({
+			clearCookies: reply.clearCookie.bind(reply),
+		});
 	}
 }

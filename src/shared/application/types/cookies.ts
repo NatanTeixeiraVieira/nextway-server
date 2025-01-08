@@ -10,3 +10,5 @@ export type SetCookies = (
 	value: string,
 	options: CookiesOptions,
 ) => void;
+
+export type ClearCookies = (name: string, options: CookiesOptions) => void;

@@ -1,0 +1,40 @@
+{
+	"configurations": [
+		{
+			"name": "Nextway debug",
+			"type": "node",
+			"request": "attach",
+			"port": 9229,
+			"restart": true,
+			"skipFiles": ["<node_internals>/**"],
+			"sourceMaps": true
+		}
+	]
+}
+
+// {
+// 	"version": "0.2.0",
+// 	"configurations": [
+// 		{
+// 			"name": "Nextway debug",
+// 			"type": "node",
+// 			"request": "launch",
+// 			"args": ["src/main.ts"],
+// 			"runtimeArgs": [
+// 				"--nolazy",
+// 				"-r",
+// 				"ts-node/register",
+// 				"-r",
+// 				"tsconfig-paths/register"
+// 			],
+// 			"cwd": "${workspaceRoot}",
+// 			"internalConsoleOptions": "openOnSessionStart",
+// 			"env": {
+// 				"PORT": "3333",
+// 			},
+// 			"sourceMaps": true,
+// 			"console": "internalConsole",
+// 			"outputCapture": "std"
+// 		}
+// 	]
+// }

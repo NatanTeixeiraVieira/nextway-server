@@ -1,17 +1,13 @@
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
-import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
-import { AuthAppJwtService } from '@/shared/infra/services/auth-service/app-jwt-service/auth-app-jwt-service.service';
 import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
-import { HashBcryptService } from '@/shared/infra/services/hash-service/bcrypt/hash-bcrypt.service';
 import { HashServiceModule } from '@/shared/infra/services/hash-service/hash-service.module';
 import { JwtServiceModule } from '@/shared/infra/services/jwt-service/jwt-service.module';
-import { JwtNestjsService } from '@/shared/infra/services/jwt-service/nestjs/jwt-nestjs.service';
 import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-service.module';
-import { MailNestjsService } from '@/shared/infra/services/mail-service/nestjs/mail-nestjs.service';
 import { Module } from '@nestjs/common';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -38,11 +34,15 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 	],
 	controllers: [UserController],
 	providers: [
-		UserTypeormRepositoryMapper,
-		UserOutputMapper,
+		{
+			provide: Providers.USER_REPOSITORY_MAPPER,
+			useClass: UserTypeormRepositoryMapper,
+		},
+
+		{ provide: Providers.USER_OUTPUT_MAPPER, useClass: UserOutputMapper },
 
 		{
-			provide: UserTypeOrmRepository,
+			provide: Providers.USER_REPOSITORY,
 			useFactory: (
 				dataSource: DataSource,
 				mapper: UserTypeormRepositoryMapper,
@@ -52,11 +52,11 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 					mapper,
 				);
 			},
-			inject: [getDataSourceToken(), UserTypeormRepositoryMapper],
+			inject: [getDataSourceToken(), Providers.USER_REPOSITORY_MAPPER],
 		},
 
 		{
-			provide: UserTypeOrmQuery,
+			provide: Providers.USER_QUERY,
 			useFactory: (dataSource: DataSource) => {
 				return new UserTypeOrmQuery(dataSource.getRepository(UserSchema));
 			},
@@ -85,13 +85,13 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
-				UserTypeOrmRepository,
-				UserTypeOrmQuery,
-				HashBcryptService,
-				MailNestjsService,
-				JwtNestjsService,
-				EnvConfigService,
-				UserOutputMapper,
+				Providers.USER_REPOSITORY,
+				Providers.USER_QUERY,
+				Providers.HASH_SERVICE,
+				Providers.MAIL_SERVICE,
+				Providers.JWT_SERVICE,
+				Providers.ENV_CONFIG_SERVICE,
+				Providers.USER_OUTPUT_MAPPER,
 			],
 		},
 
@@ -111,10 +111,10 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
-				EnvConfigService,
-				JwtNestjsService,
-				UserTypeOrmRepository,
-				AuthAppJwtService,
+				Providers.ENV_CONFIG_SERVICE,
+				Providers.JWT_SERVICE,
+				Providers.USER_REPOSITORY,
+				Providers.AUTH_SERVICE,
 			],
 		},
 
@@ -127,7 +127,11 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			) => {
 				return new LoginUseCase(userRepository, hashService, authService);
 			},
-			inject: [UserTypeOrmRepository, HashBcryptService, AuthAppJwtService],
+			inject: [
+				Providers.USER_REPOSITORY,
+				Providers.HASH_SERVICE,
+				Providers.AUTH_SERVICE,
+			],
 		},
 
 		{
@@ -135,7 +139,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			useFactory: (authService: AuthService) => {
 				return new LogoutUseCase(authService);
 			},
-			inject: [AuthAppJwtService],
+			inject: [Providers.AUTH_SERVICE],
 		},
 	],
 })

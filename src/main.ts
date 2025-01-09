@@ -9,7 +9,7 @@ import {
 } from 'typeorm-transactional';
 import { AppModule } from './app.module';
 import { applyGlobalConfigs } from './global-configs';
-import { EnvConfigService } from './shared/infra/env-config/env-config.service';
+import { Providers } from './shared/application/constants/providers';
 
 async function bootstrap() {
 	// Config transactions
@@ -19,8 +19,7 @@ async function bootstrap() {
 		AppModule,
 		new FastifyAdapter(),
 	);
-
-	const envConfigService = app.get(EnvConfigService);
+	const envConfigService = app.get(Providers.ENV_CONFIG_SERVICE);
 
 	await applyGlobalConfigs(app, envConfigService);
 

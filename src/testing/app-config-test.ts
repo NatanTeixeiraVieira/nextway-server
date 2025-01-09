@@ -1,6 +1,6 @@
 import { AppModule } from '@/app.module';
 import { applyGlobalConfigs } from '@/global-configs';
-import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
+import { Providers } from '@/shared/application/constants/providers';
 import {
 	FastifyAdapter,
 	NestFastifyApplication,
@@ -22,7 +22,7 @@ export async function appFastifyConfigTest() {
 		new FastifyAdapter(),
 	);
 
-	const envConfigService = module.get(EnvConfigService);
+	const envConfigService = module.get(Providers.ENV_CONFIG_SERVICE);
 	await applyGlobalConfigs(fastifyApp, envConfigService);
 
 	await fastifyApp.init();

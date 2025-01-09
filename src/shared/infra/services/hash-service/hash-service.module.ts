@@ -1,18 +1,18 @@
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { Module } from '@nestjs/common';
-import { EnvConfigService } from '../../env-config/env-config.service';
 import { HashBcryptService } from './bcrypt/hash-bcrypt.service';
 
 @Module({
 	providers: [
 		{
-			provide: HashBcryptService,
+			provide: Providers.HASH_SERVICE,
 			useFactory: (envConfig: EnvConfig) => {
 				return new HashBcryptService(envConfig);
 			},
-			inject: [EnvConfigService],
+			inject: [Providers.ENV_CONFIG_SERVICE],
 		},
 	],
-	exports: [HashBcryptService],
+	exports: [Providers.HASH_SERVICE],
 })
 export class HashServiceModule {}

@@ -1,3 +1,4 @@
+import { Providers } from '@/shared/application/constants/providers';
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import {
 	ConfigModule,
@@ -12,14 +13,14 @@ import { EnvConfigService } from './env-config.service';
 	imports: [ConfigModule, EnvConfigModule],
 	providers: [
 		{
-			provide: EnvConfigService,
+			provide: Providers.ENV_CONFIG_SERVICE,
 			useFactory: (configService: ConfigService) => {
 				return new EnvConfigService(configService);
 			},
 			inject: [ConfigService],
 		},
 	],
-	exports: [EnvConfigService],
+	exports: [Providers.ENV_CONFIG_SERVICE],
 })
 export class EnvConfigModule extends ConfigModule {
 	static forRoot(options: ConfigModuleOptions = {}): Promise<DynamicModule> {

@@ -1,7 +1,7 @@
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { EnvConfigModule } from '@/shared/infra/env-config/env-config.module';
-import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
@@ -24,7 +24,7 @@ export function configTypeOrmModule() {
 				logging: true,
 			};
 		},
-		inject: [EnvConfigService],
+		inject: [Providers.ENV_CONFIG_SERVICE],
 
 		dataSourceFactory: async (options) => {
 			if (!options) {

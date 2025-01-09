@@ -1,3 +1,4 @@
+import { Providers } from '@/shared/application/constants/providers';
 import { Module } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
@@ -12,13 +13,13 @@ import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
 	],
 	providers: [
 		{
-			provide: JwtNestjsService,
+			provide: Providers.JWT_SERVICE,
 			useFactory: (jwtService: JwtService) => {
 				return new JwtNestjsService(jwtService);
 			},
 			inject: [JwtService],
 		},
 	],
-	exports: [JwtNestjsService],
+	exports: [Providers.JWT_SERVICE],
 })
 export class JwtServiceModule {}

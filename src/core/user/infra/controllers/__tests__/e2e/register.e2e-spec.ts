@@ -1,12 +1,12 @@
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
+import { Providers } from '@/shared/application/constants/providers';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { appFastifyConfigTest } from '@/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';
-import { UserTypeOrmRepository } from '../../../database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '../../../database/typeorm/schemas/user.schema';
 import { RegisterDto } from '../../../dtos/register.dto';
 
@@ -27,7 +27,7 @@ describe('UserController registerUser e2e tests', () => {
 
 		dataSource = module.get<DataSource>(DataSource);
 		typeOrmUserRepository = dataSource.getRepository(UserSchema);
-		userRepository = module.get<UserRepository>(UserTypeOrmRepository);
+		userRepository = module.get<UserRepository>(Providers.USER_REPOSITORY);
 	});
 
 	afterAll(async () => {

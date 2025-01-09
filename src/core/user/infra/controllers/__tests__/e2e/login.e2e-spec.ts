@@ -1,15 +1,14 @@
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { CookiesName } from '@/shared/application/constants/cookies';
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
-import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { appFastifyConfigTest } from '@/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import bcrypt from 'bcrypt';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';
-import { UserTypeOrmRepository } from '../../../database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '../../../database/typeorm/schemas/user.schema';
 
 describe('UserController userLogin e2e tests', () => {
@@ -25,8 +24,8 @@ describe('UserController userLogin e2e tests', () => {
 
 		dataSource = module.get<DataSource>(DataSource);
 		typeOrmUserRepository = dataSource.getRepository(UserSchema);
-		userRepository = module.get<UserRepository>(UserTypeOrmRepository);
-		envConfigService = module.get<EnvConfig>(EnvConfigService);
+		userRepository = module.get<UserRepository>(Providers.USER_REPOSITORY);
+		envConfigService = module.get<EnvConfig>(Providers.ENV_CONFIG_SERVICE);
 	});
 
 	beforeEach(async () => {

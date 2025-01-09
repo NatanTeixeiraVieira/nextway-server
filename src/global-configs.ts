@@ -2,7 +2,7 @@ import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { EnvConfigService } from './shared/infra/env-config/env-config.service';
+import { EnvConfig } from './shared/application/env-config/env-config';
 import { BadRequestErrorFilter } from './shared/infra/exception-filters/bad-request-error/bad-request-error.filter';
 import { EntityValidationErrorFilter } from './shared/infra/exception-filters/entity-validation-error/entity-validation-error.filter';
 import { GlobalErrorFilter } from './shared/infra/exception-filters/global-error/global-error.filter';
@@ -12,7 +12,7 @@ import { NotFoundErrorFilter } from './shared/infra/exception-filters/not-found-
 
 export async function applyGlobalConfigs(
 	app: NestFastifyApplication,
-	envConfigService: EnvConfigService,
+	envConfigService: EnvConfig,
 ) {
 	// Swagger configs
 	if (envConfigService.getNodeEnv() === 'development') {

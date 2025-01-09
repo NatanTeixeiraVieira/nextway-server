@@ -1,3 +1,4 @@
+import { Providers } from '@/shared/application/constants/providers';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { EnvConfigModule } from '../../env-config.module';
@@ -11,7 +12,7 @@ describe('EnvConfigService unit tests', () => {
 			imports: [EnvConfigModule.forRoot()],
 			providers: [
 				{
-					provide: EnvConfigService,
+					provide: Providers.ENV_CONFIG_SERVICE,
 					useFactory: (configService: ConfigService) => {
 						return new EnvConfigService(configService);
 					},
@@ -20,7 +21,7 @@ describe('EnvConfigService unit tests', () => {
 			],
 		}).compile();
 
-		sut = module.get<EnvConfigService>(EnvConfigService);
+		sut = module.get<EnvConfigService>(Providers.ENV_CONFIG_SERVICE);
 
 		process.env.DB_NAME = 'db_test';
 		process.env.DB_PASSWORD = 'db_password_test';

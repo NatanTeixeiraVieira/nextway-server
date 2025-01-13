@@ -8,4 +8,5 @@ export const Providers = {
 	JWT_SERVICE: 'JwtService',
 	MAIL_SERVICE: 'MailService',
 	ENV_CONFIG_SERVICE: 'EnvConfigService',
+	LOGGED_USER_SERVICE: 'LoggedUserService',
 } as const;

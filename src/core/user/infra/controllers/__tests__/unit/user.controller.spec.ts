@@ -4,6 +4,7 @@ import {
 	LoginUseCase,
 } from '@/core/user/application/usecases/login.usecase';
 import { LogoutUseCase } from '@/core/user/application/usecases/logout.usecase';
+import { RefreshTokenUseCase } from '@/core/user/application/usecases/refresh-token.usecase';
 import {
 	Output,
 	Input as RegisterInput,
@@ -23,6 +24,7 @@ describe('UserController unit tests', () => {
 	let mockCheckEmailUseCase: CheckEmailUseCase;
 	let mockLoginUseCase: LoginUseCase;
 	let mockLogoutUseCase: LogoutUseCase;
+	let mockRefreshTokenUseCase: RefreshTokenUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -49,16 +51,22 @@ describe('UserController unit tests', () => {
 		} as unknown as LoginUseCase;
 
 		mockLogoutUseCase = {
-			execute: jest.fn().mockResolvedValue(output),
+			execute: jest.fn(),
 		} as unknown as LogoutUseCase;
+
+		mockRefreshTokenUseCase = {
+			execute: jest.fn(),
+		} as unknown as RefreshTokenUseCase;
 
 		sut = new UserController(
 			mockRegisterUseCase,
 			mockCheckEmailUseCase,
 			mockLoginUseCase,
 			mockLogoutUseCase,
+			mockRefreshTokenUseCase,
 		);
 	});
+
 	it('should be defined', () => {
 		expect(sut).toBeDefined();
 	});
@@ -127,6 +135,18 @@ describe('UserController unit tests', () => {
 			expect(mockLogoutUseCase.execute).toHaveBeenCalledTimes(1);
 			expect(mockLogoutUseCase.execute).toHaveBeenCalledWith({
 				clearCookies: expect.any(Function),
+			});
+		});
+	});
+
+	describe('refreshUserToken method', () => {
+		it('should refresh user token', async () => {
+			const setCookie = jest.fn();
+			const replyMock = { setCookie } as unknown as FastifyReply;
+			await sut.refreshUserToken(replyMock);
+			expect(mockRefreshTokenUseCase.execute).toHaveBeenCalledTimes(1);
+			expect(mockRefreshTokenUseCase.execute).toHaveBeenCalledWith({
+				setCookies: expect.any(Function),
 			});
 		});
 	});

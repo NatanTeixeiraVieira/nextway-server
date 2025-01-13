@@ -4,18 +4,22 @@ import {
 	HttpCode,
 	Post,
 	Res,
+	UseGuards,
 } from '@/shared/infra/decorators';
 import { FastifyReply } from 'fastify/types/reply';
 import { CheckEmailUseCase } from '../../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../../application/usecases/login.usecase';
 import { LogoutUseCase } from '../../application/usecases/logout.usecase';
+import { RefreshTokenUseCase } from '../../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../../application/usecases/register.usecase';
 import { UserCheckEmailDocResponse } from '../decorators/user-check-email-doc-response.decorator';
 import { UserLoginDocResponse } from '../decorators/user-login-doc-response.decorator';
 import { UserLogoutDocResponse } from '../decorators/user-logout-doc-response.decorator';
+import { UserRefreshTokenDocResponse } from '../decorators/user-refresh-token-doc.response.decorator';
 import { UserRegisterDocResponse } from '../decorators/user-register-doc-response.decorator';
 import { LoginDto } from '../dtos/login.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { CheckEmailPresenter } from '../presenters/check-email.presenter';
 import { LoginPresenter } from '../presenters/login.presenter';
 import { RegisterPresenter } from '../presenters/register.presenter';
@@ -27,6 +31,7 @@ export class UserController {
 		private readonly checkEmailUseCase: CheckEmailUseCase,
 		private readonly loginUseCase: LoginUseCase,
 		private readonly logoutUseCase: LogoutUseCase,
+		private readonly refreshTokenUseCase: RefreshTokenUseCase,
 	) {}
 
 	@UserRegisterDocResponse()
@@ -69,9 +74,21 @@ export class UserController {
 	@HttpCode(200)
 	@UserLogoutDocResponse()
 	@Post('/logout')
-	userLogout(@Res({ passthrough: true }) reply: FastifyReply) {
+	userLogout(@Res({ passthrough: true }) reply: FastifyReply): void {
 		this.logoutUseCase.execute({
 			clearCookies: reply.clearCookie.bind(reply),
+		});
+	}
+
+	@HttpCode(200)
+	@UserRefreshTokenDocResponse()
+	@UseGuards(RefreshTokenGuard)
+	@Post('/refresh')
+	async refreshUserToken(
+		@Res({ passthrough: true }) reply: FastifyReply,
+	): Promise<void> {
+		await this.refreshTokenUseCase.execute({
+			setCookies: reply.setCookie.bind(reply),
 		});
 	}
 }

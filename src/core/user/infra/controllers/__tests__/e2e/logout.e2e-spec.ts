@@ -16,7 +16,6 @@ describe('UserController userLogout e2e tests', () => {
 	});
 
 	it('should do user logout', async () => {
-		// Setar os cookies antes da requisição de logout
 		const agent = request.agent(app.getHttpServer());
 		agent.jar.setCookie(`${CookiesName.ACCESS_TOKEN}=accessToken`);
 		agent.jar.setCookie(`${CookiesName.REFRESH_TOKEN}=refreshToken`);

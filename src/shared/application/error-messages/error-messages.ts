@@ -11,4 +11,5 @@ export const ErrorMessages = {
 	USER_NOT_FOUND: 'Usuário não encontrado',
 	EMAIL_ALREADY_EXISTS: 'Email já em uso',
 	INVALID_CREDENTIALS: 'Email ou senha inválidos',
+	INVALID_REFRESH_TOKEN: 'Refresh token inválido',
 } as const;

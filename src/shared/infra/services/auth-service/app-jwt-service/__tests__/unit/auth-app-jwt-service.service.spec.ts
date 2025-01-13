@@ -22,8 +22,8 @@ describe('AuthAppJwtService unit tests', () => {
 		jwtService = {
 			generateJwt: jest
 				.fn()
-				.mockResolvedValueOnce({ token: 'accessToken' })
-				.mockResolvedValueOnce({ token: 'refreshToken' }),
+				.mockResolvedValueOnce({ token: 'mockAccessToken' })
+				.mockResolvedValueOnce({ token: 'mockRefreshToken' }),
 		} as unknown as JwtService;
 
 		envConfigService = {
@@ -76,16 +76,16 @@ describe('AuthAppJwtService unit tests', () => {
 		);
 
 		expect(result).toStrictEqual({
-			accessToken: 'accessToken',
-			refreshToken: 'refreshToken',
+			accessToken: 'mockAccessToken',
+			refreshToken: 'mockRefreshToken',
 		});
 	});
 
 	it('should set tokens in cookies', () => {
 		const setCookies = jest.fn();
 
-		const accessToken = 'accessToken';
-		const refreshToken = 'refreshToken';
+		const accessToken = 'mockAccessToken';
+		const refreshToken = 'mockRefreshToken';
 
 		sut.setTokensInCookies({
 			accessToken,
@@ -141,6 +141,49 @@ describe('AuthAppJwtService unit tests', () => {
 			2,
 			CookiesName.REFRESH_TOKEN,
 			cookieOptions,
+		);
+	});
+
+	it('should refresh token', async () => {
+		const user = User.with({
+			...UserDataBuilder(),
+			id: 'c68ce367-f85b-4da7-a6cb-e9719432f552',
+			audit: { createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+		});
+
+		const result = await sut.refresh(user);
+		expect(envConfigService.getJwtSecret).toHaveBeenCalledTimes(1);
+		expect(envConfigService.getJwtExpiresIn).toHaveBeenCalledTimes(1);
+		expect(jwtService.generateJwt).toHaveBeenCalledTimes(1);
+		expect(jwtService.generateJwt).toHaveBeenCalledWith(
+			{ sub: user.id },
+			{
+				expiresIn: envConfigValues.jwtExpiresIn,
+				secret: envConfigValues.jwtSecret,
+			},
+		);
+
+		expect(result).toStrictEqual({
+			accessToken: 'mockAccessToken',
+		});
+	});
+
+	it('should set access token in cookies', () => {
+		const setCookies = jest.fn();
+		const accessToken = 'mockAccessToken';
+
+		sut.setAccessTokenInCookies({ accessToken, setCookies });
+
+		expect(setCookies).toHaveBeenCalledTimes(1);
+		expect(setCookies).toHaveBeenCalledWith(
+			CookiesName.ACCESS_TOKEN,
+			accessToken,
+			{
+				httpOnly: true,
+				secure: false,
+				maxAge: envConfigValues.jwtExpiresIn,
+				sameSite: 'Strict',
+			},
 		);
 	});
 });

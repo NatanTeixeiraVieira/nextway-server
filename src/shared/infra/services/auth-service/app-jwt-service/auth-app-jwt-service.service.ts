@@ -6,6 +6,8 @@ import {
 	AuthenticatePayload,
 	AuthService,
 	ClearAuthCookiesProps,
+	Refresh,
+	SetAccessTokenInCookies,
 	SetTokensInCookiesProps,
 } from '@/shared/application/services/auth.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
@@ -32,6 +34,15 @@ export class AuthAppJwtService implements AuthService {
 		};
 	}
 
+	async refresh(user: User): Promise<Refresh> {
+		const payload: AuthenticatePayload = {
+			sub: user.id,
+		};
+		const accessToken = await this.generateAccessToken(payload);
+
+		return { accessToken };
+	}
+
 	setTokensInCookies({
 		accessToken,
 		refreshToken,
@@ -39,16 +50,26 @@ export class AuthAppJwtService implements AuthService {
 	}: SetTokensInCookiesProps): void {
 		const isSecure = this.envConfigService.getNodeEnv() === 'production';
 
-		setCookies(CookiesName.ACCESS_TOKEN, accessToken, {
-			httpOnly: true,
-			secure: isSecure,
-			maxAge: this.envConfigService.getJwtExpiresIn(),
-			sameSite: 'Strict',
-		});
+		this.setAccessTokenInCookies({ accessToken, setCookies });
+
 		setCookies(CookiesName.REFRESH_TOKEN, refreshToken, {
 			httpOnly: true,
 			secure: isSecure,
 			maxAge: this.envConfigService.getRefreshTokenExpiresIn(),
+			sameSite: 'Strict',
+		});
+	}
+
+	setAccessTokenInCookies({
+		accessToken,
+		setCookies,
+	}: SetAccessTokenInCookies): void {
+		const isSecure = this.envConfigService.getNodeEnv() === 'production';
+
+		setCookies(CookiesName.ACCESS_TOKEN, accessToken, {
+			httpOnly: true,
+			secure: isSecure,
+			maxAge: this.envConfigService.getJwtExpiresIn(),
 			sameSite: 'Strict',
 		});
 	}

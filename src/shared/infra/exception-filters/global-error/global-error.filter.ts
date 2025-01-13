@@ -15,7 +15,6 @@ export class GlobalErrorFilter implements ExceptionFilter {
 
 		if (exception instanceof HttpException) {
 			const responseBody = exception.getResponse();
-			console.log('🚀 ~ GlobalErrorFilter ~ responseBody:', responseBody);
 			return response.status(exception.getStatus()).send(responseBody);
 		}
 

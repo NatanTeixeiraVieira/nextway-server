@@ -3,10 +3,12 @@ import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { LoggedUserService } from '@/shared/application/services/logged-user.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
 import { HashServiceModule } from '@/shared/infra/services/hash-service/hash-service.module';
 import { JwtServiceModule } from '@/shared/infra/services/jwt-service/jwt-service.module';
+import { LoggedUserModule } from '@/shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-service.module';
 import { Module } from '@nestjs/common';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
@@ -16,6 +18,7 @@ import { UserQuery } from '../application/queries/user.query';
 import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../application/usecases/login.usecase';
 import { LogoutUseCase } from '../application/usecases/logout.usecase';
+import { RefreshTokenUseCase } from '../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../application/usecases/register.usecase';
 import { UserRepository } from '../domain/repositories/user.repository';
 import { UserController } from './controllers/user.controller';
@@ -31,6 +34,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		MailServiceModule,
 		JwtServiceModule,
 		AuthServiceModule,
+		LoggedUserModule,
 	],
 	controllers: [UserController],
 	providers: [
@@ -141,6 +145,40 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			},
 			inject: [Providers.AUTH_SERVICE],
 		},
+
+		{
+			provide: RefreshTokenUseCase,
+			useFactory: (
+				authService: AuthService,
+				loggedUserService: LoggedUserService,
+			) => {
+				return new RefreshTokenUseCase(authService, loggedUserService);
+			},
+			inject: [Providers.AUTH_SERVICE, Providers.LOGGED_USER_SERVICE],
+		},
+
+		// {
+		// 	provide: RefreshTokenGuard,
+		// 	useFactory: (
+		// 		// envConfigService: EnvConfig,
+		// 		jwtService: JwtService,
+		// 		userRepository: UserRepository,
+		// 		loggedUserService: LoggedUserService,
+		// 	) => {
+		// 		return new RefreshTokenGuard(
+		// 			// envConfigService,
+		// 			jwtService,
+		// 			userRepository,
+		// 			loggedUserService,
+		// 		);
+		// 	},
+		// 	inject: [
+		// 		// Providers.ENV_CONFIG_SERVICE,
+		// 		Providers.JWT_SERVICE,
+		// 		Providers.USER_REPOSITORY,
+		// 		Providers.LOGGED_USER_SERVICE,
+		// 	],
+		// },
 	],
 })
 export class UserModule {}

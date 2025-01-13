@@ -125,7 +125,6 @@ describe('UserEntity unit tests', () => {
 	it('should get emailVerified field', () => {
 		expect(sut.emailVerified).toBeDefined();
 		expect(sut.emailVerified).toEqual(props.emailVerified);
-		console.log('🚀 ~ it ~ emailVerified:', props.emailVerified);
 		expect(sut.emailVerified).toBeInstanceOf(Date);
 	});
 

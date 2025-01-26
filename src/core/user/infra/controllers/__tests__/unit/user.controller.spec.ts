@@ -4,6 +4,7 @@ import {
 	LoginUseCase,
 } from '@/core/user/application/usecases/login.usecase';
 import { LogoutUseCase } from '@/core/user/application/usecases/logout.usecase';
+import { SendPasswordRecoveryEmailUseCase } from '@/core/user/application/usecases/recover-password/send-password-recovery-email.usecase';
 import { RefreshTokenUseCase } from '@/core/user/application/usecases/refresh-token.usecase';
 import {
 	Output,
@@ -14,6 +15,7 @@ import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-bu
 import { FastifyReply } from 'fastify/types/reply';
 import { CheckEmailPresenter } from '../../../presenters/check-email.presenter';
 import { LoginPresenter } from '../../../presenters/login.presenter';
+import { RecoverPasswordSendEmailPresenter } from '../../../presenters/recover-password-send-email.presenter';
 import { RegisterPresenter } from '../../../presenters/register.presenter';
 import { UserController } from '../../user.controller';
 
@@ -25,6 +27,7 @@ describe('UserController unit tests', () => {
 	let mockLoginUseCase: LoginUseCase;
 	let mockLogoutUseCase: LogoutUseCase;
 	let mockRefreshTokenUseCase: RefreshTokenUseCase;
+	let sendPasswordRecoveryEmailUseCase: SendPasswordRecoveryEmailUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -58,12 +61,17 @@ describe('UserController unit tests', () => {
 			execute: jest.fn(),
 		} as unknown as RefreshTokenUseCase;
 
+		sendPasswordRecoveryEmailUseCase = {
+			execute: jest.fn().mockResolvedValue(output),
+		} as unknown as SendPasswordRecoveryEmailUseCase;
+
 		sut = new UserController(
 			mockRegisterUseCase,
 			mockCheckEmailUseCase,
 			mockLoginUseCase,
 			mockLogoutUseCase,
 			mockRefreshTokenUseCase,
+			sendPasswordRecoveryEmailUseCase,
 		);
 	});
 
@@ -147,6 +155,23 @@ describe('UserController unit tests', () => {
 			expect(mockRefreshTokenUseCase.execute).toHaveBeenCalledTimes(1);
 			expect(mockRefreshTokenUseCase.execute).toHaveBeenCalledWith({
 				setCookies: expect.any(Function),
+			});
+		});
+	});
+
+	describe('recoverUserPasswordSendEmail method', () => {
+		it('should recover user password and send verification email', async () => {
+			const presenter = await sut.recoverUserPasswordSendEmail({
+				email: 'test@email.com',
+			});
+
+			expect(presenter).toBeInstanceOf(RecoverPasswordSendEmailPresenter);
+			expect(presenter).toStrictEqual(
+				new RecoverPasswordSendEmailPresenter(output),
+			);
+			expect(sendPasswordRecoveryEmailUseCase.execute).toHaveBeenCalledTimes(1);
+			expect(sendPasswordRecoveryEmailUseCase.execute).toHaveBeenCalledWith({
+				email: 'test@email.com',
 			});
 		});
 	});

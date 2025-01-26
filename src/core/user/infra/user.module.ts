@@ -18,6 +18,7 @@ import { UserQuery } from '../application/queries/user.query';
 import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../application/usecases/login.usecase';
 import { LogoutUseCase } from '../application/usecases/logout.usecase';
+import { SendPasswordRecoveryEmailUseCase } from '../application/usecases/recover-password/send-password-recovery-email.usecase';
 import { RefreshTokenUseCase } from '../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../application/usecases/register.usecase';
 import { UserRepository } from '../domain/repositories/user.repository';
@@ -157,28 +158,31 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			inject: [Providers.AUTH_SERVICE, Providers.LOGGED_USER_SERVICE],
 		},
 
-		// {
-		// 	provide: RefreshTokenGuard,
-		// 	useFactory: (
-		// 		// envConfigService: EnvConfig,
-		// 		jwtService: JwtService,
-		// 		userRepository: UserRepository,
-		// 		loggedUserService: LoggedUserService,
-		// 	) => {
-		// 		return new RefreshTokenGuard(
-		// 			// envConfigService,
-		// 			jwtService,
-		// 			userRepository,
-		// 			loggedUserService,
-		// 		);
-		// 	},
-		// 	inject: [
-		// 		// Providers.ENV_CONFIG_SERVICE,
-		// 		Providers.JWT_SERVICE,
-		// 		Providers.USER_REPOSITORY,
-		// 		Providers.LOGGED_USER_SERVICE,
-		// 	],
-		// },
+		{
+			provide: SendPasswordRecoveryEmailUseCase,
+			useFactory: (
+				userRepository: UserRepository,
+				mailService: MailService,
+				jwtService: JwtService,
+				envConfigService: EnvConfig,
+				userOutputMapper: UserOutputMapper,
+			) => {
+				return new SendPasswordRecoveryEmailUseCase(
+					userRepository,
+					mailService,
+					jwtService,
+					envConfigService,
+					userOutputMapper,
+				);
+			},
+			inject: [
+				Providers.USER_REPOSITORY,
+				Providers.MAIL_SERVICE,
+				Providers.JWT_SERVICE,
+				Providers.ENV_CONFIG_SERVICE,
+				Providers.USER_OUTPUT_MAPPER,
+			],
+		},
 	],
 })
 export class UserModule {}

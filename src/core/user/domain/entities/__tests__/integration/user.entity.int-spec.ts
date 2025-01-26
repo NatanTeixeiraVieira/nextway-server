@@ -277,4 +277,19 @@ describe('UserEntity integration tests', () => {
 			user.deleteAccount();
 		});
 	});
+
+	describe('createEmailForgotPasswordEmailVerificationToken method', () => {
+		it('Should create email forgot password email verification token', () => {
+			const user = new User(
+				UserDataBuilder({ forgotPasswordEmailVerificationToken: null }),
+			);
+			user.createEmailForgotPasswordEmailVerificationToken(
+				'dc27f367-d2f2-4dd5-8312-d47fa81193cc',
+			);
+
+			expect(user.forgotPasswordEmailVerificationToken).toBe(
+				'dc27f367-d2f2-4dd5-8312-d47fa81193cc',
+			);
+		});
+	});
 });

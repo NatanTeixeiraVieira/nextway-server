@@ -79,6 +79,11 @@ describe('UserEntity unit tests', () => {
 		expect(sut['props'].audit.updatedAt).toBeInstanceOf(Date);
 	});
 
+	it('should create email forgot password email verification token', () => {
+		sut.createEmailForgotPasswordEmailVerificationToken('token_test');
+		expect(sut['forgotPasswordEmailVerificationToken']).toBe('token_test');
+	});
+
 	it('should set emailVerified field', () => {
 		sut = new User({ ...props, emailVerified: null });
 		sut['emailVerified'] = new Date();
@@ -114,6 +119,17 @@ describe('UserEntity unit tests', () => {
 		sut['email'] = 'setter email test';
 		expect(sut['props'].email).toBe('setter email test');
 		expect(typeof sut['props'].email).toBe('string');
+	});
+
+	it('should set forgotPasswordEmailVerificationToken field', () => {
+		sut['forgotPasswordEmailVerificationToken'] =
+			'setter forgotPasswordEmailVerificationToken test';
+		expect(sut['props'].forgotPasswordEmailVerificationToken).toBe(
+			'setter forgotPasswordEmailVerificationToken test',
+		);
+		expect(typeof sut['props'].forgotPasswordEmailVerificationToken).toBe(
+			'string',
+		);
 	});
 
 	it('should get email field', () => {

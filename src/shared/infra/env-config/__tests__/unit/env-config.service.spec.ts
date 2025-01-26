@@ -111,4 +111,22 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable COOKIE_SECRET', () => {
 		expect(sut.getCookiesSecret()).toBe('secret_cookies');
 	});
+
+	it('should return the variable RECOVER_USER_PASSWORD_TOKEN_SECRET', () => {
+		expect(sut.getRecoverUserPasswordTokenSecret()).toBe(
+			'secret_recover_user_password',
+		);
+	});
+
+	it('should return the variable RECOVER_USER_PASSWORD_TOKEN_EXPIRES_IN', () => {
+		expect(sut.getRecoverUserPasswordTokenExpiresIn()).toBe(3600);
+	});
+
+	it('should return the variable JWT_ACTIVATE_ACCOUNT_SECRET', () => {
+		expect(sut.getJwtActiveAccountSecret()).toBe('secret_test');
+	});
+
+	it('should return the variable JWT_ACTIVATE_ACCOUNT_EXPIRES_IN', () => {
+		expect(sut.getJwtActiveAccountExpiresIn()).toBe(1000);
+	});
 });

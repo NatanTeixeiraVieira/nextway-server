@@ -73,6 +73,10 @@ export class User extends Entity<UserProps> {
 		this.updateTimestamp();
 	}
 
+	createEmailForgotPasswordEmailVerificationToken(token: string): void {
+		this.forgotPasswordEmailVerificationToken = token;
+	}
+
 	get email(): string {
 		return this.props.email;
 	}
@@ -123,6 +127,11 @@ export class User extends Entity<UserProps> {
 
 	private set email(email: string) {
 		this.props.email = email;
+	}
+
+	private set forgotPasswordEmailVerificationToken(forgotPasswordEmailVerificationToken: string) {
+		this.props.forgotPasswordEmailVerificationToken =
+			forgotPasswordEmailVerificationToken;
 	}
 
 	private static validate(props: UserProps) {

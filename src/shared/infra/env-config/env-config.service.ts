@@ -100,4 +100,14 @@ export class EnvConfigService implements EnvConfig {
 	getAllowedMethods(): string {
 		return this.configService.get<string>('ALLOWED_METHODS');
 	}
+
+	getRecoverUserPasswordTokenSecret(): string {
+		return this.configService.get<string>('RECOVER_USER_PASSWORD_TOKEN_SECRET');
+	}
+
+	getRecoverUserPasswordTokenExpiresIn(): number {
+		return Number(
+			this.configService.get<string>('RECOVER_USER_PASSWORD_TOKEN_EXPIRES_IN'),
+		);
+	}
 }

@@ -24,4 +24,6 @@ export interface EnvConfig {
 	getApplicationMailPassword(): string;
 	getOrigin(): string;
 	getAllowedMethods(): string;
+	getRecoverUserPasswordTokenSecret(): string;
+	getRecoverUserPasswordTokenExpiresIn(): number;
 }

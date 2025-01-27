@@ -37,7 +37,6 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 				TypeOrmModule.forFeature([UserSchema]),
 				configTypeOrmModule(),
 				UserModule,
-				// JwtServiceModule,
 			],
 		}).compile();
 

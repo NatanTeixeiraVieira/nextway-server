@@ -11,6 +11,7 @@ import { CheckEmailUseCase } from '../../application/usecases/check-email.usecas
 import { LoginUseCase } from '../../application/usecases/login.usecase';
 import { LogoutUseCase } from '../../application/usecases/logout.usecase';
 import { SendPasswordRecoveryEmailUseCase } from '../../application/usecases/recover-password/send-password-recovery-email.usecase';
+import { VerifyRecoverPasswordTokenUseCase } from '../../application/usecases/recover-password/verify-recover-password-token.usecase';
 import { RefreshTokenUseCase } from '../../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../../application/usecases/register.usecase';
 import { UserCheckEmailDocResponse } from '../decorators/user-check-email-doc-response.decorator';
@@ -19,14 +20,17 @@ import { UserLogoutDocResponse } from '../decorators/user-logout-doc-response.de
 import { UserRecoverPasswordSendEmailDocResponse } from '../decorators/user-recover-password-send-email-response.decorator';
 import { UserRefreshTokenDocResponse } from '../decorators/user-refresh-token-doc.response.decorator';
 import { UserRegisterDocResponse } from '../decorators/user-register-doc-response.decorator';
+import { VerifyRecoverPasswordTokenDocResponse } from '../decorators/verify-recover-password-token-doc-response.decorator';
 import { LoginDto } from '../dtos/login.dto';
 import { RecoverPasswordSendEmailDto } from '../dtos/recover-password-send-email.dto';
 import { RegisterDto } from '../dtos/register.dto';
+import { VerifyRecoverPasswordTokenDto } from '../dtos/verify-recover-password-token.dto';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { CheckEmailPresenter } from '../presenters/check-email.presenter';
 import { LoginPresenter } from '../presenters/login.presenter';
 import { RecoverPasswordSendEmailPresenter } from '../presenters/recover-password-send-email.presenter';
 import { RegisterPresenter } from '../presenters/register.presenter';
+import { VerifyRecoverPasswordTokenPresenter } from '../presenters/verify-recover-password-token.presenter';
 
 @Controller('user')
 export class UserController {
@@ -37,6 +41,7 @@ export class UserController {
 		private readonly logoutUseCase: LogoutUseCase,
 		private readonly refreshTokenUseCase: RefreshTokenUseCase,
 		private readonly sendPasswordRecoveryEmailUseCase: SendPasswordRecoveryEmailUseCase,
+		private readonly verifyRecoverPasswordTokenUseCase: VerifyRecoverPasswordTokenUseCase,
 	) {}
 
 	@UserRegisterDocResponse()
@@ -105,5 +110,15 @@ export class UserController {
 	): Promise<RecoverPasswordSendEmailPresenter> {
 		const output = await this.sendPasswordRecoveryEmailUseCase.execute(dto);
 		return new RecoverPasswordSendEmailPresenter(output);
+	}
+
+	@HttpCode(200)
+	@VerifyRecoverPasswordTokenDocResponse()
+	@Post('/recover-password/verify-token')
+	async recoverUserPasswordVerifyToken(
+		@Body() dto: VerifyRecoverPasswordTokenDto,
+	): Promise<VerifyRecoverPasswordTokenPresenter> {
+		const output = await this.verifyRecoverPasswordTokenUseCase.execute(dto);
+		return new VerifyRecoverPasswordTokenPresenter(output);
 	}
 }

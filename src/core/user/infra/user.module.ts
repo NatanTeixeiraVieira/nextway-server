@@ -19,6 +19,7 @@ import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../application/usecases/login.usecase';
 import { LogoutUseCase } from '../application/usecases/logout.usecase';
 import { SendPasswordRecoveryEmailUseCase } from '../application/usecases/recover-password/send-password-recovery-email.usecase';
+import { VerifyRecoverPasswordTokenUseCase } from '../application/usecases/recover-password/verify-recover-password-token.usecase';
 import { RefreshTokenUseCase } from '../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../application/usecases/register.usecase';
 import { UserRepository } from '../domain/repositories/user.repository';
@@ -182,6 +183,17 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				Providers.ENV_CONFIG_SERVICE,
 				Providers.USER_OUTPUT_MAPPER,
 			],
+		},
+
+		{
+			provide: VerifyRecoverPasswordTokenUseCase,
+			useFactory: (jwtService: JwtService, envConfigService: EnvConfig) => {
+				return new VerifyRecoverPasswordTokenUseCase(
+					jwtService,
+					envConfigService,
+				);
+			},
+			inject: [Providers.JWT_SERVICE, Providers.ENV_CONFIG_SERVICE],
 		},
 	],
 })

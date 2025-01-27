@@ -5,6 +5,7 @@ import {
 } from '@/core/user/application/usecases/login.usecase';
 import { LogoutUseCase } from '@/core/user/application/usecases/logout.usecase';
 import { SendPasswordRecoveryEmailUseCase } from '@/core/user/application/usecases/recover-password/send-password-recovery-email.usecase';
+import { VerifyRecoverPasswordTokenUseCase } from '@/core/user/application/usecases/recover-password/verify-recover-password-token.usecase';
 import { RefreshTokenUseCase } from '@/core/user/application/usecases/refresh-token.usecase';
 import {
 	Output,
@@ -17,6 +18,7 @@ import { CheckEmailPresenter } from '../../../presenters/check-email.presenter';
 import { LoginPresenter } from '../../../presenters/login.presenter';
 import { RecoverPasswordSendEmailPresenter } from '../../../presenters/recover-password-send-email.presenter';
 import { RegisterPresenter } from '../../../presenters/register.presenter';
+import { VerifyRecoverPasswordTokenPresenter } from '../../../presenters/verify-recover-password-token.presenter';
 import { UserController } from '../../user.controller';
 
 describe('UserController unit tests', () => {
@@ -28,6 +30,7 @@ describe('UserController unit tests', () => {
 	let mockLogoutUseCase: LogoutUseCase;
 	let mockRefreshTokenUseCase: RefreshTokenUseCase;
 	let sendPasswordRecoveryEmailUseCase: SendPasswordRecoveryEmailUseCase;
+	let verifyRecoverPasswordTokenUseCase: VerifyRecoverPasswordTokenUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -65,6 +68,14 @@ describe('UserController unit tests', () => {
 			execute: jest.fn().mockResolvedValue(output),
 		} as unknown as SendPasswordRecoveryEmailUseCase;
 
+		sendPasswordRecoveryEmailUseCase = {
+			execute: jest.fn().mockResolvedValue(output),
+		} as unknown as SendPasswordRecoveryEmailUseCase;
+
+		verifyRecoverPasswordTokenUseCase = {
+			execute: jest.fn().mockResolvedValue({ isValid: true }),
+		} as unknown as VerifyRecoverPasswordTokenUseCase;
+
 		sut = new UserController(
 			mockRegisterUseCase,
 			mockCheckEmailUseCase,
@@ -72,6 +83,7 @@ describe('UserController unit tests', () => {
 			mockLogoutUseCase,
 			mockRefreshTokenUseCase,
 			sendPasswordRecoveryEmailUseCase,
+			verifyRecoverPasswordTokenUseCase,
 		);
 	});
 
@@ -172,6 +184,25 @@ describe('UserController unit tests', () => {
 			expect(sendPasswordRecoveryEmailUseCase.execute).toHaveBeenCalledTimes(1);
 			expect(sendPasswordRecoveryEmailUseCase.execute).toHaveBeenCalledWith({
 				email: 'test@email.com',
+			});
+		});
+	});
+
+	describe('recoverUserPasswordVerifyToken method', () => {
+		it('should recover user password and send verification email', async () => {
+			const presenter = await sut.recoverUserPasswordVerifyToken({
+				token: 'test_token',
+			});
+
+			expect(presenter).toBeInstanceOf(VerifyRecoverPasswordTokenPresenter);
+			expect(presenter).toStrictEqual(
+				new VerifyRecoverPasswordTokenPresenter({ isValid: true }),
+			);
+			expect(verifyRecoverPasswordTokenUseCase.execute).toHaveBeenCalledTimes(
+				1,
+			);
+			expect(verifyRecoverPasswordTokenUseCase.execute).toHaveBeenCalledWith({
+				token: 'test_token',
 			});
 		});
 	});

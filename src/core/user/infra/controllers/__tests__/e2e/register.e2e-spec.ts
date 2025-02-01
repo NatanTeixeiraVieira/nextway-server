@@ -3,16 +3,13 @@ import { UserRepository } from '@/core/user/domain/repositories/user.repository'
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { Providers } from '@/shared/application/constants/providers';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
+import { Mutable } from '@/shared/application/types/utils';
 import { appFastifyConfigTest } from '@/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';
 import { UserSchema } from '../../../database/typeorm/schemas/user.schema';
 import { RegisterDto } from '../../../dtos/register.dto';
-
-type Mutable<T> = {
-	-readonly [P in keyof T]: T[P];
-};
 
 describe('UserController registerUser e2e tests', () => {
 	let app: NestFastifyApplication;
@@ -185,7 +182,7 @@ describe('UserController registerUser e2e tests', () => {
 		expect(user).toBeNull();
 	});
 
-	it('should throw error with status code 422 when password is shorter that 8 character ', async () => {
+	it('should throw error with status code 422 when password is shorter that 8 character', async () => {
 		registerDto.password = '1234567';
 
 		const response = await request(app.getHttpServer())

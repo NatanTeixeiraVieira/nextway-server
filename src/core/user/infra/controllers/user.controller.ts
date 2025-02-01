@@ -10,10 +10,12 @@ import { FastifyReply } from 'fastify/types/reply';
 import { CheckEmailUseCase } from '../../application/usecases/check-email.usecase';
 import { LoginUseCase } from '../../application/usecases/login.usecase';
 import { LogoutUseCase } from '../../application/usecases/logout.usecase';
+import { ChangePasswordUseCase } from '../../application/usecases/recover-password/change-password.usecase';
 import { SendPasswordRecoveryEmailUseCase } from '../../application/usecases/recover-password/send-password-recovery-email.usecase';
 import { VerifyRecoverPasswordTokenUseCase } from '../../application/usecases/recover-password/verify-recover-password-token.usecase';
 import { RefreshTokenUseCase } from '../../application/usecases/refresh-token.usecase';
 import { RegisterUseCase } from '../../application/usecases/register.usecase';
+import { ChangePasswordDocResponse } from '../decorators/change-password-doc.response.decorator';
 import { UserCheckEmailDocResponse } from '../decorators/user-check-email-doc-response.decorator';
 import { UserLoginDocResponse } from '../decorators/user-login-doc-response.decorator';
 import { UserLogoutDocResponse } from '../decorators/user-logout-doc-response.decorator';
@@ -21,6 +23,7 @@ import { UserRecoverPasswordSendEmailDocResponse } from '../decorators/user-reco
 import { UserRefreshTokenDocResponse } from '../decorators/user-refresh-token-doc.response.decorator';
 import { UserRegisterDocResponse } from '../decorators/user-register-doc-response.decorator';
 import { VerifyRecoverPasswordTokenDocResponse } from '../decorators/verify-recover-password-token-doc-response.decorator';
+import { ChangePasswordDto } from '../dtos/change-password.dto';
 import { LoginDto } from '../dtos/login.dto';
 import { RecoverPasswordSendEmailDto } from '../dtos/recover-password-send-email.dto';
 import { RegisterDto } from '../dtos/register.dto';
@@ -42,6 +45,7 @@ export class UserController {
 		private readonly refreshTokenUseCase: RefreshTokenUseCase,
 		private readonly sendPasswordRecoveryEmailUseCase: SendPasswordRecoveryEmailUseCase,
 		private readonly verifyRecoverPasswordTokenUseCase: VerifyRecoverPasswordTokenUseCase,
+		private readonly changePasswordUseCase: ChangePasswordUseCase,
 	) {}
 
 	@UserRegisterDocResponse()
@@ -120,5 +124,12 @@ export class UserController {
 	): Promise<VerifyRecoverPasswordTokenPresenter> {
 		const output = await this.verifyRecoverPasswordTokenUseCase.execute(dto);
 		return new VerifyRecoverPasswordTokenPresenter(output);
+	}
+
+	@HttpCode(204)
+	@ChangePasswordDocResponse()
+	@Post('/recover-password/change-password')
+	async changeUserPassword(@Body() dto: ChangePasswordDto): Promise<void> {
+		await this.changePasswordUseCase.execute(dto);
 	}
 }

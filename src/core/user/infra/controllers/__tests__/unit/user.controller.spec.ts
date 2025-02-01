@@ -4,6 +4,7 @@ import {
 	LoginUseCase,
 } from '@/core/user/application/usecases/login.usecase';
 import { LogoutUseCase } from '@/core/user/application/usecases/logout.usecase';
+import { ChangePasswordUseCase } from '@/core/user/application/usecases/recover-password/change-password.usecase';
 import { SendPasswordRecoveryEmailUseCase } from '@/core/user/application/usecases/recover-password/send-password-recovery-email.usecase';
 import { VerifyRecoverPasswordTokenUseCase } from '@/core/user/application/usecases/recover-password/verify-recover-password-token.usecase';
 import { RefreshTokenUseCase } from '@/core/user/application/usecases/refresh-token.usecase';
@@ -31,6 +32,7 @@ describe('UserController unit tests', () => {
 	let mockRefreshTokenUseCase: RefreshTokenUseCase;
 	let sendPasswordRecoveryEmailUseCase: SendPasswordRecoveryEmailUseCase;
 	let verifyRecoverPasswordTokenUseCase: VerifyRecoverPasswordTokenUseCase;
+	let changePasswordUseCase: ChangePasswordUseCase;
 
 	beforeEach(() => {
 		const createdAt = new Date();
@@ -76,6 +78,10 @@ describe('UserController unit tests', () => {
 			execute: jest.fn().mockResolvedValue({ isValid: true }),
 		} as unknown as VerifyRecoverPasswordTokenUseCase;
 
+		changePasswordUseCase = {
+			execute: jest.fn(),
+		} as unknown as ChangePasswordUseCase;
+
 		sut = new UserController(
 			mockRegisterUseCase,
 			mockCheckEmailUseCase,
@@ -84,6 +90,7 @@ describe('UserController unit tests', () => {
 			mockRefreshTokenUseCase,
 			sendPasswordRecoveryEmailUseCase,
 			verifyRecoverPasswordTokenUseCase,
+			changePasswordUseCase,
 		);
 	});
 
@@ -189,7 +196,7 @@ describe('UserController unit tests', () => {
 	});
 
 	describe('recoverUserPasswordVerifyToken method', () => {
-		it('should recover user password and send verification email', async () => {
+		it('should verify recover password token', async () => {
 			const presenter = await sut.recoverUserPasswordVerifyToken({
 				token: 'test_token',
 			});
@@ -203,6 +210,21 @@ describe('UserController unit tests', () => {
 			);
 			expect(verifyRecoverPasswordTokenUseCase.execute).toHaveBeenCalledWith({
 				token: 'test_token',
+			});
+		});
+	});
+
+	describe('changeUserPassword method', () => {
+		it('should change user password', async () => {
+			await sut.changeUserPassword({
+				changePasswordToken: 'changePasswordToken_test',
+				password: '12345678',
+			});
+
+			expect(changePasswordUseCase.execute).toHaveBeenCalledTimes(1);
+			expect(changePasswordUseCase.execute).toHaveBeenCalledWith({
+				changePasswordToken: 'changePasswordToken_test',
+				password: '12345678',
 			});
 		});
 	});

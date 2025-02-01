@@ -14,14 +14,14 @@ export function UserCheckEmailDocResponse() {
 			},
 			responses: [
 				{
-					status: 404,
-					description:
-						'It happens when user is not found by user ID in the check email token',
-				},
-				{
 					status: 401,
 					description:
 						'It happens when the provided check email token is invalid',
+				},
+				{
+					status: 404,
+					description:
+						'It happens when user is not found by user ID in the check email token',
 				},
 			],
 		}),

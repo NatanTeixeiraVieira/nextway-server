@@ -36,6 +36,10 @@ export class CheckEmailUseCase implements UseCase<Input, Output> {
 
 		const user = await this.userRepository.getById(sub);
 
+		if (!user) {
+			throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
+		}
+
 		this.validateUserExists(user);
 
 		user.checkEmail();

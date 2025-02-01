@@ -13,7 +13,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid name', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				name: null,
+				name: null as any,
 			};
 			expect(() => User.register(props)).toThrow(EntityValidationError);
 
@@ -39,7 +39,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid email', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				email: null,
+				email: null as any,
 			};
 			expect(() => User.register(props)).toThrow(EntityValidationError);
 
@@ -71,7 +71,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid password', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				password: null,
+				password: null as any,
 			};
 			expect(() => User.register(props)).toThrow(EntityValidationError);
 
@@ -108,7 +108,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid name', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				name: null,
+				name: null as any,
 			};
 			expect(() => sut.register(props)).toThrow(EntityValidationError);
 
@@ -134,7 +134,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid email', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				email: null,
+				email: null as any,
 			};
 			expect(() => sut.register(props)).toThrow(EntityValidationError);
 
@@ -166,7 +166,7 @@ describe('UserEntity integration tests', () => {
 		it('Should throw an error when register with invalid password', () => {
 			let props: RegisterProps = {
 				...UserDataBuilder(),
-				password: null,
+				password: null as any,
 			};
 			expect(() => sut.register(props)).toThrow(EntityValidationError);
 
@@ -210,7 +210,9 @@ describe('UserEntity integration tests', () => {
 
 	describe('ChangePassword method', () => {
 		it('Should throw an error when register with invalid password ', () => {
-			expect(() => sut.changePassword(null)).toThrow(EntityValidationError);
+			expect(() => sut.changePassword(null as any)).toThrow(
+				EntityValidationError,
+			);
 			expect(() => sut.changePassword('')).toThrow(EntityValidationError);
 			expect(() => sut.changePassword(10 as any)).toThrow(
 				EntityValidationError,
@@ -231,7 +233,7 @@ describe('UserEntity integration tests', () => {
 	describe('UpdateProfile method', () => {
 		it('Should throw an error when update profile with invalid name', () => {
 			expect(() =>
-				sut.updateProfile({ name: null, phoneNumber: '5542988887777' }),
+				sut.updateProfile({ name: null as any, phoneNumber: '5542988887777' }),
 			).toThrow(EntityValidationError);
 			expect(() =>
 				sut.updateProfile({ name: '', phoneNumber: '5542988887777' }),

@@ -49,7 +49,11 @@ describe('AuthAppJwtService unit tests', () => {
 		const user = User.with({
 			...UserDataBuilder(),
 			id: 'c68ce367-f85b-4da7-a6cb-e9719432f552',
-			audit: { createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+			audit: {
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				deletedAt: null as Date | null,
+			},
 		});
 
 		const result = await sut.authenticate(user);
@@ -148,7 +152,11 @@ describe('AuthAppJwtService unit tests', () => {
 		const user = User.with({
 			...UserDataBuilder(),
 			id: 'c68ce367-f85b-4da7-a6cb-e9719432f552',
-			audit: { createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+			audit: {
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				deletedAt: null as Date | null,
+			},
 		});
 
 		const result = await sut.refresh(user);

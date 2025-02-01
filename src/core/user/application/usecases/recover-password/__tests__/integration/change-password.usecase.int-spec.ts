@@ -88,7 +88,7 @@ describe('ChangePasswordUseCase unit tests', () => {
 		const user = await typeOrmRepositoryUser.findOneBy({ id: userId });
 		const isPasswordValid = await hashService.compare(
 			'new_password_test',
-			user.password,
+			user?.password ?? '',
 		);
 
 		expect(isPasswordValid).toBeTruthy();

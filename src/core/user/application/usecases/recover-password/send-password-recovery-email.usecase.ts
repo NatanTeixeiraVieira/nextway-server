@@ -38,7 +38,11 @@ export class SendPasswordRecoveryEmailUseCase
 
 		const user = await this.userRepository.getByEmail(email);
 
-		await this.validateUser(user, email);
+		if (!user) {
+			throw new NotFoundError(ErrorMessages.userNotFoundByEmail(email));
+		}
+
+		await this.validateUserActive(user);
 
 		const recoverPasswordToken = await this.generateRecoverPasswordToken(user);
 
@@ -57,11 +61,7 @@ export class SendPasswordRecoveryEmailUseCase
 		}
 	}
 
-	private async validateUser(user: User, email: string): Promise<void> {
-		if (!user) {
-			throw new NotFoundError(ErrorMessages.userNotFoundByEmail(email));
-		}
-
+	private async validateUserActive(user: User): Promise<void> {
 		if (!user.active) {
 			throw new BadRequestError(ErrorMessages.INACTIVE_USER);
 		}

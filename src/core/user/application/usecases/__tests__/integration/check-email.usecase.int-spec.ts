@@ -95,8 +95,8 @@ describe('CheckEmailUseCase integration tests', () => {
 			setCookies: jest.fn(),
 		});
 		const user = await userRepository.getById(userId);
-		expect(user.emailVerified).toBeInstanceOf(Date);
-		expect(user.active).toBeTruthy();
-		expect(output).toStrictEqual(user.toJSON());
+		expect(user?.emailVerified).toBeInstanceOf(Date);
+		expect(user?.active).toBeTruthy();
+		expect(output).toStrictEqual(user?.toJSON());
 	});
 });

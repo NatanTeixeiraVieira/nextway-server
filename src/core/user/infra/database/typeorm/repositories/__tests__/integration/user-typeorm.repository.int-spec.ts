@@ -56,7 +56,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 		const user = await sut.getById(props.id);
 
 		expect(user).not.toBeNull();
-		expect(user.toJSON()).toStrictEqual({
+		expect(user?.toJSON()).toStrictEqual({
 			id: props.id,
 			name: props.name,
 			email: props.email,
@@ -88,7 +88,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 		await sut.create(entity);
 
 		const { createdAt, updatedAt, deletedAt, ...userEntity } =
-			await userRepository.findOneBy({ id: entity.id });
+			(await userRepository.findOneBy({ id: entity.id })) as UserSchema;
 
 		expect(userEntity).toBeTruthy();
 		expect({
@@ -127,7 +127,7 @@ describe('UserTypeOrmRepository integration tests', () => {
 		await sut.update(user);
 
 		const { createdAt, updatedAt, deletedAt, ...updatedUserEntity } =
-			await userRepository.findOneBy({ id: props.id });
+			(await userRepository.findOneBy({ id: props.id })) as UserSchema;
 
 		expect(updatedUserEntity).toBeTruthy();
 		expect(updatedUserEntity!.name).toBe('new name');
@@ -175,6 +175,6 @@ describe('UserTypeOrmRepository integration tests', () => {
 			where: { id: props.id },
 			withDeleted: true,
 		});
-		expect(deletedUserNotNull.deletedAt).toBeInstanceOf(Date);
+		expect(deletedUserNotNull?.deletedAt).toBeInstanceOf(Date);
 	});
 });

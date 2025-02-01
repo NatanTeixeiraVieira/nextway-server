@@ -53,7 +53,7 @@ describe('RefreshTokenUseCase integration tests', () => {
 				audit: {
 					createdAt: new Date(),
 					updatedAt: new Date(),
-					deletedAt: null,
+					deletedAt: null as Date | null,
 				},
 			}),
 		);

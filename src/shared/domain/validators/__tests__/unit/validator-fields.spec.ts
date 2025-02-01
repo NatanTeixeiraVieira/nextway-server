@@ -24,7 +24,7 @@ describe('ValidatorFields unit tests', () => {
 
 		const sut = new StubValidatorFields();
 
-		expect(sut.validate(null)).toBeFalsy();
+		expect(sut.validate(null as any)).toBeFalsy();
 		expect(spyValidateSync).toHaveBeenCalledTimes(1);
 		expect(sut.validatedData).toBeNull();
 		expect(sut.errors).toStrictEqual({ field: ['test error'] });

@@ -20,7 +20,7 @@ describe('UserController changeUserPassword e2e test', () => {
 	let typeOrmUserRepository: Repository<UserSchema>;
 	let jwtService: JwtService;
 	let envConfigService: EnvConfig;
-	let changePasswordDto: Mutable<ChangePasswordDto>;
+	let changePasswordDto: Partial<Mutable<ChangePasswordDto>>;
 	let typeOrmRepositoryUser: Repository<UserSchema>;
 	let hashService: HashService;
 	const userId = 'cd6393fd-2617-4bda-92d4-6b684010f80d';
@@ -138,7 +138,7 @@ describe('UserController changeUserPassword e2e test', () => {
 		const user = await typeOrmRepositoryUser.findOneBy({ id: userId });
 		const isPasswordValid = await hashService.compare(
 			'new_password_test',
-			user.password,
+			user?.password ?? '',
 		);
 
 		expect(isPasswordValid).toBeTruthy();

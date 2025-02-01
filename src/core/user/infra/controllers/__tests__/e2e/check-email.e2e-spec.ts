@@ -119,8 +119,8 @@ describe('UserController checkUserEmail e2e tests', () => {
 		expect(response.headers['set-cookie'][1]).toContain(`SameSite=Strict`);
 
 		const user = await typeOrmUserRepository.findOneBy({ id });
-		expect(user.emailVerified).toBeInstanceOf(Date);
-		expect(user.active).toBeTruthy();
-		expect(user.updatedAt).toBeInstanceOf(Date);
+		expect(user?.emailVerified).toBeInstanceOf(Date);
+		expect(user?.active).toBeTruthy();
+		expect(user?.updatedAt).toBeInstanceOf(Date);
 	});
 });

@@ -9,7 +9,7 @@ describe('UserEntity unit tests', () => {
 		User['validate'] = jest.fn();
 		props = UserDataBuilder();
 		sut = new User(props);
-		sut.audit.updatedAt = null;
+		sut.audit.updatedAt = null as any;
 		jest.clearAllMocks();
 	});
 

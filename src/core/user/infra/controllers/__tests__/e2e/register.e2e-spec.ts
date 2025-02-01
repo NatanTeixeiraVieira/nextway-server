@@ -16,7 +16,7 @@ describe('UserController registerUser e2e tests', () => {
 	let dataSource: DataSource;
 	let typeOrmUserRepository: Repository<UserSchema>;
 	let userRepository: UserRepository;
-	let registerDto: Mutable<RegisterDto>;
+	let registerDto: Partial<Mutable<RegisterDto>>;
 
 	beforeAll(async () => {
 		const { fastifyApp, module } = await appFastifyConfigTest();
@@ -210,7 +210,7 @@ describe('UserController registerUser e2e tests', () => {
 			audit: {
 				createdAt: new Date(),
 				updatedAt: new Date(),
-				deletedAt: null,
+				deletedAt: null as Date | null,
 			},
 		});
 		await typeOrmUserRepository.save(userEntity);

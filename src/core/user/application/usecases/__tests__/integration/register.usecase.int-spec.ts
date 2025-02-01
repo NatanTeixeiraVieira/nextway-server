@@ -118,24 +118,24 @@ describe('RegisterUseCase integration tests', () => {
 		expect(isPasswordValid).toBe(true);
 		expect(output.phoneNumber).toBeNull();
 
-		expect(user.id).toBeTruthy();
-		expect(typeof user.id).toBe('string');
-		expect(user.active).toBeFalsy();
-		expect(user.createdAt).toBeInstanceOf(Date);
-		expect(user.updatedAt).toBeInstanceOf(Date);
-		expect(user.deletedAt).toBeNull();
-		expect(user.email).toBe(input.email);
-		expect(user.emailVerified).toBeFalsy();
-		expect(user.forgotPasswordEmailVerificationToken).toBeNull();
-		expect(user.name).toBe(input.name);
-		expect(user.password).toBeTruthy();
-		expect(user.password).not.toBe(input.password);
+		expect(user?.id).toBeTruthy();
+		expect(typeof user?.id).toBe('string');
+		expect(user?.active).toBeFalsy();
+		expect(user?.createdAt).toBeInstanceOf(Date);
+		expect(user?.updatedAt).toBeInstanceOf(Date);
+		expect(user?.deletedAt).toBeNull();
+		expect(user?.email).toBe(input.email);
+		expect(user?.emailVerified).toBeFalsy();
+		expect(user?.forgotPasswordEmailVerificationToken).toBeNull();
+		expect(user?.name).toBe(input.name);
+		expect(user?.password).toBeTruthy();
+		expect(user?.password).not.toBe(input.password);
 		const isDbUserPasswordValid = await bcrypt.compare(
 			input.password,
-			user.password,
+			user?.password ?? '',
 		);
 		expect(isDbUserPasswordValid).toBe(true);
-		expect(user.phoneNumber).toBeNull();
+		expect(user?.phoneNumber).toBeNull();
 	});
 
 	it('should register a existent user', async () => {

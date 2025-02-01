@@ -30,7 +30,9 @@ export class LoginUseCase implements UseCase<Input, Output> {
 
 		const user = await this.userRepository.getByEmail(input.email);
 
-		this.validateUser(user);
+		if (!user || !user.active) {
+			throw new InvalidCredentialsError(ErrorMessages.INVALID_CREDENTIALS);
+		}
 
 		await this.validatePassword(input.password, user.password);
 
@@ -41,12 +43,6 @@ export class LoginUseCase implements UseCase<Input, Output> {
 
 	private validateInput({ email, password }: Input): void {
 		if (!email || !password) {
-			throw new InvalidCredentialsError(ErrorMessages.INVALID_CREDENTIALS);
-		}
-	}
-
-	private validateUser(user: User | null): void {
-		if (!user || !user.active) {
 			throw new InvalidCredentialsError(ErrorMessages.INVALID_CREDENTIALS);
 		}
 	}

@@ -94,6 +94,6 @@ describe('LoginUseCase integration tests', () => {
 		const output = await sut.execute(input);
 
 		const user = await userRepository.getById(userId);
-		expect(output).toStrictEqual(user.toJSON());
+		expect(output).toStrictEqual(user?.toJSON());
 	});
 });

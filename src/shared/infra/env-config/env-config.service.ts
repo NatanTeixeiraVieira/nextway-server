@@ -122,4 +122,8 @@ export class EnvConfigService implements EnvConfig {
 			) as string,
 		);
 	}
+
+	getClientBaseUrl(): string {
+		return this.configService.get<string>('CLIENT_BASE_URL') as string;
+	}
 }

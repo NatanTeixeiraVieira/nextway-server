@@ -59,7 +59,7 @@ describe('RegisterUseCase unit tests', () => {
 		envConfigService = {
 			getJwtActiveAccountSecret: jest.fn(),
 			getJwtActiveAccountExpiresIn: jest.fn(),
-			getBaseUrl: jest.fn(),
+			getClientBaseUrl: jest.fn(),
 		} as unknown as EnvConfig;
 
 		sut = new RegisterUseCase(
@@ -153,7 +153,7 @@ describe('RegisterUseCase unit tests', () => {
 		(userQuery.emailAccountActiveExists as jest.Mock).mockResolvedValue(false);
 		(hashService.generate as jest.Mock).mockResolvedValue(hashedPassword);
 		(userOutputMapper.toOutput as jest.Mock).mockReturnValue(userOutput);
-		(envConfigService.getBaseUrl as jest.Mock).mockReturnValue(baseUrl);
+		(envConfigService.getClientBaseUrl as jest.Mock).mockReturnValue(baseUrl);
 		(jwtService.generateJwt as jest.Mock).mockResolvedValue({
 			token: 'activateAccountToken',
 		});
@@ -224,7 +224,7 @@ describe('RegisterUseCase unit tests', () => {
 		(userQuery.emailAccountActiveExists as jest.Mock).mockResolvedValue(false);
 		(hashService.generate as jest.Mock).mockResolvedValue(hashedPassword);
 		(userOutputMapper.toOutput as jest.Mock).mockReturnValue(userOutput);
-		(envConfigService.getBaseUrl as jest.Mock).mockReturnValue(baseUrl);
+		(envConfigService.getClientBaseUrl as jest.Mock).mockReturnValue(baseUrl);
 		(jwtService.generateJwt as jest.Mock).mockResolvedValue({
 			token: 'activateAccountToken',
 		});

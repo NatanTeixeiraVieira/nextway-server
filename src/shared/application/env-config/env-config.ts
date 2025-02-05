@@ -26,4 +26,5 @@ export interface EnvConfig {
 	getAllowedMethods(): string;
 	getRecoverUserPasswordTokenSecret(): string;
 	getRecoverUserPasswordTokenExpiresIn(): number;
+	getClientBaseUrl(): string;
 }

@@ -126,7 +126,7 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		userEmail: string,
 		activateAccountToken: string,
 	): Promise<void> {
-		const baseUrl = this.envConfigService.getBaseUrl();
+		const baseUrl = this.envConfigService.getClientBaseUrl();
 		const content = `
       Olá ${userName}, para ativar sua conta no Nextway clique no link abaixo: <br>
       ${baseUrl}/activate-account/${activateAccountToken}

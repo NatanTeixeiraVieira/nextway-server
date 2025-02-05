@@ -129,4 +129,8 @@ describe('EnvConfigService unit tests', () => {
 	it('should return the variable JWT_ACTIVATE_ACCOUNT_EXPIRES_IN', () => {
 		expect(sut.getJwtActiveAccountExpiresIn()).toBe(1000);
 	});
+
+	it('should return the variable CLIENT_BASE_URL', () => {
+		expect(sut.getClientBaseUrl()).toBe('http://localhost:3000');
+	});
 });

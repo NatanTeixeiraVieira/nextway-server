@@ -93,7 +93,7 @@ export class SendPasswordRecoveryEmailUseCase
 		userEmail: string,
 		recoverPasswordToken: string,
 	): Promise<void> {
-		const baseUrl = this.envConfigService.getBaseUrl();
+		const baseUrl = this.envConfigService.getClientBaseUrl();
 		const content = `
       Olá ${userName}, uma recuperação de senha foi solicitada. <br>
       Clique no link abaixo para definir uma nova senha. <br />

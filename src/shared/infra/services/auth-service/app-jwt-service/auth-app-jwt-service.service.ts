@@ -57,6 +57,7 @@ export class AuthAppJwtService implements AuthService {
 			secure: isSecure,
 			maxAge: this.envConfigService.getRefreshTokenExpiresIn(),
 			sameSite: 'Strict',
+			path: '/api/v1/auth/refresh',
 		});
 	}
 
@@ -71,6 +72,7 @@ export class AuthAppJwtService implements AuthService {
 			secure: isSecure,
 			maxAge: this.envConfigService.getJwtExpiresIn(),
 			sameSite: 'Strict',
+			path: '/',
 		});
 	}
 

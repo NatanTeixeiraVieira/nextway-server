@@ -3,6 +3,7 @@ export type CookiesOptions = {
 	httpOnly: boolean;
 	secure: boolean;
 	sameSite: string;
+	path?: string;
 };
 
 export type SetCookies = (

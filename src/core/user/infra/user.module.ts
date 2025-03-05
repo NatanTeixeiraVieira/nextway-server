@@ -204,12 +204,14 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				envConfigService: EnvConfig,
 				userRepository: UserRepository,
 				hashService: HashService,
+				loggedUserService: LoggedUserService,
 			) => {
 				return new ChangePasswordUseCase(
 					jwtService,
 					envConfigService,
 					userRepository,
 					hashService,
+					loggedUserService,
 				);
 			},
 			inject: [
@@ -217,6 +219,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				Providers.ENV_CONFIG_SERVICE,
 				Providers.USER_REPOSITORY,
 				Providers.HASH_SERVICE,
+				Providers.LOGGED_USER_SERVICE,
 			],
 		},
 	],

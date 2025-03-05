@@ -57,6 +57,7 @@ export class User extends Entity<UserProps> {
 	changePassword(password: string): void {
 		User.validate({ ...this.props, password });
 		this.password = password;
+		this.forgotPasswordEmailVerificationToken = null;
 		this.updateTimestamp();
 	}
 
@@ -129,7 +130,9 @@ export class User extends Entity<UserProps> {
 		this.props.email = email;
 	}
 
-	private set forgotPasswordEmailVerificationToken(forgotPasswordEmailVerificationToken: string) {
+	private set forgotPasswordEmailVerificationToken(forgotPasswordEmailVerificationToken:
+		| string
+		| null) {
 		this.props.forgotPasswordEmailVerificationToken =
 			forgotPasswordEmailVerificationToken;
 	}

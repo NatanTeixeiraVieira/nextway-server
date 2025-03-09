@@ -107,6 +107,7 @@ describe('AuthAppJwtService unit tests', () => {
 				secure: false,
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
+				path: '/',
 			},
 		);
 		expect(setCookies).toHaveBeenNthCalledWith(
@@ -118,6 +119,7 @@ describe('AuthAppJwtService unit tests', () => {
 				secure: false,
 				maxAge: envConfigValues.refreshTokenExpiresIn,
 				sameSite: 'Strict',
+				path: '/api/user/v1/refresh',
 			},
 		);
 	});
@@ -136,16 +138,14 @@ describe('AuthAppJwtService unit tests', () => {
 		};
 
 		expect(clearCookies).toHaveBeenCalledTimes(2);
-		expect(clearCookies).toHaveBeenNthCalledWith(
-			1,
-			CookiesName.ACCESS_TOKEN,
-			cookieOptions,
-		);
-		expect(clearCookies).toHaveBeenNthCalledWith(
-			2,
-			CookiesName.REFRESH_TOKEN,
-			cookieOptions,
-		);
+		expect(clearCookies).toHaveBeenNthCalledWith(1, CookiesName.ACCESS_TOKEN, {
+			...cookieOptions,
+			path: '/',
+		});
+		expect(clearCookies).toHaveBeenNthCalledWith(2, CookiesName.REFRESH_TOKEN, {
+			...cookieOptions,
+			path: '/api/user/v1/refresh',
+		});
 	});
 
 	it('should refresh token', async () => {
@@ -189,6 +189,7 @@ describe('AuthAppJwtService unit tests', () => {
 			{
 				httpOnly: true,
 				secure: false,
+				path: '/',
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
 			},

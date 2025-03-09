@@ -5,6 +5,7 @@ import { InvalidTokenError } from '@/shared/application/errors/invalid-token-err
 import { NotFoundError } from '@/shared/application/errors/not-found-error';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { LoggedUserService } from '@/shared/application/services/logged-user.service';
 import { ChangePasswordUseCase } from '../../change-password.usecase';
 
 describe('ChangePasswordUseCase unit tests', () => {
@@ -13,6 +14,7 @@ describe('ChangePasswordUseCase unit tests', () => {
 	let envConfigService: EnvConfig;
 	let userRepository: UserRepository;
 	let hashService: HashService;
+	let loggedUserService: LoggedUserService;
 	let userChangePassword: jest.Mock;
 
 	beforeEach(() => {
@@ -44,11 +46,18 @@ describe('ChangePasswordUseCase unit tests', () => {
 			generate: jest.fn().mockResolvedValue('hashed_password_test'),
 		} as unknown as HashService;
 
+		loggedUserService = {
+			getLoggedUser: jest.fn().mockReturnValue({
+				forgotPasswordEmailVerificationToken: 'valid_token',
+			}),
+		} as unknown as LoggedUserService;
+
 		sut = new ChangePasswordUseCase(
 			jwtService,
 			envConfigService,
 			userRepository,
 			hashService,
+			loggedUserService,
 		);
 	});
 
@@ -65,6 +74,9 @@ describe('ChangePasswordUseCase unit tests', () => {
 
 	it('should throw an error when user is not found', async () => {
 		(userRepository.getById as jest.Mock).mockResolvedValue(null);
+		(loggedUserService.getLoggedUser as jest.Mock).mockReturnValue({
+			forgotPasswordEmailVerificationToken: 'invalid_token',
+		});
 
 		await expect(
 			sut.execute({

@@ -85,7 +85,7 @@ export class AuthAppJwtService implements AuthService {
 			sameSite: 'Strict',
 		};
 
-		clearCookies(CookiesName.ACCESS_TOKEN, cookieOptions);
+		clearCookies(CookiesName.ACCESS_TOKEN, { ...cookieOptions, path: '/' });
 		clearCookies(CookiesName.REFRESH_TOKEN, {
 			...cookieOptions,
 			path: '/api/user/v1/refresh',

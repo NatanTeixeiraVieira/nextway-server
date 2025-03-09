@@ -85,7 +85,7 @@ describe('EnvConfigService unit tests', () => {
 	});
 
 	it('should return the variable ORIGIN', () => {
-		expect(sut.getOrigin()).toBe('localhost:3000');
+		expect(sut.getOrigin()).toBe('http://localhost:3000');
 	});
 
 	it('should return the variable ALLOWED_METHODS', () => {

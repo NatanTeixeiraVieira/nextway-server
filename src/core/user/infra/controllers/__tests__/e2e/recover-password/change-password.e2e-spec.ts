@@ -58,6 +58,15 @@ describe('UserController changeUserPassword e2e test', () => {
 				secret: recoverPasswordSecret,
 			},
 		);
+
+		await typeOrmRepositoryUser.save({
+			...UserDataBuilder({
+				email: 'test@email.com',
+				forgotPasswordEmailVerificationToken: token,
+			}),
+			id: userId,
+		});
+
 		changePasswordDto = {
 			changePasswordToken: token,
 			password: 'new_password_test',
@@ -75,11 +84,12 @@ describe('UserController changeUserPassword e2e test', () => {
 		expect(response.body).toStrictEqual({
 			statusCode: 401,
 			error: 'Invalid Token Error',
-			message: ErrorMessages.INVALID_TOKEN,
+			message: ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN,
 		});
 	});
 
 	it('should throw an error when user is not found', async () => {
+		await typeOrmUserRepository.clear();
 		const response = await request(app.getHttpServer())
 			.post('/api/user/v1/recover-password/change-password')
 			.send(changePasswordDto)
@@ -123,11 +133,6 @@ describe('UserController changeUserPassword e2e test', () => {
 	});
 
 	it('should change user password', async () => {
-		await typeOrmRepositoryUser.save({
-			...UserDataBuilder({ email: 'test@email.com' }),
-			id: userId,
-		});
-
 		const response = await request(app.getHttpServer())
 			.post('/api/user/v1/recover-password/change-password')
 			.send(changePasswordDto)

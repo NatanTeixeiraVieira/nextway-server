@@ -49,7 +49,7 @@ describe('SendPasswordRecoveryEmailUseCase unit tests', () => {
 				.fn()
 				.mockReturnValue('getRecoverUserPasswordTokenSecret'),
 			getRecoverUserPasswordTokenExpiresIn: jest.fn().mockReturnValue(100),
-			getBaseUrl: jest.fn().mockReturnValue('http://localhost:3000'),
+			getClientBaseUrl: jest.fn().mockReturnValue('http://localhost:3000'),
 		} as unknown as EnvConfig;
 		userOutputMapper = {
 			toOutput: jest.fn(),
@@ -120,7 +120,7 @@ describe('SendPasswordRecoveryEmailUseCase unit tests', () => {
 		expect(userRepository.update).toHaveBeenCalledTimes(1);
 		expect(userRepository.update).toHaveBeenCalledWith(userMock);
 
-		expect(envConfigService.getBaseUrl).toHaveBeenCalledTimes(1);
+		expect(envConfigService.getClientBaseUrl).toHaveBeenCalledTimes(1);
 
 		expect(mailService.sendMail).toHaveBeenCalledTimes(1);
 		expect(mailService.sendMail).toHaveBeenCalledWith({

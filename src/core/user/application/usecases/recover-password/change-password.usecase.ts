@@ -55,6 +55,7 @@ export class ChangePasswordUseCase implements UseCase<Input, Output> {
 
 		const isTokenEqualLoggedUserToken = token === loggedUserToken;
 
+		// TODO Test this verification
 		if (!isTokenEqualLoggedUserToken) {
 			throw new InvalidTokenError(ErrorMessages.INVALID_TOKEN);
 		}

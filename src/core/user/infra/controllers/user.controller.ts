@@ -28,6 +28,7 @@ import { LoginDto } from '../dtos/login.dto';
 import { RecoverPasswordSendEmailDto } from '../dtos/recover-password-send-email.dto';
 import { RegisterDto } from '../dtos/register.dto';
 import { VerifyRecoverPasswordTokenDto } from '../dtos/verify-recover-password-token.dto';
+import { RecoverPasswordGuard } from '../guards/recover-password.guard';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { CheckEmailPresenter } from '../presenters/check-email.presenter';
 import { LoginPresenter } from '../presenters/login.presenter';
@@ -128,8 +129,9 @@ export class UserController {
 
 	@HttpCode(204)
 	@ChangePasswordDocResponse()
+	@UseGuards(RecoverPasswordGuard)
 	@Post('/recover-password/change-password')
 	async changeUserPassword(@Body() dto: ChangePasswordDto): Promise<void> {
-		await this.changePasswordUseCase.execute(dto);
+		return await this.changePasswordUseCase.execute(dto);
 	}
 }

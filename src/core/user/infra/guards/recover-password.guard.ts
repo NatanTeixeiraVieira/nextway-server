@@ -1,4 +1,3 @@
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
@@ -13,8 +12,9 @@ import {
 	Inject,
 } from '@/shared/infra/framework/common';
 import { UserRepository } from '../../domain/repositories/user.repository';
+import { ChangePasswordDto } from '../dtos/change-password.dto';
 
-export class RefreshTokenGuard implements CanActivate {
+export class RecoverPasswordGuard implements CanActivate {
 	constructor(
 		@Inject(Providers.ENV_CONFIG_SERVICE)
 		private readonly envConfigService: EnvConfig,
@@ -28,28 +28,28 @@ export class RefreshTokenGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest();
-		const refreshToken = request.cookies[CookiesName.REFRESH_TOKEN];
-		console.log(
-			'🚀 ~ RefreshTokenGuard ~ canActivate ~ request.cookies:',
-			request.cookies,
-		);
+		const { changePasswordToken }: ChangePasswordDto = request.body;
 
-		if (!refreshToken) {
-			throw new InvalidTokenError(ErrorMessages.INVALID_REFRESH_TOKEN);
+		if (!changePasswordToken) {
+			throw new InvalidTokenError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN);
 		}
 
-		const refreshTokenSecret = this.envConfigService.getRefreshTokenSecret();
+		const recoverUserPasswordTokenSecret =
+			this.envConfigService.getRecoverUserPasswordTokenSecret();
 
-		const isRefreshTokenValid = await this.jwtService.verifyJwt(refreshToken, {
-			secret: refreshTokenSecret,
-		});
+		const isRefreshTokenValid = await this.jwtService.verifyJwt(
+			changePasswordToken,
+			{
+				secret: recoverUserPasswordTokenSecret,
+			},
+		);
 
 		if (!isRefreshTokenValid) {
-			throw new InvalidTokenError(ErrorMessages.INVALID_REFRESH_TOKEN);
+			throw new InvalidTokenError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN);
 		}
 
 		const jwtPayload =
-			await this.jwtService.decodeJwt<AuthenticatePayload>(refreshToken);
+			await this.jwtService.decodeJwt<AuthenticatePayload>(changePasswordToken);
 
 		const loggedUser = await this.userRepository.getById(jwtPayload.sub);
 

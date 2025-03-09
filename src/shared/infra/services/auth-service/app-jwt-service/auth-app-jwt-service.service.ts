@@ -57,7 +57,7 @@ export class AuthAppJwtService implements AuthService {
 			secure: isSecure,
 			maxAge: this.envConfigService.getRefreshTokenExpiresIn(),
 			sameSite: 'Strict',
-			path: 'api/user/v1/refresh',
+			path: '/api/user/v1/refresh',
 		});
 	}
 
@@ -88,7 +88,7 @@ export class AuthAppJwtService implements AuthService {
 		clearCookies(CookiesName.ACCESS_TOKEN, cookieOptions);
 		clearCookies(CookiesName.REFRESH_TOKEN, {
 			...cookieOptions,
-			path: 'api/user/v1/refresh',
+			path: '/api/user/v1/refresh',
 		});
 	}
 

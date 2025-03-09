@@ -13,6 +13,7 @@ export const ErrorMessages = {
 	INVALID_CREDENTIALS: 'Email ou senha inválidos',
 	INVALID_REFRESH_TOKEN: 'Refresh token inválido',
 	INACTIVE_USER: 'Usuário não ativo',
+	INVALID_CHANGE_PASSWORD_TOKEN: 'Token de troca de senha inválido',
 
 	userNotFoundByEmail: (email: string) =>
 		`Usuário não encontrado pelo email ${email}`,

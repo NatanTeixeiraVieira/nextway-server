@@ -16,7 +16,6 @@ export type Input = {
 
 export type Output = undefined;
 
-// TODO: Add forgot password verification
 export class ChangePasswordUseCase implements UseCase<Input, Output> {
 	constructor(
 		private readonly jwtService: JwtService,

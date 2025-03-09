@@ -48,7 +48,6 @@ describe('ChangePasswordUseCase unit tests', () => {
 	beforeEach(async () => {
 		sut = new ChangePasswordUseCase(
 			jwtService,
-			envConfigService,
 			userRepository,
 			hashService,
 			loggedUserService,

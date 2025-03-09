@@ -1,5 +1,4 @@
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
-import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { InvalidTokenError } from '@/shared/application/errors/invalid-token-error';
 import { NotFoundError } from '@/shared/application/errors/not-found-error';
@@ -19,7 +18,6 @@ export type Output = undefined;
 export class ChangePasswordUseCase implements UseCase<Input, Output> {
 	constructor(
 		private readonly jwtService: JwtService,
-		private readonly envConfigService: EnvConfig,
 		private readonly userRepository: UserRepository,
 		private readonly hashService: HashService,
 		private readonly loggedUserService: LoggedUserService,
@@ -46,26 +44,14 @@ export class ChangePasswordUseCase implements UseCase<Input, Output> {
 	}
 
 	private async validateChangePasswordToken(token: string): Promise<void> {
-		const recoverPasswordSecret =
-			this.envConfigService.getRecoverUserPasswordTokenSecret();
-
 		const loggedUserToken =
 			this.loggedUserService.getLoggedUser()
 				?.forgotPasswordEmailVerificationToken;
 
 		const isTokenEqualLoggedUserToken = token === loggedUserToken;
 
-		// TODO Test this verification
 		if (!isTokenEqualLoggedUserToken) {
-			throw new InvalidTokenError(ErrorMessages.INVALID_TOKEN);
-		}
-
-		const isValid = await this.jwtService.verifyJwt(token, {
-			secret: recoverPasswordSecret,
-		});
-
-		if (!isValid) {
-			throw new InvalidTokenError(ErrorMessages.INVALID_TOKEN);
+			throw new InvalidTokenError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN);
 		}
 	}
 }

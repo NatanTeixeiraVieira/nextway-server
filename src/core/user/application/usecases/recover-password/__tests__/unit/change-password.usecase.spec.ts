@@ -54,7 +54,6 @@ describe('ChangePasswordUseCase unit tests', () => {
 
 		sut = new ChangePasswordUseCase(
 			jwtService,
-			envConfigService,
 			userRepository,
 			hashService,
 			loggedUserService,
@@ -69,7 +68,9 @@ describe('ChangePasswordUseCase unit tests', () => {
 				changePasswordToken: 'invalid_token',
 				password: 'password_test',
 			}),
-		).rejects.toThrow(new InvalidTokenError(ErrorMessages.INVALID_TOKEN));
+		).rejects.toThrow(
+			new InvalidTokenError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN),
+		);
 	});
 
 	it('should throw an error when user is not found', async () => {
@@ -86,19 +87,23 @@ describe('ChangePasswordUseCase unit tests', () => {
 		).rejects.toThrow(new NotFoundError(ErrorMessages.USER_NOT_FOUND));
 	});
 
+	it('should throw an error when user token is not equal logged user token', async () => {
+		(userRepository.getById as jest.Mock).mockResolvedValue(null);
+
+		await expect(
+			sut.execute({
+				changePasswordToken: 'invalid_token',
+				password: 'password_test',
+			}),
+		).rejects.toThrow(
+			new NotFoundError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN),
+		);
+	});
+
 	it('should change user password', async () => {
 		await sut.execute({
 			changePasswordToken: 'valid_token',
 			password: 'password_test',
-		});
-
-		expect(
-			envConfigService.getRecoverUserPasswordTokenSecret,
-		).toHaveBeenCalledTimes(1);
-
-		expect(jwtService.verifyJwt).toHaveBeenCalledTimes(1);
-		expect(jwtService.verifyJwt).toHaveBeenCalledWith('valid_token', {
-			secret: 'secret_test',
 		});
 
 		expect(jwtService.decodeJwt).toHaveBeenCalledTimes(1);

@@ -88,6 +88,28 @@ describe('UserController changeUserPassword e2e test', () => {
 		});
 	});
 
+	it('should throw an error when change password token is different of DB', async () => {
+		await typeOrmRepositoryUser.clear();
+		await typeOrmRepositoryUser.save({
+			...UserDataBuilder({
+				email: 'test@email.com',
+				forgotPasswordEmailVerificationToken: 'different_token',
+			}),
+			id: userId,
+		});
+
+		const response = await request(app.getHttpServer())
+			.post('/api/user/v1/recover-password/change-password')
+			.send(changePasswordDto)
+			.expect(401);
+
+		expect(response.body).toStrictEqual({
+			statusCode: 401,
+			error: 'Invalid Token Error',
+			message: ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN,
+		});
+	});
+
 	it('should throw an error when user is not found', async () => {
 		await typeOrmUserRepository.clear();
 		const response = await request(app.getHttpServer())

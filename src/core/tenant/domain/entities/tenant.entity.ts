@@ -3,56 +3,86 @@ import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps, RegisterBannerProps } from './banner.entity';
 import { DeliveryProps, RegisterDeliveryProps } from './delivery.entity';
+import { OpeninHoursProps, RegisterOpeningHoursProps } from './opening-hours';
 
 export type TenantProps = {
-	email: string;
-	password: string;
-	slug: string;
 	responsibleName: string;
+	responsibleCpf: string;
+	email: string;
 	phoneNumber: string;
+
+	zipcode: string;
 	state: string;
 	uf: string;
 	city: string;
 	neighborhood: string;
 	street: string;
 	streetNumber: string;
-	zipcode: string;
+	longitude: number;
+	latitude: number;
+
+	cnpj: string;
+	corporateReason: string;
+	establishmentName: string;
+	establishmentPhoneNumber: string;
+	slug: string;
+	password: string;
+
+	mainColor: string;
+	coverImagePath: string | null;
+	logoImagePath: string | null;
+	description: string;
+	banners: BannerProps[];
+	deliveryProps: DeliveryProps[];
+
 	emailVerified: Date | null;
 	forgotPasswordEmailVerificationToken: string | null;
 	active: boolean;
-	banners: BannerProps[];
-	establishmentName: string;
-	longitude: number;
-	latitude: number;
-	mainColor: string;
-	deliveryProps: DeliveryProps[];
+
+	openingHours: OpeninHoursProps[];
 };
 
 type RegisterProps = {
 	responsibleName: string;
+	responsibleCpf: string;
 	email: string;
-	password: string;
-	slug: string;
 	phoneNumber: string;
+
+	zipcode: string;
 	state: string;
 	uf: string;
 	city: string;
 	neighborhood: string;
 	street: string;
 	streetNumber: string;
-	zipcode: string;
-	mainColor: string;
-	banners: RegisterBannerProps[];
-	establishmentName: string;
 	longitude: number;
 	latitude: number;
+
+	cnpj: string;
+	corporateReason: string;
+	establishmentName: string;
+	establishmentPhoneNumber: string;
+	slug: string;
+	password: string;
+
+	mainColor: string;
+	coverImagePath: string | null;
+	logoImagePath: string | null;
+	description: string;
+	banners: RegisterBannerProps[];
 	deliveryProps: RegisterDeliveryProps[];
+
+	openingHours: RegisterOpeningHoursProps[];
 };
 
 export class Tenant extends Entity<TenantProps> {
 	static register(registerProps: RegisterProps): Tenant {
 		const tenantProps: TenantProps = {
 			responsibleName: registerProps.responsibleName,
+			cnpj: registerProps.cnpj,
+			establishmentPhoneNumber: registerProps.establishmentPhoneNumber,
+			corporateReason: registerProps.corporateReason,
+			responsibleCpf: registerProps.responsibleCpf,
 			email: registerProps.email,
 			password: registerProps.password,
 			phoneNumber: registerProps.phoneNumber,
@@ -70,6 +100,10 @@ export class Tenant extends Entity<TenantProps> {
 			longitude: registerProps.longitude,
 			latitude: registerProps.latitude,
 			deliveryProps: registerProps.deliveryProps,
+			openingHours: registerProps.openingHours,
+			coverImagePath: registerProps.coverImagePath,
+			logoImagePath: registerProps.logoImagePath,
+			description: registerProps.description,
 			emailVerified: null,
 			forgotPasswordEmailVerificationToken: null,
 			active: false,
@@ -80,6 +114,36 @@ export class Tenant extends Entity<TenantProps> {
 		return new Tenant(tenantProps);
 	}
 
+	register(registerProps: RegisterProps): void {
+		Tenant.validate({ ...this.props, ...registerProps });
+		this.responsibleName = registerProps.responsibleName;
+		this.email = registerProps.email;
+		this.phoneNumber = registerProps.phoneNumber;
+		this.zipcode = registerProps.zipcode;
+		this.state = registerProps.state;
+		this.uf = registerProps.uf;
+		this.city = registerProps.city;
+		this.neighborhood = registerProps.neighborhood;
+		this.street = registerProps.street;
+		this.streetNumber = registerProps.streetNumber;
+		this.longitude = registerProps.longitude;
+		this.latitude = registerProps.latitude;
+		this.slug = registerProps.slug;
+		this.password = registerProps.password;
+		this.mainColor = registerProps.mainColor;
+		this.banners = registerProps.banners;
+		this.deliveryProps = registerProps.deliveryProps;
+		this.responsibleCpf = registerProps.responsibleCpf;
+		this.cnpj = registerProps.cnpj;
+		this.corporateReason = registerProps.corporateReason;
+		this.establishmentName = registerProps.establishmentName;
+		this.establishmentPhoneNumber = registerProps.establishmentPhoneNumber;
+		this.coverImagePath = registerProps.coverImagePath;
+		this.logoImagePath = registerProps.logoImagePath;
+		this.description = registerProps.description;
+		this.openingHours = registerProps.openingHours;
+	}
+
 	private static validate(props: TenantProps) {
 		const tenantValidatorFactory = new TenantValidatorFactory();
 		const validator = tenantValidatorFactory.create();
@@ -88,28 +152,6 @@ export class Tenant extends Entity<TenantProps> {
 		if (!isValid) {
 			throw new EntityValidationError(validator.errors);
 		}
-	}
-
-	register(registerProps: RegisterProps): void {
-		Tenant.validate({ ...this.props, ...registerProps });
-		this.responsibleName = registerProps.responsibleName;
-		this.email = registerProps.email;
-		this.password = registerProps.password;
-		this.slug = registerProps.slug;
-		this.phoneNumber = registerProps.phoneNumber;
-		this.state = registerProps.state;
-		this.uf = registerProps.uf;
-		this.city = registerProps.city;
-		this.neighborhood = registerProps.neighborhood;
-		this.street = registerProps.street;
-		this.streetNumber = registerProps.streetNumber;
-		this.zipcode = registerProps.zipcode;
-		this.mainColor = registerProps.mainColor;
-		this.banners = registerProps.banners;
-		this.establishmentName = registerProps.establishmentName;
-		this.longitude = registerProps.longitude;
-		this.latitude = registerProps.latitude;
-		this.deliveryProps = registerProps.deliveryProps;
 	}
 
 	private set responsibleName(responsibleName: string) {
@@ -165,5 +207,29 @@ export class Tenant extends Entity<TenantProps> {
 	}
 	private set deliveryProps(deliveryProps: RegisterDeliveryProps[]) {
 		this.props.deliveryProps = deliveryProps;
+	}
+	private set responsibleCpf(responsibleCpf: string) {
+		this.props.responsibleCpf = responsibleCpf;
+	}
+	private set cnpj(cnpj: string) {
+		this.props.cnpj = cnpj;
+	}
+	private set corporateReason(corporateReason: string) {
+		this.props.corporateReason = corporateReason;
+	}
+	private set establishmentPhoneNumber(establishmentPhoneNumber: string) {
+		this.props.establishmentPhoneNumber = establishmentPhoneNumber;
+	}
+	private set coverImagePath(coverImagePath: string | null) {
+		this.props.coverImagePath = coverImagePath;
+	}
+	private set logoImagePath(logoImagePath: string | null) {
+		this.props.logoImagePath = logoImagePath;
+	}
+	private set description(description: string) {
+		this.props.description = description;
+	}
+	private set openingHours(openingHours: OpeninHoursProps[]) {
+		this.props.openingHours = openingHours;
 	}
 }

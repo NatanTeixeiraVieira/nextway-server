@@ -33,7 +33,7 @@ export type TenantProps = {
 	logoImagePath: string | null;
 	description: string;
 	banners: BannerProps[];
-	deliveryProps: DeliveryProps[];
+	deliveries: DeliveryProps[];
 
 	emailVerified: Date | null;
 	forgotPasswordEmailVerificationToken: string | null;
@@ -70,7 +70,7 @@ type RegisterProps = {
 	logoImagePath: string | null;
 	description: string;
 	banners: RegisterBannerProps[];
-	deliveryProps: RegisterDeliveryProps[];
+	deliveries: RegisterDeliveryProps[];
 
 	openingHours: RegisterOpeningHoursProps[];
 };
@@ -99,7 +99,7 @@ export class Tenant extends Entity<TenantProps> {
 			establishmentName: registerProps.establishmentName,
 			longitude: registerProps.longitude,
 			latitude: registerProps.latitude,
-			deliveryProps: registerProps.deliveryProps,
+			deliveries: registerProps.deliveries,
 			openingHours: registerProps.openingHours,
 			coverImagePath: registerProps.coverImagePath,
 			logoImagePath: registerProps.logoImagePath,
@@ -132,7 +132,7 @@ export class Tenant extends Entity<TenantProps> {
 		this.password = registerProps.password;
 		this.mainColor = registerProps.mainColor;
 		this.banners = registerProps.banners;
-		this.deliveryProps = registerProps.deliveryProps;
+		this.deliveries = registerProps.deliveries;
 		this.responsibleCpf = registerProps.responsibleCpf;
 		this.cnpj = registerProps.cnpj;
 		this.corporateReason = registerProps.corporateReason;
@@ -205,8 +205,8 @@ export class Tenant extends Entity<TenantProps> {
 	private set latitude(latitude: number) {
 		this.props.latitude = latitude;
 	}
-	private set deliveryProps(deliveryProps: RegisterDeliveryProps[]) {
-		this.props.deliveryProps = deliveryProps;
+	private set deliveries(deliveries: RegisterDeliveryProps[]) {
+		this.props.deliveries = deliveries;
 	}
 	private set responsibleCpf(responsibleCpf: string) {
 		this.props.responsibleCpf = responsibleCpf;

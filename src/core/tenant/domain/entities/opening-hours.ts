@@ -1,13 +1,15 @@
 import { Entity } from '@/shared/domain/entities/entity';
 
 export type OpeninHoursProps = {
-	weekday: string;
+	weekdayName: string;
+	weekdayShortName: string;
 	start: string;
 	end: string;
 };
 
 export type RegisterOpeningHoursProps = {
-	weekday: string;
+	weekdayName: string;
+	weekdayShortName: string;
 	start: string;
 	end: string;
 };

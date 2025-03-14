@@ -103,7 +103,7 @@ export class TenantRules {
 	@ValidateNested({ each: true })
 	@Type(() => DeliveryRules)
 	@IsNotEmpty()
-	deliveryProps: DeliveryRules[];
+	deliveries: DeliveryRules[];
 
 	@IsArray()
 	@ValidateNested({ each: true })

@@ -1,15 +1,19 @@
 import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
-import { BannerProps, RegisterBannerProps } from './banner.entity';
-import { DeliveryProps, RegisterDeliveryProps } from './delivery.entity';
-import { OpeninHoursProps, RegisterOpeningHoursProps } from './opening-hours';
+import { BannerProps, RegisterTenantBannerProps } from './banner.entity';
+import { DeliveryProps, RegisterTenantDeliveryProps } from './delivery.entity';
+import {
+	OpeningHoursProps,
+	RegisterTenantOpeningHoursProps,
+} from './opening-hours';
+import { PlanProps, RegisterTenantPlanProps } from './plan.entity';
 
 export type TenantProps = {
 	responsibleName: string;
 	responsibleCpf: string;
 	email: string;
-	phoneNumber: string;
+	responsiblePhoneNumber: string;
 
 	zipcode: string;
 	state: string;
@@ -36,17 +40,19 @@ export type TenantProps = {
 	deliveries: DeliveryProps[];
 
 	emailVerified: Date | null;
+	verifyEmailCode: number | null;
 	forgotPasswordEmailVerificationToken: string | null;
 	active: boolean;
 
-	openingHours: OpeninHoursProps[];
+	openingHours: OpeningHoursProps[];
+	plan: PlanProps;
 };
 
-type RegisterProps = {
+export type RegisterTenantProps = {
 	responsibleName: string;
 	responsibleCpf: string;
 	email: string;
-	phoneNumber: string;
+	responsiblePhoneNumber: string;
 
 	zipcode: string;
 	state: string;
@@ -69,41 +75,45 @@ type RegisterProps = {
 	coverImagePath: string | null;
 	logoImagePath: string | null;
 	description: string;
-	banners: RegisterBannerProps[];
-	deliveries: RegisterDeliveryProps[];
+	banners: RegisterTenantBannerProps[];
+	deliveries: RegisterTenantDeliveryProps[];
 
-	openingHours: RegisterOpeningHoursProps[];
+	openingHours: RegisterTenantOpeningHoursProps[];
+	plan: RegisterTenantPlanProps;
 };
 
 export class Tenant extends Entity<TenantProps> {
-	static register(registerProps: RegisterProps): Tenant {
+	// TODO Add CPF validation
+	static registerTenant(registerTenantProps: RegisterTenantProps): Tenant {
 		const tenantProps: TenantProps = {
-			responsibleName: registerProps.responsibleName,
-			cnpj: registerProps.cnpj,
-			establishmentPhoneNumber: registerProps.establishmentPhoneNumber,
-			corporateReason: registerProps.corporateReason,
-			responsibleCpf: registerProps.responsibleCpf,
-			email: registerProps.email,
-			password: registerProps.password,
-			phoneNumber: registerProps.phoneNumber,
-			slug: registerProps.slug,
-			state: registerProps.state,
-			uf: registerProps.uf,
-			city: registerProps.city,
-			neighborhood: registerProps.neighborhood,
-			street: registerProps.street,
-			streetNumber: registerProps.streetNumber,
-			zipcode: registerProps.zipcode,
-			mainColor: registerProps.mainColor,
-			banners: registerProps.banners,
-			establishmentName: registerProps.establishmentName,
-			longitude: registerProps.longitude,
-			latitude: registerProps.latitude,
-			deliveries: registerProps.deliveries,
-			openingHours: registerProps.openingHours,
-			coverImagePath: registerProps.coverImagePath,
-			logoImagePath: registerProps.logoImagePath,
-			description: registerProps.description,
+			responsibleName: registerTenantProps.responsibleName,
+			cnpj: registerTenantProps.cnpj,
+			establishmentPhoneNumber: registerTenantProps.establishmentPhoneNumber,
+			corporateReason: registerTenantProps.corporateReason,
+			responsibleCpf: registerTenantProps.responsibleCpf,
+			email: registerTenantProps.email,
+			password: registerTenantProps.password,
+			responsiblePhoneNumber: registerTenantProps.responsiblePhoneNumber,
+			slug: registerTenantProps.slug,
+			state: registerTenantProps.state,
+			uf: registerTenantProps.uf,
+			city: registerTenantProps.city,
+			neighborhood: registerTenantProps.neighborhood,
+			street: registerTenantProps.street,
+			streetNumber: registerTenantProps.streetNumber,
+			zipcode: registerTenantProps.zipcode,
+			mainColor: registerTenantProps.mainColor,
+			banners: registerTenantProps.banners,
+			establishmentName: registerTenantProps.establishmentName,
+			longitude: registerTenantProps.longitude,
+			latitude: registerTenantProps.latitude,
+			deliveries: registerTenantProps.deliveries,
+			openingHours: registerTenantProps.openingHours,
+			coverImagePath: registerTenantProps.coverImagePath,
+			logoImagePath: registerTenantProps.logoImagePath,
+			description: registerTenantProps.description,
+			plan: registerTenantProps.plan,
+			verifyEmailCode: null,
 			emailVerified: null,
 			forgotPasswordEmailVerificationToken: null,
 			active: false,
@@ -114,34 +124,35 @@ export class Tenant extends Entity<TenantProps> {
 		return new Tenant(tenantProps);
 	}
 
-	register(registerProps: RegisterProps): void {
-		Tenant.validate({ ...this.props, ...registerProps });
-		this.responsibleName = registerProps.responsibleName;
-		this.email = registerProps.email;
-		this.phoneNumber = registerProps.phoneNumber;
-		this.zipcode = registerProps.zipcode;
-		this.state = registerProps.state;
-		this.uf = registerProps.uf;
-		this.city = registerProps.city;
-		this.neighborhood = registerProps.neighborhood;
-		this.street = registerProps.street;
-		this.streetNumber = registerProps.streetNumber;
-		this.longitude = registerProps.longitude;
-		this.latitude = registerProps.latitude;
-		this.slug = registerProps.slug;
-		this.password = registerProps.password;
-		this.mainColor = registerProps.mainColor;
-		this.banners = registerProps.banners;
-		this.deliveries = registerProps.deliveries;
-		this.responsibleCpf = registerProps.responsibleCpf;
-		this.cnpj = registerProps.cnpj;
-		this.corporateReason = registerProps.corporateReason;
-		this.establishmentName = registerProps.establishmentName;
-		this.establishmentPhoneNumber = registerProps.establishmentPhoneNumber;
-		this.coverImagePath = registerProps.coverImagePath;
-		this.logoImagePath = registerProps.logoImagePath;
-		this.description = registerProps.description;
-		this.openingHours = registerProps.openingHours;
+	registerTenant(registerTenantProps: RegisterTenantProps): void {
+		Tenant.validate({ ...this.props, ...registerTenantProps });
+		this.responsibleName = registerTenantProps.responsibleName;
+		this.email = registerTenantProps.email;
+		this.responsiblePhoneNumber = registerTenantProps.responsiblePhoneNumber;
+		this.zipcode = registerTenantProps.zipcode;
+		this.state = registerTenantProps.state;
+		this.uf = registerTenantProps.uf;
+		this.city = registerTenantProps.city;
+		this.neighborhood = registerTenantProps.neighborhood;
+		this.street = registerTenantProps.street;
+		this.streetNumber = registerTenantProps.streetNumber;
+		this.longitude = registerTenantProps.longitude;
+		this.latitude = registerTenantProps.latitude;
+		this.slug = registerTenantProps.slug;
+		this.password = registerTenantProps.password;
+		this.mainColor = registerTenantProps.mainColor;
+		this.banners = registerTenantProps.banners;
+		this.deliveries = registerTenantProps.deliveries;
+		this.responsibleCpf = registerTenantProps.responsibleCpf;
+		this.cnpj = registerTenantProps.cnpj;
+		this.corporateReason = registerTenantProps.corporateReason;
+		this.establishmentName = registerTenantProps.establishmentName;
+		this.establishmentPhoneNumber =
+			registerTenantProps.establishmentPhoneNumber;
+		this.coverImagePath = registerTenantProps.coverImagePath;
+		this.logoImagePath = registerTenantProps.logoImagePath;
+		this.description = registerTenantProps.description;
+		this.openingHours = registerTenantProps.openingHours;
 	}
 
 	private static validate(props: TenantProps) {
@@ -166,8 +177,8 @@ export class Tenant extends Entity<TenantProps> {
 	private set slug(slug: string) {
 		this.props.slug = slug;
 	}
-	private set phoneNumber(phoneNumber: string) {
-		this.props.phoneNumber = phoneNumber;
+	private set responsiblePhoneNumber(responsiblePhoneNumber: string) {
+		this.props.responsiblePhoneNumber = responsiblePhoneNumber;
 	}
 	private set state(state: string) {
 		this.props.state = state;
@@ -193,7 +204,7 @@ export class Tenant extends Entity<TenantProps> {
 	private set mainColor(mainColor: string) {
 		this.props.mainColor = mainColor;
 	}
-	private set banners(banners: RegisterBannerProps[]) {
+	private set banners(banners: RegisterTenantBannerProps[]) {
 		this.props.banners = banners;
 	}
 	private set establishmentName(establishmentName: string) {
@@ -205,7 +216,7 @@ export class Tenant extends Entity<TenantProps> {
 	private set latitude(latitude: number) {
 		this.props.latitude = latitude;
 	}
-	private set deliveries(deliveries: RegisterDeliveryProps[]) {
+	private set deliveries(deliveries: RegisterTenantDeliveryProps[]) {
 		this.props.deliveries = deliveries;
 	}
 	private set responsibleCpf(responsibleCpf: string) {
@@ -229,7 +240,7 @@ export class Tenant extends Entity<TenantProps> {
 	private set description(description: string) {
 		this.props.description = description;
 	}
-	private set openingHours(openingHours: OpeninHoursProps[]) {
+	private set openingHours(openingHours: OpeningHoursProps[]) {
 		this.props.openingHours = openingHours;
 	}
 }

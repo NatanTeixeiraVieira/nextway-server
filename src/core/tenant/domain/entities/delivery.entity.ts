@@ -5,7 +5,7 @@ export type DeliveryProps = {
 	deliveryPrice: number;
 };
 
-export type RegisterDeliveryProps = {
+export type RegisterTenantDeliveryProps = {
 	deliveryRadiusKm: number;
 	deliveryPrice: number;
 };

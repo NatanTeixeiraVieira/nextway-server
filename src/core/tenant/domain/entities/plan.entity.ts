@@ -5,4 +5,10 @@ export type PlanProps = {
 	price: string;
 };
 
+export type RegisterTenantPlanProps = {
+	id: string;
+	name: string;
+	price: string;
+};
+
 export class Plan extends Entity<PlanProps> {}

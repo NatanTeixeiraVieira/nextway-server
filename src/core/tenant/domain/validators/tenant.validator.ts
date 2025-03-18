@@ -1,4 +1,6 @@
+import { Regex } from '@/shared/domain/utils/regex';
 import {
+	ArrayNotEmpty,
 	IsArray,
 	IsBoolean,
 	IsDate,
@@ -6,23 +8,35 @@ import {
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
+	IsPositive,
 	IsString,
 	Length,
 	Matches,
 	MaxLength,
+	MinLength,
 	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { Type } from 'class-transformer';
-import { RegisterBannerProps } from '../entities/banner.entity';
+import { PlanProps } from '../entities/plan.entity';
 import { TenantProps } from '../entities/tenant.entity';
+import { BannerRules } from './banner.validator';
 import { DeliveryRules } from './delivery.validator';
+import { OpeningHoursRules } from './opening-hours.validator';
+import { PlanRules } from './plan.validator';
 
 export class TenantRules {
 	@MaxLength(255)
 	@IsString()
 	@IsNotEmpty()
 	responsibleName: string;
+
+	@IsString()
+	@IsNotEmpty()
+	@MaxLength(255)
+	@Length(11, 11)
+	@Matches(Regex.ONLY_DIGITS)
+	responsibleCpf: string;
 
 	@MaxLength(255)
 	@IsString()
@@ -33,17 +47,19 @@ export class TenantRules {
 	@MaxLength(100)
 	@IsString()
 	@IsNotEmpty()
+	@MinLength(8)
 	password: string;
 
 	@IsString()
 	@IsOptional()
 	@Length(13, 13)
-	@Matches(/^\d+$/)
-	phoneNumber: string;
+	@Matches(Regex.ONLY_DIGITS)
+	responsiblePhoneNumber: string;
 
 	@MaxLength(255)
 	@IsString()
 	@IsNotEmpty()
+	@Matches(Regex.NO_SPACES)
 	slug: string;
 
 	@MaxLength(20)
@@ -91,6 +107,12 @@ export class TenantRules {
 	@IsNotEmpty()
 	establishmentName: string;
 
+	@IsString()
+	@IsOptional()
+	@Length(12, 13)
+	@Matches(Regex.ONLY_DIGITS)
+	establishmentPhoneNumber: string;
+
 	@IsNumber()
 	@IsNotEmpty()
 	longitude: number;
@@ -98,6 +120,28 @@ export class TenantRules {
 	@IsNumber()
 	@IsNotEmpty()
 	latitude: number;
+
+	@IsString()
+	@IsNotEmpty()
+	@Length(13, 13)
+	@Matches(Regex.ONLY_DIGITS)
+	cnpj: string;
+
+	@IsString()
+	@IsNotEmpty()
+	corporateReason: string;
+
+	@IsString()
+	@IsOptional()
+	coverImagePath: string | null;
+
+	@IsString()
+	@IsOptional()
+	logoImagePath: string | null;
+
+	@IsString()
+	@IsNotEmpty()
+	description: string;
 
 	@IsArray()
 	@ValidateNested({ each: true })
@@ -107,10 +151,20 @@ export class TenantRules {
 
 	@IsArray()
 	@ValidateNested({ each: true })
-	@Type(() => DeliveryRules)
-	@IsNotEmpty()
-	@IsNotEmpty()
-	banners: RegisterBannerProps[];
+	@Type(() => BannerRules)
+	@ArrayNotEmpty()
+	banners: BannerRules[];
+
+	@IsArray()
+	@ValidateNested({ each: true })
+	@Type(() => OpeningHoursRules)
+	@ArrayNotEmpty()
+	openingHours: OpeningHoursRules[];
+
+	@IsPositive()
+	@IsOptional()
+	@Length(6, 6)
+	verifyEmailCode: number | null;
 
 	@IsDate()
 	@IsOptional()
@@ -124,13 +178,17 @@ export class TenantRules {
 	@IsNotEmpty()
 	active: boolean;
 
+	@ValidateNested()
+	@Type(() => PlanRules)
+	plan: PlanProps;
+
 	constructor(props: TenantProps) {
 		Object.assign(this, props);
 	}
 }
 
 export class TenantValidator extends ValidatorFields<TenantRules> {
-	validate(data: TenantRules | null): boolean {
+	validate(data: TenantProps | null): boolean {
 		return super.validate(new TenantRules(data ?? ({} as TenantProps)));
 	}
 }

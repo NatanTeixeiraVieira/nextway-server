@@ -10,11 +10,16 @@ export const ErrorMessages = {
 	INVALID_PHONE: 'Telefone inválido',
 	USER_NOT_FOUND: 'Usuário não encontrado',
 	EMAIL_ALREADY_EXISTS: 'Email já em uso',
+	CNPJ_ALREADY_EXISTS: 'CNPJ já em uso',
+	SLUG_ALREADY_EXISTS: 'Slug já em uso',
 	INVALID_CREDENTIALS: 'Email ou senha inválidos',
 	INVALID_REFRESH_TOKEN: 'Refresh token inválido',
 	INACTIVE_USER: 'Usuário não ativo',
 	INVALID_CHANGE_PASSWORD_TOKEN: 'Token de troca de senha inválido',
+	FILE_LIMIT_EXCEEDED: 'Tamanho máximo do arquivo excedido',
 
 	userNotFoundByEmail: (email: string) =>
 		`Usuário não encontrado pelo email ${email}`,
+
+	invalidMimetype: (mimetype: string) => `Mimetype ${mimetype} inválido`,
 } as const;

@@ -5,7 +5,7 @@ export type BannerProps = {
 	active: boolean;
 };
 
-export type RegisterBannerProps = {
+export type RegisterTenantBannerProps = {
 	active: boolean;
 	imagePath: string;
 };

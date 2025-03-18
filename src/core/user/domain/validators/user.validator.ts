@@ -1,3 +1,4 @@
+import { Regex } from '@/shared/domain/utils/regex';
 import {
 	IsBoolean,
 	IsDate,
@@ -32,7 +33,7 @@ export class UserRules {
 	@IsString()
 	@IsOptional()
 	@Length(13, 13)
-	@Matches(/^\d+$/)
+	@Matches(Regex.ONLY_DIGITS)
 	phoneNumber: string | null;
 
 	@IsDate()

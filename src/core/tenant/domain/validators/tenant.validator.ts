@@ -3,6 +3,7 @@ import {
 	ArrayNotEmpty,
 	IsArray,
 	IsBoolean,
+	IsCPF,
 	IsDate,
 	IsEmail,
 	IsNotEmpty,
@@ -17,6 +18,7 @@ import {
 	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
+import { IsCNPJ } from '@/shared/infra/decorators/validation/cnpj.decorator';
 import { Type } from 'class-transformer';
 import { PlanProps } from '../entities/plan.entity';
 import { TenantProps } from '../entities/tenant.entity';
@@ -36,6 +38,7 @@ export class TenantRules {
 	@MaxLength(255)
 	@Length(11, 11)
 	@Matches(Regex.ONLY_DIGITS)
+	@IsCPF()
 	responsibleCpf: string;
 
 	@MaxLength(255)
@@ -125,6 +128,7 @@ export class TenantRules {
 	@IsNotEmpty()
 	@Length(13, 13)
 	@Matches(Regex.ONLY_DIGITS)
+	@IsCNPJ()
 	cnpj: string;
 
 	@IsString()

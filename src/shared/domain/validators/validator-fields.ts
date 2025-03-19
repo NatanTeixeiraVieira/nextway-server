@@ -1,6 +1,7 @@
 import { validateSync } from 'class-validator';
 import { FieldsErrors, IValidator } from './validator-fields.interface';
 
+export { IsCPF } from '@/shared/infra/decorators/validation/cpf.decorator';
 export * from 'class-validator';
 
 export abstract class ValidatorFields<PropsValidated extends object>

@@ -225,23 +225,17 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		coverImage: UploadFile | undefined,
 		logoImage: UploadFile | undefined,
 	): Promise<Record<'coverImagePath' | 'logoImagePath', string | null>> {
-		let coverImagePath: string | null = null;
-		let logoImagePath: string | null = null;
+		const [coverImagePath, logoImagePath] = await Promise.all([
+			coverImage ? this.uploadImage(coverImage) : null,
+			logoImage ? this.uploadImage(logoImage) : null,
+		]);
 
-		if (coverImage) {
-			this.validateImages(coverImage);
-			coverImagePath = (await this.fileService.upload(coverImage)).directory;
-		}
+		return { coverImagePath, logoImagePath };
+	}
 
-		if (logoImage) {
-			this.validateImages(logoImage);
-			logoImagePath = (await this.fileService.upload(logoImage)).directory;
-		}
-
-		return {
-			coverImagePath,
-			logoImagePath,
-		};
+	private async uploadImage(image: UploadFile): Promise<string> {
+		this.validateImages(image);
+		return (await this.fileService.upload(image)).directory;
 	}
 
 	private validateImages(image: UploadFile) {

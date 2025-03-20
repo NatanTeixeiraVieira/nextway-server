@@ -72,10 +72,10 @@ export type RegisterTenantProps = {
 	password: string;
 
 	mainColor: string;
-	coverImagePath: string | null;
-	logoImagePath: string | null;
+	// coverImagePath: string | null;
+	// logoImagePath: string | null;
 	description: string;
-	banners: RegisterTenantBannerProps[];
+	// banners: RegisterTenantBannerProps[];
 	deliveries: RegisterTenantDeliveryProps[];
 
 	openingHours: RegisterTenantOpeningHoursProps[];
@@ -103,14 +103,14 @@ export class Tenant extends Entity<TenantProps> {
 			streetNumber: registerTenantProps.streetNumber,
 			zipcode: registerTenantProps.zipcode,
 			mainColor: registerTenantProps.mainColor,
-			banners: registerTenantProps.banners,
+			banners: [],
 			establishmentName: registerTenantProps.establishmentName,
 			longitude: registerTenantProps.longitude,
 			latitude: registerTenantProps.latitude,
 			deliveries: registerTenantProps.deliveries,
 			openingHours: registerTenantProps.openingHours,
-			coverImagePath: registerTenantProps.coverImagePath,
-			logoImagePath: registerTenantProps.logoImagePath,
+			coverImagePath: null,
+			logoImagePath: null,
 			description: registerTenantProps.description,
 			plan: registerTenantProps.plan,
 			verifyEmailCode: null,
@@ -141,7 +141,7 @@ export class Tenant extends Entity<TenantProps> {
 		this.slug = registerTenantProps.slug;
 		this.password = registerTenantProps.password;
 		this.mainColor = registerTenantProps.mainColor;
-		this.banners = registerTenantProps.banners;
+		this.banners = [];
 		this.deliveries = registerTenantProps.deliveries;
 		this.responsibleCpf = registerTenantProps.responsibleCpf;
 		this.cnpj = registerTenantProps.cnpj;
@@ -149,8 +149,8 @@ export class Tenant extends Entity<TenantProps> {
 		this.establishmentName = registerTenantProps.establishmentName;
 		this.establishmentPhoneNumber =
 			registerTenantProps.establishmentPhoneNumber;
-		this.coverImagePath = registerTenantProps.coverImagePath;
-		this.logoImagePath = registerTenantProps.logoImagePath;
+		this.coverImagePath = null;
+		this.logoImagePath = null;
 		this.description = registerTenantProps.description;
 		this.openingHours = registerTenantProps.openingHours;
 	}

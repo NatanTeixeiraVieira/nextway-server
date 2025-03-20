@@ -126,4 +126,8 @@ export class EnvConfigService implements EnvConfig {
 	getClientBaseUrl(): string {
 		return this.configService.get<string>('CLIENT_BASE_URL') as string;
 	}
+
+	getZipcodeApiBaseUrl(): string {
+		return this.configService.get<string>('ZIPCODE_API_BASE_URL') as string;
+	}
 }

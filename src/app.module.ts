@@ -7,9 +7,11 @@ import { HashServiceModule } from './shared/infra/services/hash-service/hash-ser
 import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-service.module';
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
+import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
 
 @Module({
 	imports: [
+		ZipcodeModule,
 		LoggedUserModule,
 		AuthServiceModule,
 		MailServiceModule,

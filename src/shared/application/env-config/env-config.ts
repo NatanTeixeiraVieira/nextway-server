@@ -27,4 +27,5 @@ export interface EnvConfig {
 	getRecoverUserPasswordTokenSecret(): string;
 	getRecoverUserPasswordTokenExpiresIn(): number;
 	getClientBaseUrl(): string;
+	getZipcodeApiBaseUrl(): string;
 }

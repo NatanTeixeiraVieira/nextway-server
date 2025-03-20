@@ -71,12 +71,12 @@ export type Input = {
 
 	// Establishment configurations
 	openingHours: OpeningHoursInput[];
-	coverImage?: UploadFile;
-	logoImage?: UploadFile;
+	// coverImage?: UploadFile;
+	// logoImage?: UploadFile;
 	slug: string;
 	mainColor: string;
 	description: string;
-	banners: BannerInput[];
+	// banners: BannerInput[];
 	deliveries: DeliveryInput[];
 };
 
@@ -160,21 +160,21 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			}),
 		);
 
-		const { coverImagePath, logoImagePath } = await this.handleCoverLogoImages(
-			input.coverImage,
-			input.logoImage,
-		);
+		// const { coverImagePath, logoImagePath } = await this.handleCoverLogoImages(
+		// 	input.coverImage,
+		// 	input.logoImage,
+		// );
 
-		const banners = await this.handleBanners(input.banners);
+		// const banners = await this.handleBanners(input.banners);
 
 		return this.formatRegisterTenantProps(
 			input,
 			zipcodeInfos,
 			corporateReason,
-			coverImagePath,
-			logoImagePath,
+			// coverImagePath,
+			// logoImagePath,
 			openingHours,
-			banners,
+			// banners,
 			plan,
 		);
 	}
@@ -221,17 +221,17 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		}
 	}
 
-	private async handleCoverLogoImages(
-		coverImage: UploadFile | undefined,
-		logoImage: UploadFile | undefined,
-	): Promise<Record<'coverImagePath' | 'logoImagePath', string | null>> {
-		const [coverImagePath, logoImagePath] = await Promise.all([
-			coverImage ? this.uploadImage(coverImage) : null,
-			logoImage ? this.uploadImage(logoImage) : null,
-		]);
+	// private async handleCoverLogoImages(
+	// 	coverImage: UploadFile | undefined,
+	// 	logoImage: UploadFile | undefined,
+	// ): Promise<Record<'coverImagePath' | 'logoImagePath', string | null>> {
+	// 	const [coverImagePath, logoImagePath] = await Promise.all([
+	// 		coverImage ? this.uploadImage(coverImage) : null,
+	// 		logoImage ? this.uploadImage(logoImage) : null,
+	// 	]);
 
-		return { coverImagePath, logoImagePath };
-	}
+	// 	return { coverImagePath, logoImagePath };
+	// }
 
 	private async uploadImage(image: UploadFile): Promise<string> {
 		this.validateImages(image);
@@ -252,10 +252,10 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		input: Input,
 		zipcodeInfos: ZipcodeServiceResponse,
 		corporateReason: string,
-		coverImagePath: string | null,
-		logoImagePath: string | null,
+		// coverImagePath: string | null,
+		// logoImagePath: string | null,
 		openingHours: RegisterTenantOpeningHoursProps[],
-		banners: RegisterTenantBannerProps[],
+		// banners: RegisterTenantBannerProps[],
 		plan: RegisterTenantPlanProps,
 	): RegisterTenantProps {
 		const registerTenantProps: RegisterTenantProps = {
@@ -276,9 +276,9 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			streetNumber: input.streetNumber,
 			zipcode: input.zipcode,
 			mainColor: input.mainColor,
-			coverImagePath,
-			logoImagePath,
-			banners,
+			// coverImagePath,
+			// logoImagePath,
+			// banners,
 			establishmentName: input.establishmentName,
 			longitude: +zipcodeInfos.location.coordinates.longitude,
 			latitude: +zipcodeInfos.location.coordinates.latitude,

@@ -8,21 +8,19 @@ import {
 
 type ZipcodeResponse = {
 	cep: string;
+	address_type: string;
+	address_name: string;
+	address: string;
 	state: Ufs;
+	district: string;
+	lat: string;
+	lng: string;
 	city: string;
-	neighborhood: string;
-	street: string;
-	service: string;
-	location: {
-		type: string;
-		coordinates: {
-			longitude?: string;
-			latitude?: string;
-		};
-	};
+	city_ibge: string;
+	ddd: string;
 };
 
-export class ZipcodeBrasilApiService implements ZipcodeService {
+export class ZipcodeAwesomeApiService implements ZipcodeService {
 	constructor(
 		private readonly httpService: HttpService,
 		private readonly envCofigService: EnvConfig,
@@ -34,13 +32,21 @@ export class ZipcodeBrasilApiService implements ZipcodeService {
 			`${apiUrl}/${zipcode}`,
 		);
 
-		const { cep, state: uf, ...res } = response.data;
+		const { cep, state: uf, district, lat, address, lng, city } = response.data;
 		const state = StateMapper.ufToStateName(uf);
 		return {
-			...res,
+			city,
 			uf,
 			zipcode: cep,
 			state,
+			neighborhood: district,
+			street: address,
+			location: {
+				coordinates: {
+					latitude: lat,
+					longitude: lng,
+				},
+			},
 		};
 	}
 }

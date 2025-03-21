@@ -1,7 +1,7 @@
-type GetInfosByCnpj = {
+export type GetInfosByCnpjResponse = {
 	corporateReason: string;
 };
 
 export interface CnpjService {
-	getInfosByCnpj(cnpj: string): Promise<GetInfosByCnpj>;
+	getInfosByCnpj(cnpj: string): Promise<GetInfosByCnpjResponse>;
 }

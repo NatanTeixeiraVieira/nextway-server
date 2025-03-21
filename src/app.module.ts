@@ -3,7 +3,9 @@ import { UserModule } from './core/user/infra/user.module';
 import { DatabaseModule } from './shared/infra/database/database.module';
 import { EnvConfigModule } from './shared/infra/env-config/env-config.module';
 import { AuthServiceModule } from './shared/infra/services/auth-service/auth-service.module';
+import { CnpjServiceModule } from './shared/infra/services/cnpj-service/cnpj-service.module';
 import { HashServiceModule } from './shared/infra/services/hash-service/hash-service.module';
+import { HttpServiceModule } from './shared/infra/services/http-service/http-service.module';
 import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-service.module';
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
@@ -11,6 +13,8 @@ import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.m
 
 @Module({
 	imports: [
+		HttpServiceModule,
+		CnpjServiceModule,
 		ZipcodeModule,
 		LoggedUserModule,
 		AuthServiceModule,

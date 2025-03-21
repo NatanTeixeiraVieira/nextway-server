@@ -9,4 +9,7 @@ export const Providers = {
 	MAIL_SERVICE: 'MailService',
 	ENV_CONFIG_SERVICE: 'EnvConfigService',
 	LOGGED_USER_SERVICE: 'LoggedUserService',
+	ZIPCODE_SERVICE: 'ZipcodeService',
+	HTTP_SERVICE: 'HttpService',
+	CNPJ_SERVICE: 'CnpjService',
 } as const;

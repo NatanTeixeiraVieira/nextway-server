@@ -1,6 +1,8 @@
+import { Ufs } from '../mappers/state.mapper';
+
 export type ZipcodeServiceResponse = {
 	zipcode: string;
-	uf: string;
+	uf: Ufs;
 	state: string;
 	city: string;
 	neighborhood: string;

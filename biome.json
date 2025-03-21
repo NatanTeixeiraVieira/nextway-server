@@ -27,7 +27,8 @@
 		"enabled": true,
 		"rules": {
 			"complexity": {
-				"noBannedTypes": "off"
+				"noBannedTypes": "off",
+				"noStaticOnlyClass": "off"
 			},
 			"style": {
 				"useImportType": "off"

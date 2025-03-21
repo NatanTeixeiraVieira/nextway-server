@@ -1,3 +1,5 @@
+export type Ufs = keyof typeof stateMapper;
+
 const stateMapper = {
 	AC: 'Acre',
 	AL: 'Alagoas',
@@ -28,7 +30,7 @@ const stateMapper = {
 	TO: 'Tocantins',
 } as const;
 
-class StateMapper {
+export class StateMapper {
 	static ufToStateName(uf: keyof typeof stateMapper): string {
 		return stateMapper[uf];
 	}

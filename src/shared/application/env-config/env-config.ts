@@ -29,4 +29,6 @@ export interface EnvConfig {
 	getClientBaseUrl(): string;
 	getZipcodeApiBaseUrl(): string;
 	getCnpjApiBaseUrl(): string;
+	getStorageUrl(): string;
+	getStorageApiKey(): string;
 }

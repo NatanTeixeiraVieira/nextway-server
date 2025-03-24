@@ -1,5 +1,5 @@
-type UploadResponse = {
-	directory: string;
+export type UploadResponse = {
+	fullPath: string;
 };
 
 export type UploadFile = {
@@ -12,5 +12,9 @@ export type UploadFile = {
 };
 
 export interface FileService {
-	upload(file: UploadFile): Promise<UploadResponse>;
+	upload(
+		file: UploadFile,
+		path: string,
+		name?: string,
+	): Promise<UploadResponse>;
 }

@@ -12,4 +12,5 @@ export const Providers = {
 	ZIPCODE_SERVICE: 'ZipcodeService',
 	HTTP_SERVICE: 'HttpService',
 	CNPJ_SERVICE: 'CnpjService',
+	FILE_SERVICE: 'FileService',
 } as const;

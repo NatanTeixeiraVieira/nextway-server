@@ -1,6 +1,5 @@
 import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
-import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import {
@@ -12,7 +11,6 @@ import {
 	ZipcodeServiceResponse,
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
-import { RegisterTenantBannerProps } from '../../domain/entities/banner.entity';
 import { RegisterTenantOpeningHoursProps } from '../../domain/entities/opening-hours';
 import { RegisterTenantPlanProps } from '../../domain/entities/plan.entity';
 import {
@@ -82,11 +80,9 @@ export type Input = {
 
 export type Output = TenantOutput;
 
-// https://receitaws.com.br/v1/cnpj/{cnpj} - Search company cnpj
-// TODO Add custom messages in the validators for each field
 export class RegisterTenantUseCase implements UseCase<Input, Output> {
-	private readonly allowedMimeTypes = ['image/jpeg', 'image/png'];
-	private readonly maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
+	// private readonly allowedMimeTypes = ['image/jpeg', 'image/png'];
+	// private readonly maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
 
 	constructor(
 		private readonly tenantRepository: TenantRepository,
@@ -179,47 +175,47 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		);
 	}
 
-	private async handleBanners(
-		banners: BannerInput[],
-	): Promise<RegisterTenantBannerProps[]> {
-		this.validateBanners(banners);
+	// private async handleBanners(
+	// 	banners: BannerInput[],
+	// ): Promise<RegisterTenantBannerProps[]> {
+	// 	this.validateBanners(banners);
 
-		const createdBanners: RegisterTenantBannerProps[] = await Promise.all(
-			banners.map(async ({ image, active }) => {
-				const bannerPath = (await this.fileService.upload(image)).directory;
-				return { imagePath: bannerPath, active };
-			}),
-		);
+	// 	const createdBanners: RegisterTenantBannerProps[] = await Promise.all(
+	// 		banners.map(async ({ image, active }) => {
+	// 			const bannerPath = (await this.fileService.upload(image,)).fullPath;
+	// 			return { imagePath: bannerPath, active };
+	// 		}),
+	// 	);
 
-		return createdBanners;
-	}
+	// 	return createdBanners;
+	// }
 
-	private validateBanners(banners: BannerInput[]) {
-		const bannersErrors: BannersErrors[] = [];
+	// private validateBanners(banners: BannerInput[]) {
+	// 	const bannersErrors: BannersErrors[] = [];
 
-		for (const { image } of banners) {
-			if (!this.allowedMimeTypes.includes(image.mimetype)) {
-				bannersErrors.push({
-					name: image.originalname,
-					errors: [ErrorMessages.invalidMimetype(image.mimetype)],
-				});
-			}
+	// 	for (const { image } of banners) {
+	// 		if (!this.allowedMimeTypes.includes(image.mimetype)) {
+	// 			bannersErrors.push({
+	// 				name: image.originalname,
+	// 				errors: [ErrorMessages.invalidMimetype(image.mimetype)],
+	// 			});
+	// 		}
 
-			if (image.size > this.maxSizeInBytes) {
-				for (const bannerError of bannersErrors) {
-					if (bannerError.name === image.originalname) {
-						bannerError.errors.push(ErrorMessages.FILE_LIMIT_EXCEEDED);
-					}
-				}
-			}
-		}
+	// 		if (image.size > this.maxSizeInBytes) {
+	// 			for (const bannerError of bannersErrors) {
+	// 				if (bannerError.name === image.originalname) {
+	// 					bannerError.errors.push(ErrorMessages.FILE_LIMIT_EXCEEDED);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
 
-		if (bannersErrors.length > 0) {
-			throw new BadRequestError(
-				`Os seguintes banners estão inválidos: \n ${JSON.stringify(bannersErrors)}`,
-			);
-		}
-	}
+	// 	if (bannersErrors.length > 0) {
+	// 		throw new BadRequestError(
+	// 			`Os seguintes banners estão inválidos: \n ${JSON.stringify(bannersErrors)}`,
+	// 		);
+	// 	}
+	// }
 
 	// private async handleCoverLogoImages(
 	// 	coverImage: UploadFile | undefined,
@@ -233,20 +229,20 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 	// 	return { coverImagePath, logoImagePath };
 	// }
 
-	private async uploadImage(image: UploadFile): Promise<string> {
-		this.validateImages(image);
-		return (await this.fileService.upload(image)).directory;
-	}
+	// private async uploadImage(image: UploadFile): Promise<string> {
+	// 	this.validateImages(image);
+	// 	return (await this.fileService.upload(image)).fullPath;
+	// }
 
-	private validateImages(image: UploadFile) {
-		if (!this.allowedMimeTypes.includes(image.mimetype)) {
-			throw new BadRequestError(ErrorMessages.invalidMimetype(image.mimetype));
-		}
+	// private validateImages(image: UploadFile) {
+	// 	if (!this.allowedMimeTypes.includes(image.mimetype)) {
+	// 		throw new BadRequestError(ErrorMessages.invalidMimetype(image.mimetype));
+	// 	}
 
-		if (image.size > this.maxSizeInBytes) {
-			throw new BadRequestError(ErrorMessages.FILE_LIMIT_EXCEEDED);
-		}
-	}
+	// 	if (image.size > this.maxSizeInBytes) {
+	// 		throw new BadRequestError(ErrorMessages.FILE_LIMIT_EXCEEDED);
+	// 	}
+	// }
 
 	private formatRegisterTenantProps(
 		input: Input,

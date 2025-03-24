@@ -6,6 +6,15 @@ import {
 
 export class EnvConfigService implements EnvConfig {
 	constructor(private readonly configService: ConfigService) {}
+	getStorageUrl(): string {
+		throw new Error('Method not implemented.');
+	}
+	getStorageApiKey(): string {
+		throw new Error('Method not implemented.');
+	}
+	getCnpjApiBaseUrl(): string {
+		throw new Error('Method not implemented.');
+	}
 
 	getPort(): number {
 		return Number(this.configService.get<string>('PORT') as string);

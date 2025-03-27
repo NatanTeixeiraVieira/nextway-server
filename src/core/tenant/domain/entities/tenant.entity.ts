@@ -155,6 +155,12 @@ export class Tenant extends Entity<TenantProps> {
 		this.openingHours = registerTenantProps.openingHours;
 	}
 
+	deleteAccount(): void {
+		Tenant.validate(this.props);
+		this.markAsDeleted();
+		this.updateTimestamp();
+	}
+
 	private static validate(props: TenantProps) {
 		const tenantValidatorFactory = new TenantValidatorFactory();
 		const validator = tenantValidatorFactory.create();

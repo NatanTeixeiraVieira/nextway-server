@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TenantModule } from './core/tenant/infra/tenant.module';
 import { UserModule } from './core/user/infra/user.module';
 import { DatabaseModule } from './shared/infra/database/database.module';
 import { EnvConfigModule } from './shared/infra/env-config/env-config.module';
@@ -14,6 +15,7 @@ import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.m
 
 @Module({
 	imports: [
+		TenantModule,
 		FileModule,
 		HttpServiceModule,
 		CnpjServiceModule,

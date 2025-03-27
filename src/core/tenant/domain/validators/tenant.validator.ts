@@ -14,7 +14,6 @@ import {
 	Length,
 	Matches,
 	MaxLength,
-	MinLength,
 	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
@@ -50,7 +49,6 @@ export class TenantRules {
 	@MaxLength(100)
 	@IsString()
 	@IsNotEmpty()
-	@MinLength(8)
 	password: string;
 
 	@IsString()
@@ -122,17 +120,19 @@ export class TenantRules {
 
 	@IsNumber()
 	@IsNotEmpty()
+	@MaxLength(100)
 	latitude: number;
 
 	@IsString()
 	@IsNotEmpty()
-	@Length(13, 13)
+	@Length(14, 14)
 	@Matches(Regex.ONLY_DIGITS)
 	@IsCNPJ()
 	cnpj: string;
 
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(255)
 	corporateReason: string;
 
 	@IsString()

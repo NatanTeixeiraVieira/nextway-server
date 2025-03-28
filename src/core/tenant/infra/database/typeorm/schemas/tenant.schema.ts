@@ -32,8 +32,8 @@ export class TenantSchema extends Schema {
 	@Column({ type: 'varchar', length: 255, unique: true, nullable: false })
 	email: string;
 
-	@Column({ type: 'varchar', length: 13, nullable: true })
-	responsiblePhoneNumber: string | null;
+	@Column({ type: 'varchar', length: 13, nullable: false })
+	responsiblePhoneNumber: string;
 
 	@Column({ type: 'varchar', length: 8, nullable: false })
 	zipcode: string;

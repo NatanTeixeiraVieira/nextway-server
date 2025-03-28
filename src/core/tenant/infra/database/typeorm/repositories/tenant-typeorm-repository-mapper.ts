@@ -11,17 +11,59 @@ export class TenantTypeormRepositoryMapper
 	toEntity(schema: TenantSchema): Tenant {
 		return Tenant.with({
 			id: schema.id,
+			responsibleName: schema.responsibleName,
+			responsibleCpf: schema.responsibleCpf,
 			email: schema.email,
+			responsiblePhoneNumber: schema.responsiblePhoneNumber,
+			zipcode: schema.zipcode,
+			state: schema.city.state.name,
+			uf: schema.city.state.uf,
+			city: schema.city.name,
+			neighborhood: schema.neighborhood,
+			street: schema.street,
+			streetNumber: schema.streetNumber,
+			longitude: schema.longitude,
+			latitude: schema.latitude,
+			cnpj: schema.cnpj,
+			corporateReason: schema.corporateReason,
+			establishmentName: schema.establishmentName,
+			establishmentPhoneNumber: schema.establishmentPhoneNumber,
+			slug: schema.slug,
 			password: schema.password,
+			mainColor: schema.mainColor,
+			coverImagePath: schema.coverImagePath,
+			logoImagePath: schema.logoImagePath,
+			description: schema.description,
+			banners: schema.banners.map(({ imagePath, active }) => ({
+				imagePath,
+				active,
+			})),
+			deliveries: schema.deliveries.map(
+				({ deliveryRadiusKm, deliveryPrice }) => ({
+					deliveryRadiusKm,
+					deliveryPrice,
+				}),
+			),
+			emailVerified: schema.emailVerified,
+			verifyEmailCode: schema.verifyEmailCode,
+			forgotPasswordEmailVerificationToken:
+				schema.forgotPasswordEmailVerificationToken,
+			active: schema.active,
+			openingHours: schema.openingHours.map(({ start, end, weekday }) => ({
+				start,
+				end,
+				weekdayName: weekday.name,
+				weekdayShortName: weekday.shortName,
+			})),
+			plan: {
+				name: schema.plan.name,
+				price: schema.plan.price,
+			},
 			audit: {
 				createdAt: schema.createdAt,
 				updatedAt: schema.updatedAt,
 				deletedAt: schema.deletedAt,
 			},
-			active: schema.active,
-			emailVerified: schema.emailVerified,
-			forgotPasswordEmailVerificationToken:
-				schema.forgotPasswordEmailVerificationToken,
 		});
 	}
 

@@ -171,6 +171,130 @@ export class Tenant extends Entity<TenantProps> {
 		}
 	}
 
+	get responsibleName(): string {
+		return this.props.responsibleName;
+	}
+
+	get responsibleCpf(): string {
+		return this.props.responsibleCpf;
+	}
+
+	get email(): string {
+		return this.props.email;
+	}
+
+	get responsiblePhoneNumber(): string {
+		return this.props.responsiblePhoneNumber;
+	}
+
+	get zipcode(): string {
+		return this.props.zipcode;
+	}
+
+	get state(): string {
+		return this.props.state;
+	}
+
+	get uf(): string {
+		return this.props.uf;
+	}
+
+	get city(): string {
+		return this.props.city;
+	}
+
+	get neighborhood(): string {
+		return this.props.neighborhood;
+	}
+
+	get street(): string {
+		return this.props.street;
+	}
+
+	get streetNumber(): string {
+		return this.props.streetNumber;
+	}
+
+	get longitude(): number {
+		return this.props.longitude;
+	}
+
+	get latitude(): number {
+		return this.props.latitude;
+	}
+
+	get cnpj(): string {
+		return this.props.cnpj;
+	}
+
+	get corporateReason(): string {
+		return this.props.corporateReason;
+	}
+
+	get establishmentName(): string {
+		return this.props.establishmentName;
+	}
+
+	get establishmentPhoneNumber(): string {
+		return this.props.establishmentPhoneNumber;
+	}
+
+	get slug(): string {
+		return this.props.slug;
+	}
+
+	get password(): string {
+		return this.props.password;
+	}
+
+	get mainColor(): string {
+		return this.props.mainColor;
+	}
+
+	get coverImagePath(): string | null {
+		return this.props.coverImagePath;
+	}
+
+	get logoImagePath(): string | null {
+		return this.props.logoImagePath;
+	}
+
+	get description(): string {
+		return this.props.description;
+	}
+
+	get banners(): BannerProps[] {
+		return this.props.banners;
+	}
+
+	get deliveries(): DeliveryProps[] {
+		return this.props.deliveries;
+	}
+
+	get emailVerified(): Date | null {
+		return this.props.emailVerified;
+	}
+
+	get verifyEmailCode(): number | null {
+		return this.props.verifyEmailCode;
+	}
+
+	get forgotPasswordEmailVerificationToken(): string | null {
+		return this.props.forgotPasswordEmailVerificationToken;
+	}
+
+	get active(): boolean {
+		return this.props.active;
+	}
+
+	get openingHours(): OpeningHoursProps[] {
+		return this.props.openingHours;
+	}
+
+	get plan(): PlanProps {
+		return this.props.plan;
+	}
+
 	private set responsibleName(responsibleName: string) {
 		this.props.responsibleName = responsibleName;
 	}

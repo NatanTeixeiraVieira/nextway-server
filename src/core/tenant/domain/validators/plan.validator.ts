@@ -8,6 +8,10 @@ import { PlanProps } from '../entities/plan.entity';
 export class PlanRules {
 	@IsString()
 	@IsNotEmpty()
+	id: string;
+
+	@IsString()
+	@IsNotEmpty()
 	name: string;
 
 	@IsString()
@@ -20,7 +24,7 @@ export class PlanRules {
 }
 
 export class PlanValidator extends ValidatorFields<PlanRules> {
-	validate(data: PlanRules | null): boolean {
+	validate(data: PlanProps | null): boolean {
 		return super.validate(new PlanRules(data ?? ({} as PlanProps)));
 	}
 }

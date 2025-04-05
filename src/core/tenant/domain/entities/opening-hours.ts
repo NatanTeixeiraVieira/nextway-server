@@ -1,17 +1,17 @@
-import { Entity } from '@/shared/domain/entities/entity';
+import { WeekdayProps } from './weekday.entity';
 
 export type OpeningHoursProps = {
-	weekdayName: string;
-	weekdayShortName: string;
+	weekday: WeekdayProps;
 	start: string;
 	end: string;
 };
 
 export type RegisterTenantOpeningHoursProps = {
-	weekdayName: string;
-	weekdayShortName: string;
+	weekday: {
+		id: string;
+		name: string;
+		shortName: string;
+	};
 	start: string;
 	end: string;
 };
-
-export class OpeningHours extends Entity<OpeningHoursProps> {}

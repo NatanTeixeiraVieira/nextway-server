@@ -22,4 +22,11 @@ export const ErrorMessages = {
 		`Usuário não encontrado pelo email ${email}`,
 
 	invalidMimetype: (mimetype: string) => `Mimetype ${mimetype} inválido`,
+
+	stateNotFound: (state: string) => `Estado ${state} não encontrado`,
+
+	cityNotFound: (city: string) => `Cidade ${city} não encontrada`,
+
+	weekdayNotFound: (id: string) =>
+		`Dia da semana  não encontrado pelo ID ${id}`,
 } as const;

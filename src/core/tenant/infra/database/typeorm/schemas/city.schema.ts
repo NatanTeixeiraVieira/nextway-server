@@ -28,5 +28,5 @@ export class CitySchema {
 		() => TenantSchema,
 		(tenant) => tenant.city,
 	)
-	tenant: TenantSchema[];
+	tenants: TenantSchema[];
 }

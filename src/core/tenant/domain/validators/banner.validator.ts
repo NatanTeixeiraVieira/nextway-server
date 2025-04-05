@@ -21,7 +21,7 @@ export class BannerRules {
 }
 
 export class BannerValidator extends ValidatorFields<BannerRules> {
-	validate(data: BannerRules | null): boolean {
+	validate(data: BannerProps | null): boolean {
 		return super.validate(new BannerRules(data ?? ({} as BannerProps)));
 	}
 }

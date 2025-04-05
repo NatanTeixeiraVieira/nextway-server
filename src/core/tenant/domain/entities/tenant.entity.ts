@@ -2,12 +2,14 @@ import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps, RegisterTenantBannerProps } from './banner.entity';
+import { CityProps } from './city.entity';
 import { DeliveryProps, RegisterTenantDeliveryProps } from './delivery.entity';
 import {
 	OpeningHoursProps,
 	RegisterTenantOpeningHoursProps,
 } from './opening-hours';
 import { PlanProps, RegisterTenantPlanProps } from './plan.entity';
+import { StateProps } from './state.entity';
 
 export type TenantProps = {
 	responsibleName: string;
@@ -16,9 +18,8 @@ export type TenantProps = {
 	responsiblePhoneNumber: string;
 
 	zipcode: string;
-	state: string;
-	uf: string;
-	city: string;
+	state: StateProps;
+	city: CityProps;
 	neighborhood: string;
 	street: string;
 	streetNumber: string;
@@ -55,9 +56,8 @@ export type RegisterTenantProps = {
 	responsiblePhoneNumber: string;
 
 	zipcode: string;
-	state: string;
-	uf: string;
-	city: string;
+	state: StateProps;
+	city: CityProps;
 	neighborhood: string;
 	street: string;
 	streetNumber: string;
@@ -96,7 +96,6 @@ export class Tenant extends Entity<TenantProps> {
 			responsiblePhoneNumber: registerTenantProps.responsiblePhoneNumber,
 			slug: registerTenantProps.slug,
 			state: registerTenantProps.state,
-			uf: registerTenantProps.uf,
 			city: registerTenantProps.city,
 			neighborhood: registerTenantProps.neighborhood,
 			street: registerTenantProps.street,
@@ -124,36 +123,35 @@ export class Tenant extends Entity<TenantProps> {
 		return new Tenant(tenantProps);
 	}
 
-	registerTenant(registerTenantProps: RegisterTenantProps): void {
-		Tenant.validate({ ...this.props, ...registerTenantProps });
-		this.responsibleName = registerTenantProps.responsibleName;
-		this.email = registerTenantProps.email;
-		this.responsiblePhoneNumber = registerTenantProps.responsiblePhoneNumber;
-		this.zipcode = registerTenantProps.zipcode;
-		this.state = registerTenantProps.state;
-		this.uf = registerTenantProps.uf;
-		this.city = registerTenantProps.city;
-		this.neighborhood = registerTenantProps.neighborhood;
-		this.street = registerTenantProps.street;
-		this.streetNumber = registerTenantProps.streetNumber;
-		this.longitude = registerTenantProps.longitude;
-		this.latitude = registerTenantProps.latitude;
-		this.slug = registerTenantProps.slug;
-		this.password = registerTenantProps.password;
-		this.mainColor = registerTenantProps.mainColor;
-		this.banners = [];
-		this.deliveries = registerTenantProps.deliveries;
-		this.responsibleCpf = registerTenantProps.responsibleCpf;
-		this.cnpj = registerTenantProps.cnpj;
-		this.corporateReason = registerTenantProps.corporateReason;
-		this.establishmentName = registerTenantProps.establishmentName;
-		this.establishmentPhoneNumber =
-			registerTenantProps.establishmentPhoneNumber;
-		this.coverImagePath = null;
-		this.logoImagePath = null;
-		this.description = registerTenantProps.description;
-		this.openingHours = registerTenantProps.openingHours;
-	}
+	// registerTenant(registerTenantProps: RegisterTenantProps): void {
+	// 	Tenant.validate({ ...this.props, ...registerTenantProps });
+	// 	this.responsibleName = registerTenantProps.responsibleName;
+	// 	this.email = registerTenantProps.email;
+	// 	this.responsiblePhoneNumber = registerTenantProps.responsiblePhoneNumber;
+	// 	this.zipcode = registerTenantProps.zipcode;
+	// 	this.state = registerTenantProps.state;
+	// 	this.city = registerTenantProps.city;
+	// 	this.neighborhood = registerTenantProps.neighborhood;
+	// 	this.street = registerTenantProps.street;
+	// 	this.streetNumber = registerTenantProps.streetNumber;
+	// 	this.longitude = registerTenantProps.longitude;
+	// 	this.latitude = registerTenantProps.latitude;
+	// 	this.slug = registerTenantProps.slug;
+	// 	this.password = registerTenantProps.password;
+	// 	this.mainColor = registerTenantProps.mainColor;
+	// 	this.banners = [];
+	// 	this.deliveries = registerTenantProps.deliveries;
+	// 	this.responsibleCpf = registerTenantProps.responsibleCpf;
+	// 	this.cnpj = registerTenantProps.cnpj;
+	// 	this.corporateReason = registerTenantProps.corporateReason;
+	// 	this.establishmentName = registerTenantProps.establishmentName;
+	// 	this.establishmentPhoneNumber =
+	// 		registerTenantProps.establishmentPhoneNumber;
+	// 	this.coverImagePath = null;
+	// 	this.logoImagePath = null;
+	// 	this.description = registerTenantProps.description;
+	// 	this.openingHours = registerTenantProps.openingHours;
+	// }
 
 	deleteAccount(): void {
 		Tenant.validate(this.props);
@@ -191,15 +189,11 @@ export class Tenant extends Entity<TenantProps> {
 		return this.props.zipcode;
 	}
 
-	get state(): string {
+	get state(): StateProps {
 		return this.props.state;
 	}
 
-	get uf(): string {
-		return this.props.uf;
-	}
-
-	get city(): string {
+	get city(): CityProps {
 		return this.props.city;
 	}
 
@@ -310,13 +304,10 @@ export class Tenant extends Entity<TenantProps> {
 	private set responsiblePhoneNumber(responsiblePhoneNumber: string) {
 		this.props.responsiblePhoneNumber = responsiblePhoneNumber;
 	}
-	private set state(state: string) {
+	private set state(state: StateProps) {
 		this.props.state = state;
 	}
-	private set uf(uf: string) {
-		this.props.uf = uf;
-	}
-	private set city(city: string) {
+	private set city(city: CityProps) {
 		this.props.city = city;
 	}
 	private set neighborhood(neighborhood: string) {

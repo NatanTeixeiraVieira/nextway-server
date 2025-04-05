@@ -1,18 +1,17 @@
 import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
+import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
-import {
-	FileService,
-	UploadFile,
-} from '@/shared/application/services/file.service';
 import {
 	ZipcodeService,
 	ZipcodeServiceResponse,
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
+import { CityProps } from '../../domain/entities/city.entity';
 import { RegisterTenantOpeningHoursProps } from '../../domain/entities/opening-hours';
 import { RegisterTenantPlanProps } from '../../domain/entities/plan.entity';
+import { StateProps } from '../../domain/entities/state.entity';
 import {
 	RegisterTenantProps,
 	Tenant,
@@ -20,16 +19,6 @@ import {
 import { TenantRepository } from '../../domain/repositories/tenant.repository';
 import { TenantOutput, TenantOutputMapper } from '../outputs/tenant-output';
 import { TenantQuery } from '../queries/tenant.query';
-
-type BannersErrors = {
-	name: string;
-	errors: string[];
-};
-
-type BannerInput = {
-	active: boolean;
-	image: UploadFile;
-};
 
 type DeliveryInput = {
 	deliveryRadiusKm: number;
@@ -65,31 +54,22 @@ export type Input = {
 	email: string;
 	password: string;
 
-	// TODO Add payment here
-
 	// Establishment configurations
 	openingHours: OpeningHoursInput[];
-	// coverImage?: UploadFile;
-	// logoImage?: UploadFile;
 	slug: string;
 	mainColor: string;
 	description: string;
-	// banners: BannerInput[];
 	deliveries: DeliveryInput[];
 };
 
 export type Output = TenantOutput;
 
 export class RegisterTenantUseCase implements UseCase<Input, Output> {
-	// private readonly allowedMimeTypes = ['image/jpeg', 'image/png'];
-	// private readonly maxSizeInBytes = 5 * 1024 * 1024; // 5 MB
-
 	constructor(
 		private readonly tenantRepository: TenantRepository,
 		private readonly tenantQuery: TenantQuery,
 		private readonly zipcodeService: ZipcodeService,
 		private readonly cnpjService: CnpjService,
-		private readonly fileService: FileService,
 		private readonly tenantOutputMapper: TenantOutputMapper,
 	) {}
 
@@ -148,24 +128,43 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		const openingHours: RegisterTenantOpeningHoursProps[] = await Promise.all(
 			input.openingHours.map(async ({ weekdayId, end, start }) => {
 				const weekday = await this.tenantQuery.getWeekdayById(weekdayId);
+
+				if (!weekday) {
+					throw new BadRequestError(ErrorMessages.weekdayNotFound(weekdayId));
+				}
+
 				return {
-					...weekday,
+					weekday: {
+						id: weekday.id,
+						name: weekday.weekdayName,
+						shortName: weekday.weekdayShortName,
+					},
 					end,
 					start,
 				};
 			}),
 		);
 
-		// const { coverImagePath, logoImagePath } = await this.handleCoverLogoImages(
-		// 	input.coverImage,
-		// 	input.logoImage,
-		// );
+		const [state, city] = await Promise.all([
+			this.tenantQuery.getOneStateByName(zipcodeInfos.state),
+			this.tenantQuery.getOneCityByName(zipcodeInfos.city),
+		]);
 
-		// const banners = await this.handleBanners(input.banners);
+		if (!state) {
+			throw new BadRequestError(
+				ErrorMessages.stateNotFound(zipcodeInfos.state),
+			);
+		}
+
+		if (!city) {
+			throw new BadRequestError(ErrorMessages.stateNotFound(zipcodeInfos.city));
+		}
 
 		return this.formatRegisterTenantProps(
 			input,
 			zipcodeInfos,
+			state,
+			city,
 			corporateReason,
 			// coverImagePath,
 			// logoImagePath,
@@ -175,78 +174,11 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		);
 	}
 
-	// private async handleBanners(
-	// 	banners: BannerInput[],
-	// ): Promise<RegisterTenantBannerProps[]> {
-	// 	this.validateBanners(banners);
-
-	// 	const createdBanners: RegisterTenantBannerProps[] = await Promise.all(
-	// 		banners.map(async ({ image, active }) => {
-	// 			const bannerPath = (await this.fileService.upload(image,)).fullPath;
-	// 			return { imagePath: bannerPath, active };
-	// 		}),
-	// 	);
-
-	// 	return createdBanners;
-	// }
-
-	// private validateBanners(banners: BannerInput[]) {
-	// 	const bannersErrors: BannersErrors[] = [];
-
-	// 	for (const { image } of banners) {
-	// 		if (!this.allowedMimeTypes.includes(image.mimetype)) {
-	// 			bannersErrors.push({
-	// 				name: image.originalname,
-	// 				errors: [ErrorMessages.invalidMimetype(image.mimetype)],
-	// 			});
-	// 		}
-
-	// 		if (image.size > this.maxSizeInBytes) {
-	// 			for (const bannerError of bannersErrors) {
-	// 				if (bannerError.name === image.originalname) {
-	// 					bannerError.errors.push(ErrorMessages.FILE_LIMIT_EXCEEDED);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	if (bannersErrors.length > 0) {
-	// 		throw new BadRequestError(
-	// 			`Os seguintes banners estão inválidos: \n ${JSON.stringify(bannersErrors)}`,
-	// 		);
-	// 	}
-	// }
-
-	// private async handleCoverLogoImages(
-	// 	coverImage: UploadFile | undefined,
-	// 	logoImage: UploadFile | undefined,
-	// ): Promise<Record<'coverImagePath' | 'logoImagePath', string | null>> {
-	// 	const [coverImagePath, logoImagePath] = await Promise.all([
-	// 		coverImage ? this.uploadImage(coverImage) : null,
-	// 		logoImage ? this.uploadImage(logoImage) : null,
-	// 	]);
-
-	// 	return { coverImagePath, logoImagePath };
-	// }
-
-	// private async uploadImage(image: UploadFile): Promise<string> {
-	// 	this.validateImages(image);
-	// 	return (await this.fileService.upload(image)).fullPath;
-	// }
-
-	// private validateImages(image: UploadFile) {
-	// 	if (!this.allowedMimeTypes.includes(image.mimetype)) {
-	// 		throw new BadRequestError(ErrorMessages.invalidMimetype(image.mimetype));
-	// 	}
-
-	// 	if (image.size > this.maxSizeInBytes) {
-	// 		throw new BadRequestError(ErrorMessages.FILE_LIMIT_EXCEEDED);
-	// 	}
-	// }
-
 	private formatRegisterTenantProps(
 		input: Input,
 		zipcodeInfos: ZipcodeServiceResponse,
+		state: StateProps,
+		city: CityProps,
 		corporateReason: string,
 		// coverImagePath: string | null,
 		// logoImagePath: string | null,
@@ -264,17 +196,13 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			password: input.password,
 			responsiblePhoneNumber: input.responsiblePhoneNumber,
 			slug: input.slug,
-			state: zipcodeInfos.state,
-			uf: zipcodeInfos.uf,
-			city: zipcodeInfos.city,
+			state,
+			city,
 			neighborhood: zipcodeInfos.neighborhood,
 			street: zipcodeInfos.street,
 			streetNumber: input.streetNumber,
 			zipcode: input.zipcode,
 			mainColor: input.mainColor,
-			// coverImagePath,
-			// logoImagePath,
-			// banners,
 			establishmentName: input.establishmentName,
 			longitude: +zipcodeInfos.location.coordinates.longitude,
 			latitude: +zipcodeInfos.location.coordinates.latitude,

@@ -5,6 +5,10 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 
+export type SchemaBaseProps = Record<string, unknown>;
+
+export type SchemaProps = Partial<InstanceType<typeof Schema>>;
+
 export abstract class Schema {
 	@PrimaryColumn('uuid')
 	id: string;
@@ -17,4 +21,14 @@ export abstract class Schema {
 
 	@DeleteDateColumn({ name: 'deleted_at', type: 'timestamp', nullable: true })
 	deletedAt: Date | null;
+
+	static with<Props extends SchemaBaseProps, Ent extends Schema>(
+		this: new (
+			props: Props & SchemaProps,
+		) => Ent,
+		props: Props & SchemaProps,
+	): Ent {
+		// biome-ignore lint/complexity/noThisInStatic: Using `this` in a static method to dynamically reference the subclass constructor and create instances.
+		return new this(props);
+	}
 }

@@ -20,7 +20,7 @@ export class DeliveryRules {
 }
 
 export class DeliveryValidator extends ValidatorFields<DeliveryRules> {
-	validate(data: DeliveryRules | null): boolean {
+	validate(data: DeliveryProps | null): boolean {
 		return super.validate(new DeliveryRules(data ?? ({} as DeliveryProps)));
 	}
 }

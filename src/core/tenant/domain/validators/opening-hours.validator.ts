@@ -7,15 +7,10 @@ import {
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { OpeningHoursProps } from '../entities/opening-hours';
+import { WeekdayRules } from './weekday.validator';
 
 export class OpeningHoursRules {
-	@IsString()
-	@IsNotEmpty()
-	weekdayName: string;
-
-	@IsString()
-	@IsNotEmpty()
-	weekdayShortName: string;
+	weekday: WeekdayRules;
 
 	@IsString()
 	@IsNotEmpty()
@@ -51,7 +46,7 @@ export class OpeningHoursRules {
 }
 
 export class OpeningHoursValidator extends ValidatorFields<OpeningHoursRules> {
-	validate(data: OpeningHoursRules | null): boolean {
+	validate(data: OpeningHoursProps | null): boolean {
 		return super.validate(
 			new OpeningHoursRules(data ?? ({} as OpeningHoursProps)),
 		);

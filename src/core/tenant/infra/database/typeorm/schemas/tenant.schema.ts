@@ -13,6 +13,8 @@ import { DeliverySchema } from './delivery.schema';
 import { OpeningHourSchema } from './opening-hour.schema';
 import { PlanSchema } from './plan.schema';
 
+export type TenantSchemaProps = InstanceType<typeof TenantSchema>;
+
 @Entity('tenant')
 @Index('UQ_tenant_email_active', ['email'], {
 	unique: true,
@@ -40,7 +42,7 @@ export class TenantSchema extends Schema {
 
 	@ManyToOne(
 		() => CitySchema,
-		(tenant) => tenant.tenant,
+		(tenant) => tenant.tenants,
 	)
 	@JoinColumn()
 	city: CitySchema;

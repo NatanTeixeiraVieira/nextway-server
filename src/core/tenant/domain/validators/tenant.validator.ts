@@ -19,12 +19,13 @@ import {
 } from '@/shared/domain/validators/validator-fields';
 import { IsCNPJ } from '@/shared/infra/decorators/validation/cnpj.decorator';
 import { Type } from 'class-transformer';
-import { PlanProps } from '../entities/plan.entity';
 import { TenantProps } from '../entities/tenant.entity';
 import { BannerRules } from './banner.validator';
+import { CityRules } from './city.validator';
 import { DeliveryRules } from './delivery.validator';
 import { OpeningHoursRules } from './opening-hours.validator';
 import { PlanRules } from './plan.validator';
+import { StateRules } from './state.validator';
 
 export class TenantRules {
 	@MaxLength(255)
@@ -66,17 +67,12 @@ export class TenantRules {
 	@MaxLength(20)
 	@IsString()
 	@IsNotEmpty()
-	state: string;
-
-	@MaxLength(2)
-	@IsString()
-	@IsNotEmpty()
-	uf: string;
+	state: StateRules;
 
 	@MaxLength(35)
 	@IsString()
 	@IsNotEmpty()
-	city: string;
+	city: CityRules;
 
 	@MaxLength(50)
 	@IsString()
@@ -184,7 +180,7 @@ export class TenantRules {
 
 	@ValidateNested()
 	@Type(() => PlanRules)
-	plan: PlanProps;
+	plan: PlanRules;
 
 	constructor(props: TenantProps) {
 		Object.assign(this, props);

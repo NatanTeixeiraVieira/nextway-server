@@ -125,8 +125,29 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			input.cnpj,
 		);
 
-		const openingHours: RegisterTenantOpeningHoursProps[] = await Promise.all(
-			input.openingHours.map(async ({ weekdayId, end, start }) => {
+		const openingHours = await this.createOpeningHoursProps(input.openingHours);
+
+		const { city, state } = await this.getStateAndCityByNames(
+			zipcodeInfos.state,
+			zipcodeInfos.city,
+		);
+
+		return this.formatRegisterTenantProps(
+			input,
+			zipcodeInfos,
+			state,
+			city,
+			corporateReason,
+			openingHours,
+			plan,
+		);
+	}
+
+	private async createOpeningHoursProps(
+		openingHours: OpeningHoursInput[],
+	): Promise<RegisterTenantOpeningHoursProps[]> {
+		return await Promise.all(
+			openingHours.map(async ({ weekdayId, end, start }) => {
 				const weekday = await this.tenantQuery.getWeekdayById(weekdayId);
 
 				if (!weekday) {
@@ -144,34 +165,29 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 				};
 			}),
 		);
+	}
 
+	private async getStateAndCityByNames(
+		stateName: string,
+		cityName: string,
+	): Promise<{
+		state: StateProps;
+		city: CityProps;
+	}> {
 		const [state, city] = await Promise.all([
-			this.tenantQuery.getOneStateByName(zipcodeInfos.state),
-			this.tenantQuery.getOneCityByName(zipcodeInfos.city),
+			this.tenantQuery.getOneStateByName(stateName),
+			this.tenantQuery.getOneCityByName(cityName),
 		]);
 
 		if (!state) {
-			throw new BadRequestError(
-				ErrorMessages.stateNotFound(zipcodeInfos.state),
-			);
+			throw new BadRequestError(ErrorMessages.stateNotFound(stateName));
 		}
 
 		if (!city) {
-			throw new BadRequestError(ErrorMessages.stateNotFound(zipcodeInfos.city));
+			throw new BadRequestError(ErrorMessages.stateNotFound(cityName));
 		}
 
-		return this.formatRegisterTenantProps(
-			input,
-			zipcodeInfos,
-			state,
-			city,
-			corporateReason,
-			// coverImagePath,
-			// logoImagePath,
-			openingHours,
-			// banners,
-			plan,
-		);
+		return { state, city };
 	}
 
 	private formatRegisterTenantProps(
@@ -180,13 +196,10 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		state: StateProps,
 		city: CityProps,
 		corporateReason: string,
-		// coverImagePath: string | null,
-		// logoImagePath: string | null,
 		openingHours: RegisterTenantOpeningHoursProps[],
-		// banners: RegisterTenantBannerProps[],
 		plan: RegisterTenantPlanProps,
 	): RegisterTenantProps {
-		const registerTenantProps: RegisterTenantProps = {
+		return {
 			responsibleName: input.responsibleName,
 			cnpj: input.cnpj,
 			establishmentPhoneNumber: input.establishmentPhoneNumber,
@@ -211,7 +224,5 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			description: input.description,
 			plan,
 		};
-
-		return registerTenantProps;
 	}
 }

@@ -5,7 +5,6 @@ import { DatabaseModule } from './shared/infra/database/database.module';
 import { EnvConfigModule } from './shared/infra/env-config/env-config.module';
 import { AuthServiceModule } from './shared/infra/services/auth-service/auth-service.module';
 import { CnpjServiceModule } from './shared/infra/services/cnpj-service/cnpj-service.module';
-import { FileModule } from './shared/infra/services/file/file.module';
 import { HashServiceModule } from './shared/infra/services/hash-service/hash-service.module';
 import { HttpServiceModule } from './shared/infra/services/http-service/http-service.module';
 import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-service.module';
@@ -16,7 +15,7 @@ import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.m
 @Module({
 	imports: [
 		TenantModule,
-		FileModule,
+		// FileModule,
 		HttpServiceModule,
 		CnpjServiceModule,
 		ZipcodeModule,

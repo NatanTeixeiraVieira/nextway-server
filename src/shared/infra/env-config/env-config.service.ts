@@ -12,8 +12,9 @@ export class EnvConfigService implements EnvConfig {
 	getStorageApiKey(): string {
 		throw new Error('Method not implemented.');
 	}
+
 	getCnpjApiBaseUrl(): string {
-		throw new Error('Method not implemented.');
+		return this.configService.get<string>('CNPJ_API_BASE_URL') as string;
 	}
 
 	getPort(): number {

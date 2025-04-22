@@ -1,7 +1,7 @@
 import {
 	CreateDateColumn,
 	DeleteDateColumn,
-	PrimaryColumn,
+	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 
@@ -10,7 +10,7 @@ export type SchemaBaseProps = Record<string, unknown>;
 export type SchemaProps = Partial<InstanceType<typeof Schema>>;
 
 export abstract class Schema {
-	@PrimaryColumn('uuid')
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
 	@CreateDateColumn({ name: 'created_at', type: 'timestamp' })
@@ -29,6 +29,8 @@ export abstract class Schema {
 		props: Props & SchemaProps,
 	): Ent {
 		// biome-ignore lint/complexity/noThisInStatic: Using `this` in a static method to dynamically reference the subclass constructor and create instances.
-		return new this(props);
+		const schemaInstance = new this(props);
+		Object.assign(schemaInstance, props);
+		return schemaInstance;
 	}
 }

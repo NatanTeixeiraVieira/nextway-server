@@ -15,13 +15,13 @@ export class OpeningHourSchema extends Schema {
 		() => WeekdaySchema,
 		(weekday) => weekday.openingHours,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'weekday_id' })
 	weekday: WeekdaySchema;
 
 	@ManyToOne(
 		() => TenantSchema,
 		(tenant) => tenant.openingHours,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'tenant_id' })
 	tenant: TenantSchema;
 }

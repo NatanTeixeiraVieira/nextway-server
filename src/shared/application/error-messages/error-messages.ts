@@ -27,6 +27,7 @@ export const ErrorMessages = {
 
 	cityNotFound: (city: string) => `Cidade ${city} não encontrada`,
 
-	weekdayNotFound: (id: string) =>
-		`Dia da semana  não encontrado pelo ID ${id}`,
+	weekdayNotFound: (id: string) => `Dia da semana não encontrado pelo ID ${id}`,
+
+	cnpjNotFound: (cnpj: string) => `O CNPJ ${cnpj} não foi encontrado`,
 } as const;

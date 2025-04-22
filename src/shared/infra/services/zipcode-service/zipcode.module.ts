@@ -16,5 +16,6 @@ import { ZipcodeAwesomeApiService } from './awesomeapi/zipcode-awesomeapi.servic
 			inject: [Providers.HTTP_SERVICE, Providers.ENV_CONFIG_SERVICE],
 		},
 	],
+	exports: [Providers.ZIPCODE_SERVICE],
 })
 export class ZipcodeModule {}

@@ -3,13 +3,14 @@ import { ErrorMessages } from '@/shared/application/error-messages/error-message
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
+import { MailService } from '@/shared/application/services/mail.service';
 import {
 	ZipcodeService,
 	ZipcodeServiceResponse,
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
+import { randomBytes } from 'node:crypto';
 import { CityProps } from '../../domain/entities/city.entity';
-import { RegisterTenantOpeningHoursProps } from '../../domain/entities/opening-hours';
 import { RegisterTenantPlanProps } from '../../domain/entities/plan.entity';
 import { StateProps } from '../../domain/entities/state.entity';
 import {
@@ -20,46 +21,28 @@ import { TenantRepository } from '../../domain/repositories/tenant.repository';
 import { TenantOutput, TenantOutputMapper } from '../outputs/tenant-output';
 import { TenantQuery } from '../queries/tenant.query';
 
-type DeliveryInput = {
-	deliveryRadiusKm: number;
-	deliveryPrice: number;
-};
-
-type OpeningHoursInput = {
-	weekdayId: string;
-	start: string;
-	end: string;
-};
-
 export type Input = {
 	// Address
 	zipcode: string;
+	streetName: string;
+	neighborhood: string;
 	streetNumber: string;
+	complement?: string;
 
 	// Responsible infos
 	responsibleName: string;
 	responsibleCpf: string;
 	responsiblePhoneNumber: string;
-	neighborhood?: string;
 
 	// Establishment infos
 	cnpj: string;
 	establishmentName: string;
 	establishmentPhoneNumber: string;
-
-	// Plan choice
-	planId: string;
+	slug: string;
 
 	// Login infos
 	email: string;
 	password: string;
-
-	// Establishment configurations
-	openingHours: OpeningHoursInput[];
-	slug: string;
-	mainColor: string;
-	description: string;
-	deliveries: DeliveryInput[];
 };
 
 export type Output = TenantOutput;
@@ -71,6 +54,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		private readonly zipcodeService: ZipcodeService,
 		private readonly cnpjService: CnpjService,
 		private readonly tenantOutputMapper: TenantOutputMapper,
+		private readonly mailService: MailService,
 	) {}
 
 	@Transactional()
@@ -85,9 +69,22 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			zipcodeInfos,
 		);
 
+		const foundInactiveTenant = await this.tenantQuery.getInactiveUserIdByEmail(
+			input.email,
+		);
+
+		if (foundInactiveTenant) {
+			await this.tenantRepository.hardDelete(foundInactiveTenant.id);
+		}
+
 		const tenant = Tenant.registerTenant(registerTenantProps);
 
 		await this.tenantRepository.create(tenant);
+
+		await this.sendActivateAccountEmailCode(
+			input.email,
+			registerTenantProps.verifyEmailCode,
+		);
 
 		return this.tenantOutputMapper.toOutput(tenant);
 	}
@@ -121,50 +118,63 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		zipcodeInfos: ZipcodeServiceResponse,
 	): Promise<RegisterTenantProps> {
 		const plan = await this.tenantQuery.getPlan();
-		const { corporateReason } = await this.cnpjService.getInfosByCnpj(
-			input.cnpj,
-		);
+		const cnpjInfos = await this.cnpjService.getInfosByCnpj(input.cnpj);
 
-		const openingHours = await this.createOpeningHoursProps(input.openingHours);
+		if (!cnpjInfos) {
+			throw new BadRequestError(ErrorMessages.cnpjNotFound(input.cnpj));
+		}
 
 		const { city, state } = await this.getStateAndCityByNames(
 			zipcodeInfos.state,
 			zipcodeInfos.city,
 		);
 
+		const verifyEmailCode = this.generateEmailVerificationCode();
+
 		return this.formatRegisterTenantProps(
 			input,
 			zipcodeInfos,
 			state,
 			city,
-			corporateReason,
-			openingHours,
+			cnpjInfos.corporateReason,
 			plan,
+			verifyEmailCode,
 		);
 	}
 
-	private async createOpeningHoursProps(
-		openingHours: OpeningHoursInput[],
-	): Promise<RegisterTenantOpeningHoursProps[]> {
-		return await Promise.all(
-			openingHours.map(async ({ weekdayId, end, start }) => {
-				const weekday = await this.tenantQuery.getWeekdayById(weekdayId);
+	// private async createOpeningHoursProps(
+	// 	openingHours: OpeningHoursInput[],
+	// ): Promise<RegisterTenantOpeningHoursProps[]> {
+	// 	return await Promise.all(
+	// 		openingHours.map(async ({ weekdayId, end, start }) => {
+	// 			const weekday = await this.tenantQuery.getWeekdayById(weekdayId);
 
-				if (!weekday) {
-					throw new BadRequestError(ErrorMessages.weekdayNotFound(weekdayId));
-				}
+	// 			if (!weekday) {
+	// 				throw new BadRequestError(ErrorMessages.weekdayNotFound(weekdayId));
+	// 			}
 
-				return {
-					weekday: {
-						id: weekday.id,
-						name: weekday.weekdayName,
-						shortName: weekday.weekdayShortName,
-					},
-					end,
-					start,
-				};
-			}),
-		);
+	// 			return {
+	// 				weekday: {
+	// 					id: weekday.id,
+	// 					name: weekday.weekdayName,
+	// 					shortName: weekday.weekdayShortName,
+	// 				},
+	// 				end,
+	// 				start,
+	// 			};
+	// 		}),
+	// 	);
+	// }
+
+	private generateEmailVerificationCode() {
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+		const length = 6;
+		const bytes = randomBytes(length);
+		let result = '';
+		for (const byte of bytes) {
+			result += characters[byte % characters.length];
+		}
+		return result;
 	}
 
 	private async getStateAndCityByNames(
@@ -190,14 +200,29 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		return { state, city };
 	}
 
+	private async sendActivateAccountEmailCode(
+		userEmail: string,
+		activateAccountCode: string,
+	): Promise<void> {
+		const content = `Olá o seu código de ativação da conta é ${activateAccountCode}`;
+
+		const mailOptions = {
+			to: userEmail,
+			subject: 'Ative o cadastro do estabelecimento no Nextway',
+			content,
+		};
+
+		await this.mailService.sendMail(mailOptions);
+	}
+
 	private formatRegisterTenantProps(
 		input: Input,
 		zipcodeInfos: ZipcodeServiceResponse,
 		state: StateProps,
 		city: CityProps,
 		corporateReason: string,
-		openingHours: RegisterTenantOpeningHoursProps[],
 		plan: RegisterTenantPlanProps,
+		verifyEmailCode: string,
 	): RegisterTenantProps {
 		return {
 			responsibleName: input.responsibleName,
@@ -215,14 +240,11 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			street: zipcodeInfos.street,
 			streetNumber: input.streetNumber,
 			zipcode: input.zipcode,
-			mainColor: input.mainColor,
 			establishmentName: input.establishmentName,
 			longitude: +zipcodeInfos.location.coordinates.longitude,
 			latitude: +zipcodeInfos.location.coordinates.latitude,
-			deliveries: input.deliveries,
-			openingHours,
-			description: input.description,
 			plan,
+			verifyEmailCode,
 		};
 	}
 }

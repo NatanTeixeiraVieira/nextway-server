@@ -1,4 +1,5 @@
 import {
+	GetInactiveUserIdByEmail,
 	GetWeekdayById,
 	TenantQuery,
 } from '@/core/tenant/application/queries/tenant.query';
@@ -8,6 +9,7 @@ import { StateProps } from '@/core/tenant/domain/entities/state.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CitySchema } from '../schemas/city.schema';
+import { PlanSchema } from '../schemas/plan.schema';
 import { StateSchema } from '../schemas/state.schema';
 import { TenantSchema } from '../schemas/tenant.schema';
 import { WeekdaySchema } from '../schemas/weekday.schema';
@@ -22,6 +24,8 @@ export class TenantTypeOrmQuery implements TenantQuery {
 		private readonly stateQuery: Repository<StateSchema>,
 		@InjectRepository(CitySchema)
 		private readonly cityQuery: Repository<CitySchema>,
+		@InjectRepository(PlanSchema)
+		private readonly planQuery: Repository<PlanSchema>,
 	) {}
 
 	async getOneStateByName(name: string): Promise<StateProps | null> {
@@ -66,7 +70,8 @@ export class TenantTypeOrmQuery implements TenantQuery {
 	}
 
 	async getPlan(): Promise<PlanProps & { id: string }> {
-		return await this.tenantQuery.find()[0];
+		const plans = await this.planQuery.find();
+		return plans[0];
 	}
 
 	async getWeekdayById(id: string): Promise<GetWeekdayById | null> {
@@ -84,5 +89,20 @@ export class TenantTypeOrmQuery implements TenantQuery {
 			weekdayName: weekday.name,
 			weekdayShortName: weekday.shortName,
 		};
+	}
+
+	async getInactiveUserIdByEmail(
+		email: string,
+	): Promise<GetInactiveUserIdByEmail | null> {
+		const weekday = await this.tenantQuery.findOne({
+			select: ['id'],
+			where: { email, active: false },
+		});
+
+		if (!weekday) {
+			return null;
+		}
+
+		return { id: weekday.id };
 	}
 }

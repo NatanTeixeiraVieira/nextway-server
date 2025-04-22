@@ -13,6 +13,7 @@ import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-ser
 import { Module } from '@nestjs/common';
 import { getDataSourceToken, TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { UserProviders } from '../application/constants/providers';
 import { UserOutputMapper } from '../application/outputs/user-output';
 import { UserQuery } from '../application/queries/user.query';
 import { CheckEmailUseCase } from '../application/usecases/check-email.usecase';
@@ -42,14 +43,14 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 	controllers: [UserController],
 	providers: [
 		{
-			provide: Providers.USER_REPOSITORY_MAPPER,
+			provide: UserProviders.USER_REPOSITORY_MAPPER,
 			useClass: UserTypeormRepositoryMapper,
 		},
 
-		{ provide: Providers.USER_OUTPUT_MAPPER, useClass: UserOutputMapper },
+		{ provide: UserProviders.USER_OUTPUT_MAPPER, useClass: UserOutputMapper },
 
 		{
-			provide: Providers.USER_REPOSITORY,
+			provide: UserProviders.USER_REPOSITORY,
 			useFactory: (
 				dataSource: DataSource,
 				mapper: UserTypeormRepositoryMapper,
@@ -59,11 +60,11 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 					mapper,
 				);
 			},
-			inject: [getDataSourceToken(), Providers.USER_REPOSITORY_MAPPER],
+			inject: [getDataSourceToken(), UserProviders.USER_REPOSITORY_MAPPER],
 		},
 
 		{
-			provide: Providers.USER_QUERY,
+			provide: UserProviders.USER_QUERY,
 			useFactory: (dataSource: DataSource) => {
 				return new UserTypeOrmQuery(dataSource.getRepository(UserSchema));
 			},
@@ -92,13 +93,13 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
-				Providers.USER_REPOSITORY,
-				Providers.USER_QUERY,
+				UserProviders.USER_REPOSITORY,
+				UserProviders.USER_QUERY,
 				Providers.HASH_SERVICE,
 				Providers.MAIL_SERVICE,
 				Providers.JWT_SERVICE,
 				Providers.ENV_CONFIG_SERVICE,
-				Providers.USER_OUTPUT_MAPPER,
+				UserProviders.USER_OUTPUT_MAPPER,
 			],
 		},
 
@@ -120,7 +121,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			inject: [
 				Providers.ENV_CONFIG_SERVICE,
 				Providers.JWT_SERVICE,
-				Providers.USER_REPOSITORY,
+				UserProviders.USER_REPOSITORY,
 				Providers.AUTH_SERVICE,
 			],
 		},
@@ -135,7 +136,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				return new LoginUseCase(userRepository, hashService, authService);
 			},
 			inject: [
-				Providers.USER_REPOSITORY,
+				UserProviders.USER_REPOSITORY,
 				Providers.HASH_SERVICE,
 				Providers.AUTH_SERVICE,
 			],
@@ -178,11 +179,11 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
-				Providers.USER_REPOSITORY,
+				UserProviders.USER_REPOSITORY,
 				Providers.MAIL_SERVICE,
 				Providers.JWT_SERVICE,
 				Providers.ENV_CONFIG_SERVICE,
-				Providers.USER_OUTPUT_MAPPER,
+				UserProviders.USER_OUTPUT_MAPPER,
 			],
 		},
 
@@ -214,7 +215,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 			},
 			inject: [
 				Providers.JWT_SERVICE,
-				Providers.USER_REPOSITORY,
+				UserProviders.USER_REPOSITORY,
 				Providers.HASH_SERVICE,
 				Providers.LOGGED_USER_SERVICE,
 			],

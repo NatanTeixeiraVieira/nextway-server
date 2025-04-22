@@ -8,6 +8,10 @@ export type GetWeekdayById = {
 	weekdayShortName: string;
 };
 
+export type GetInactiveUserIdByEmail = {
+	id: string;
+};
+
 export interface TenantQuery {
 	emailExists(email: string): Promise<boolean>;
 	cnpjExists(cnpj: string): Promise<boolean>;
@@ -16,4 +20,7 @@ export interface TenantQuery {
 	getWeekdayById(id: string): Promise<GetWeekdayById | null>;
 	getOneStateByName(name: string): Promise<StateProps | null>;
 	getOneCityByName(name: string): Promise<CityProps | null>;
+	getInactiveUserIdByEmail(
+		email: string,
+	): Promise<GetInactiveUserIdByEmail | null>;
 }

@@ -78,7 +78,7 @@ export class TenantTypeormRepositoryMapper
 	}
 
 	toSchema(entity: Tenant): TenantSchema {
-		return TenantSchema.with({
+		const r = TenantSchema.with({
 			id: entity.id,
 			responsibleName: entity.responsibleName,
 			responsibleCpf: entity.responsibleCpf,
@@ -142,5 +142,7 @@ export class TenantTypeormRepositoryMapper
 			updatedAt: entity.audit.updatedAt,
 			deletedAt: entity.audit.deletedAt,
 		});
+
+		return r;
 	}
 }

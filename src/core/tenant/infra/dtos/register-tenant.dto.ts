@@ -1,35 +1,23 @@
 export class RegisterTenantDto {
+	// Address
 	zipcode: string;
+	streetName: string;
+	neighborhood: string;
 	streetNumber: string;
+	complement?: string;
 
+	// Responsible infos
 	responsibleName: string;
 	responsibleCpf: string;
 	responsiblePhoneNumber: string;
-	neighborhood?: string;
 
+	// Establishment infos
 	cnpj: string;
 	establishmentName: string;
 	establishmentPhoneNumber: string;
+	slug: string;
 
-	planId: string;
-
+	// Login infos
 	email: string;
 	password: string;
-
-	openingHours: OpeningHoursDto[];
-	slug: string;
-	mainColor: string;
-	description: string;
-	deliveries: DeliveryDto[];
-}
-
-class OpeningHoursDto {
-	weekdayId: string;
-	start: string;
-	end: string;
-}
-
-class DeliveryDto {
-	deliveryRadiusKm: number;
-	deliveryPrice: number;
 }

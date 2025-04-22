@@ -16,5 +16,6 @@ import { CnpjReceitawsService } from './receitaws/cnpj-receitaws.service';
 			inject: [Providers.HTTP_SERVICE, Providers.ENV_CONFIG_SERVICE],
 		},
 	],
+	exports: [Providers.CNPJ_SERVICE],
 })
 export class CnpjServiceModule {}

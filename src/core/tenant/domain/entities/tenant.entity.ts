@@ -4,10 +4,7 @@ import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps, RegisterTenantBannerProps } from './banner.entity';
 import { CityProps } from './city.entity';
 import { DeliveryProps, RegisterTenantDeliveryProps } from './delivery.entity';
-import {
-	OpeningHoursProps,
-	RegisterTenantOpeningHoursProps,
-} from './opening-hours';
+import { OpeningHoursProps } from './opening-hours';
 import { PlanProps, RegisterTenantPlanProps } from './plan.entity';
 import { StateProps } from './state.entity';
 
@@ -36,12 +33,12 @@ export type TenantProps = {
 	mainColor: string;
 	coverImagePath: string | null;
 	logoImagePath: string | null;
-	description: string;
+	description: string | null;
 	banners: BannerProps[];
 	deliveries: DeliveryProps[];
 
 	emailVerified: Date | null;
-	verifyEmailCode: number | null;
+	verifyEmailCode: string | null;
 	forgotPasswordEmailVerificationToken: string | null;
 	active: boolean;
 
@@ -70,15 +67,8 @@ export type RegisterTenantProps = {
 	establishmentPhoneNumber: string;
 	slug: string;
 	password: string;
+	verifyEmailCode: string;
 
-	mainColor: string;
-	// coverImagePath: string | null;
-	// logoImagePath: string | null;
-	description: string;
-	// banners: RegisterTenantBannerProps[];
-	deliveries: RegisterTenantDeliveryProps[];
-
-	openingHours: RegisterTenantOpeningHoursProps[];
 	plan: RegisterTenantPlanProps;
 };
 
@@ -101,18 +91,18 @@ export class Tenant extends Entity<TenantProps> {
 			street: registerTenantProps.street,
 			streetNumber: registerTenantProps.streetNumber,
 			zipcode: registerTenantProps.zipcode,
-			mainColor: registerTenantProps.mainColor,
+			mainColor: '#4CAF50',
 			banners: [],
 			establishmentName: registerTenantProps.establishmentName,
 			longitude: registerTenantProps.longitude,
 			latitude: registerTenantProps.latitude,
-			deliveries: registerTenantProps.deliveries,
-			openingHours: registerTenantProps.openingHours,
+			deliveries: [],
+			openingHours: [],
 			coverImagePath: null,
 			logoImagePath: null,
-			description: registerTenantProps.description,
+			description: null,
 			plan: registerTenantProps.plan,
-			verifyEmailCode: null,
+			verifyEmailCode: registerTenantProps.verifyEmailCode,
 			emailVerified: null,
 			forgotPasswordEmailVerificationToken: null,
 			active: false,
@@ -122,36 +112,6 @@ export class Tenant extends Entity<TenantProps> {
 
 		return new Tenant(tenantProps);
 	}
-
-	// registerTenant(registerTenantProps: RegisterTenantProps): void {
-	// 	Tenant.validate({ ...this.props, ...registerTenantProps });
-	// 	this.responsibleName = registerTenantProps.responsibleName;
-	// 	this.email = registerTenantProps.email;
-	// 	this.responsiblePhoneNumber = registerTenantProps.responsiblePhoneNumber;
-	// 	this.zipcode = registerTenantProps.zipcode;
-	// 	this.state = registerTenantProps.state;
-	// 	this.city = registerTenantProps.city;
-	// 	this.neighborhood = registerTenantProps.neighborhood;
-	// 	this.street = registerTenantProps.street;
-	// 	this.streetNumber = registerTenantProps.streetNumber;
-	// 	this.longitude = registerTenantProps.longitude;
-	// 	this.latitude = registerTenantProps.latitude;
-	// 	this.slug = registerTenantProps.slug;
-	// 	this.password = registerTenantProps.password;
-	// 	this.mainColor = registerTenantProps.mainColor;
-	// 	this.banners = [];
-	// 	this.deliveries = registerTenantProps.deliveries;
-	// 	this.responsibleCpf = registerTenantProps.responsibleCpf;
-	// 	this.cnpj = registerTenantProps.cnpj;
-	// 	this.corporateReason = registerTenantProps.corporateReason;
-	// 	this.establishmentName = registerTenantProps.establishmentName;
-	// 	this.establishmentPhoneNumber =
-	// 		registerTenantProps.establishmentPhoneNumber;
-	// 	this.coverImagePath = null;
-	// 	this.logoImagePath = null;
-	// 	this.description = registerTenantProps.description;
-	// 	this.openingHours = registerTenantProps.openingHours;
-	// }
 
 	deleteAccount(): void {
 		Tenant.validate(this.props);
@@ -253,7 +213,7 @@ export class Tenant extends Entity<TenantProps> {
 		return this.props.logoImagePath;
 	}
 
-	get description(): string {
+	get description(): string | null {
 		return this.props.description;
 	}
 
@@ -269,7 +229,7 @@ export class Tenant extends Entity<TenantProps> {
 		return this.props.emailVerified;
 	}
 
-	get verifyEmailCode(): number | null {
+	get verifyEmailCode(): string | null {
 		return this.props.verifyEmailCode;
 	}
 

@@ -1,9 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CitySchema } from './city.schema';
 
 @Entity('state')
 export class StateSchema {
-	@PrimaryColumn('uuid')
+	@PrimaryGeneratedColumn('increment')
 	id: string;
 
 	@Column({ type: 'varchar', length: 20, nullable: false })

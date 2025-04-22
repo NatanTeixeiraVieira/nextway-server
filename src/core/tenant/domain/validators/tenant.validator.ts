@@ -1,6 +1,5 @@
 import { Regex } from '@/shared/domain/utils/regex';
 import {
-	ArrayNotEmpty,
 	IsArray,
 	IsBoolean,
 	IsCPF,
@@ -9,7 +8,6 @@ import {
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
-	IsPositive,
 	IsString,
 	Length,
 	Matches,
@@ -64,13 +62,13 @@ export class TenantRules {
 	@Matches(Regex.NO_SPACES)
 	slug: string;
 
-	@MaxLength(20)
-	@IsString()
+	@ValidateNested()
+	@Type(() => StateRules)
 	@IsNotEmpty()
 	state: StateRules;
 
-	@MaxLength(35)
-	@IsString()
+	@ValidateNested()
+	@Type(() => CityRules)
 	@IsNotEmpty()
 	city: CityRules;
 
@@ -105,7 +103,7 @@ export class TenantRules {
 	establishmentName: string;
 
 	@IsString()
-	@IsOptional()
+	@IsNotEmpty()
 	@Length(12, 13)
 	@Matches(Regex.ONLY_DIGITS)
 	establishmentPhoneNumber: string;
@@ -116,7 +114,6 @@ export class TenantRules {
 
 	@IsNumber()
 	@IsNotEmpty()
-	@MaxLength(100)
 	latitude: number;
 
 	@IsString()
@@ -140,31 +137,28 @@ export class TenantRules {
 	logoImagePath: string | null;
 
 	@IsString()
-	@IsNotEmpty()
-	description: string;
+	@IsOptional()
+	description: string | null;
 
 	@IsArray()
 	@ValidateNested({ each: true })
 	@Type(() => DeliveryRules)
-	@IsNotEmpty()
 	deliveries: DeliveryRules[];
 
 	@IsArray()
 	@ValidateNested({ each: true })
 	@Type(() => BannerRules)
-	@ArrayNotEmpty()
 	banners: BannerRules[];
 
 	@IsArray()
 	@ValidateNested({ each: true })
 	@Type(() => OpeningHoursRules)
-	@ArrayNotEmpty()
 	openingHours: OpeningHoursRules[];
 
-	@IsPositive()
+	@IsString()
 	@IsOptional()
 	@Length(6, 6)
-	verifyEmailCode: number | null;
+	verifyEmailCode: string | null;
 
 	@IsDate()
 	@IsOptional()
@@ -180,6 +174,7 @@ export class TenantRules {
 
 	@ValidateNested()
 	@Type(() => PlanRules)
+	@IsNotEmpty()
 	plan: PlanRules;
 
 	constructor(props: TenantProps) {

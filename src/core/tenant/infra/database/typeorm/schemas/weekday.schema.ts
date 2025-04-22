@@ -1,10 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CitySchema } from './city.schema';
 import { OpeningHourSchema } from './opening-hour.schema';
 
 @Entity('weekday')
 export class WeekdaySchema {
-	@PrimaryColumn('uuid')
+	@PrimaryGeneratedColumn('increment')
 	id: string;
 
 	@Column({ type: 'varchar', length: 7, nullable: false })

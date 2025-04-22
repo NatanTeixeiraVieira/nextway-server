@@ -3,5 +3,5 @@ export type GetInfosByCnpjResponse = {
 };
 
 export interface CnpjService {
-	getInfosByCnpj(cnpj: string): Promise<GetInfosByCnpjResponse>;
+	getInfosByCnpj(cnpj: string): Promise<GetInfosByCnpjResponse | null>;
 }

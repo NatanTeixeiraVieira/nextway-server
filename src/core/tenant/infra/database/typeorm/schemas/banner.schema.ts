@@ -1,7 +1,8 @@
 import { Schema } from '@/shared/infra/database/typeorm/schemas/schema';
-import { Column, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { TenantSchema } from './tenant.schema';
 
+@Entity('banner')
 export class BannerSchema extends Schema {
 	@Column({ type: 'varchar', length: 70, nullable: false })
 	imagePath: string;
@@ -13,6 +14,6 @@ export class BannerSchema extends Schema {
 		() => TenantSchema,
 		(tenant) => tenant.banners,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'tenant_id' })
 	tenant: TenantSchema;
 }

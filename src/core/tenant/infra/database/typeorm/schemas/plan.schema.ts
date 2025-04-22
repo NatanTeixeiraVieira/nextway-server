@@ -1,9 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { TenantSchema } from './tenant.schema';
 
 @Entity('plan')
 export class PlanSchema {
-	@PrimaryColumn('uuid')
+	@PrimaryGeneratedColumn('uuid')
 	id: string;
 
 	@Column({ type: 'varchar', length: 30, nullable: false })

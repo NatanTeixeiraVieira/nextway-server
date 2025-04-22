@@ -14,6 +14,6 @@ export class DeliverySchema extends Schema {
 		() => TenantSchema,
 		(tenant) => tenant.deliveries,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'tenant_id' })
 	tenant: TenantSchema;
 }

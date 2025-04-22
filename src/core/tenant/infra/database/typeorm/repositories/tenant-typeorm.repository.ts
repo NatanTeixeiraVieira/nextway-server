@@ -1,11 +1,13 @@
 import { Tenant } from '@/core/tenant/domain/entities/tenant.entity';
 import { TenantRepository } from '@/core/tenant/domain/repositories/tenant.repository';
+import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TenantSchema } from '../schemas/tenant.schema';
 import { TenantTypeormRepositoryMapper } from './tenant-typeorm-repository-mapper';
 
 export class TenantTypeOrmRepository implements TenantRepository {
 	constructor(
+		@InjectRepository(TenantSchema)
 		private readonly tenantRepository: Repository<TenantSchema>,
 		private readonly tenantRepositoryMapper: TenantTypeormRepositoryMapper,
 	) {}
@@ -32,5 +34,9 @@ export class TenantTypeOrmRepository implements TenantRepository {
 		entity.deleteAccount();
 		const tenantSchema = this.tenantRepositoryMapper.toSchema(entity);
 		await this.tenantRepository.save(tenantSchema);
+	}
+
+	async hardDelete(id: string): Promise<void> {
+		await this.tenantRepository.delete({ id });
 	}
 }

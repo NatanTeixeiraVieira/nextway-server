@@ -89,14 +89,14 @@ export class TenantSchema extends Schema {
 	@Column({ type: 'varchar', length: 255, nullable: true })
 	logoImagePath: string | null;
 
-	@Column({ type: 'text', nullable: false })
-	description: string;
+	@Column({ type: 'text', nullable: true })
+	description: string | null;
 
 	@Column({ type: 'timestamp', nullable: true })
 	emailVerified: Date | null;
 
-	@Column({ type: 'int', nullable: true })
-	verifyEmailCode: number | null;
+	@Column({ type: 'varchar', length: 6, nullable: true })
+	verifyEmailCode: string | null;
 
 	@Column({ type: 'varchar', length: 255, nullable: true })
 	forgotPasswordEmailVerificationToken: string | null;
@@ -126,6 +126,6 @@ export class TenantSchema extends Schema {
 		() => PlanSchema,
 		(plan) => plan.tenants,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'plan_id' })
 	plan: PlanSchema;
 }

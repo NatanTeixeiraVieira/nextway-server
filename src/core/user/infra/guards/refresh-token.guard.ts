@@ -12,6 +12,7 @@ import {
 	ExecutionContext,
 	Inject,
 } from '@/shared/infra/framework/common';
+import { UserProviders } from '../../application/constants/providers';
 import { UserRepository } from '../../domain/repositories/user.repository';
 
 export class RefreshTokenGuard implements CanActivate {
@@ -20,7 +21,7 @@ export class RefreshTokenGuard implements CanActivate {
 		private readonly envConfigService: EnvConfig,
 		@Inject(Providers.JWT_SERVICE)
 		private readonly jwtService: JwtService,
-		@Inject(Providers.USER_REPOSITORY)
+		@Inject(UserProviders.USER_REPOSITORY)
 		private readonly userRepository: UserRepository,
 		@Inject(Providers.LOGGED_USER_SERVICE)
 		private readonly loggedUserService: LoggedUserService,

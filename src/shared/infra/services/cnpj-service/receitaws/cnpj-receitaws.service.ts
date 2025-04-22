@@ -4,6 +4,7 @@ import {
 	GetInfosByCnpjResponse,
 } from '@/shared/application/services/cnpj.service';
 import { HttpService } from '@/shared/application/services/http.service';
+import { Regex } from '@/shared/domain/utils/regex';
 
 type CnpjResponse = {
 	abertura: string;
@@ -85,9 +86,10 @@ export class CnpjReceitawsService implements CnpjService {
 	) {}
 
 	async getInfosByCnpj(cnpj: string): Promise<GetInfosByCnpjResponse> {
-		const apiUrl = this.envCofigService.getZipcodeApiBaseUrl();
+		const apiUrl = this.envCofigService.getCnpjApiBaseUrl();
+		const formattedCnpj = cnpj.replace(Regex.REMOVE_NON_DIGITS, '');
 		const response = await this.httpService.get<CnpjResponse>(
-			`${apiUrl}/${cnpj}`,
+			`${apiUrl}/${formattedCnpj}`,
 		);
 
 		const { nome } = response.data;

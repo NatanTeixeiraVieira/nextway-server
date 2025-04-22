@@ -5,29 +5,34 @@ import {
 	ValidatorConstraintInterface,
 } from 'class-validator';
 
-export function isValidCPF(cpf: string): boolean {
-	const formattedCpf = cpf.replace(/\D/g, ''); // Remove caracteres não numéricos
+export function isValidCPF(cpfMasked: string): boolean {
+	// Remove caracteres não numéricos
+	const cpf = cpfMasked.replace(/[^\d]+/g, '');
 
-	if (formattedCpf.length !== 11 || /^(\d)\1{10}$/.test(formattedCpf)) {
-		return false; // CPF inválido (tamanho errado ou sequência repetida)
+	// Verifica se tem 11 dígitos ou se todos os dígitos são iguais (ex: 111.111.111-11)
+	if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+	// Validação do primeiro dígito verificador
+	let sum = 0;
+	for (let i = 0; i < 9; i++) {
+		sum += Number.parseInt(cpf[i]) * (10 - i);
 	}
+	let firstCheckDigit = 11 - (sum % 11);
+	if (firstCheckDigit >= 10) firstCheckDigit = 0;
 
-	const calcCheckDigit = (slice: number) => {
-		let sum = 0;
-		for (let i = 0; i < slice; i++) {
-			sum += Number(formattedCpf[i]) * (slice + 1 - i);
-		}
-		const remainder = (sum * 10) % 11;
-		return remainder === 10 ? 0 : remainder;
-	};
+	if (Number.parseInt(cpf[9]) !== firstCheckDigit) return false;
 
-	const firstDigit = calcCheckDigit(9);
-	const secondDigit = calcCheckDigit(10);
+	// Validação do segundo dígito verificador
+	sum = 0;
+	for (let i = 0; i < 10; i++) {
+		sum += Number.parseInt(cpf[i]) * (11 - i);
+	}
+	let secondCheckDigit = 11 - (sum % 11);
+	if (secondCheckDigit >= 10) secondCheckDigit = 0;
 
-	return (
-		firstDigit === Number(formattedCpf[9]) &&
-		secondDigit === Number(formattedCpf[10])
-	);
+	if (Number.parseInt(cpf[10]) !== secondCheckDigit) return false;
+
+	return true;
 }
 
 @ValidatorConstraint({ async: false })

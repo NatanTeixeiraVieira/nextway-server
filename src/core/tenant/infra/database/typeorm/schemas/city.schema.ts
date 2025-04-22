@@ -4,14 +4,14 @@ import {
 	JoinColumn,
 	ManyToOne,
 	OneToMany,
-	PrimaryColumn,
+	PrimaryGeneratedColumn,
 } from 'typeorm';
 import { StateSchema } from './state.schema';
 import { TenantSchema } from './tenant.schema';
 
 @Entity('city')
 export class CitySchema {
-	@PrimaryColumn('uuid')
+	@PrimaryGeneratedColumn('increment')
 	id: string;
 
 	@Column({ type: 'varchar', length: 20, nullable: false })
@@ -21,7 +21,7 @@ export class CitySchema {
 		() => StateSchema,
 		(state) => state.cities,
 	)
-	@JoinColumn()
+	@JoinColumn({ name: 'state_id' })
 	state: StateSchema;
 
 	@OneToMany(

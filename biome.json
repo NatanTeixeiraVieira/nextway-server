@@ -26,6 +26,9 @@
 		"ignore": ["*.spec.ts", "*.int-spec.ts", "*.e2e-spec.ts"],
 		"enabled": true,
 		"rules": {
+			"suspicious": {
+				"noUnsafeDeclarationMerging": "off"
+			},
 			"complexity": {
 				"noBannedTypes": "off",
 				"noStaticOnlyClass": "off"

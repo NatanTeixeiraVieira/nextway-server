@@ -78,7 +78,7 @@ export class TenantTypeormRepositoryMapper
 	}
 
 	toSchema(entity: Tenant): TenantSchema {
-		const r = TenantSchema.with({
+		return TenantSchema.with({
 			id: entity.id,
 			responsibleName: entity.responsibleName,
 			responsibleCpf: entity.responsibleCpf,
@@ -86,6 +86,7 @@ export class TenantTypeormRepositoryMapper
 			responsiblePhoneNumber: entity.responsiblePhoneNumber,
 			zipcode: entity.zipcode,
 			city: {
+				id: entity.city.id,
 				name: entity.city.name,
 				state: {
 					id: entity.state.id,
@@ -134,6 +135,7 @@ export class TenantTypeormRepositoryMapper
 				createdAt: null,
 			})),
 			plan: {
+				id: entity.plan.id,
 				name: entity.plan.name,
 				price: entity.plan.price,
 				tenants: [],
@@ -142,7 +144,5 @@ export class TenantTypeormRepositoryMapper
 			updatedAt: entity.audit.updatedAt,
 			deletedAt: entity.audit.deletedAt,
 		});
-
-		return r;
 	}
 }

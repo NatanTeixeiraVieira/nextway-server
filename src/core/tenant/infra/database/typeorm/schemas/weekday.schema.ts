@@ -1,5 +1,4 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CitySchema } from './city.schema';
 import { OpeningHourSchema } from './opening-hour.schema';
 
 @Entity('weekday')
@@ -13,11 +12,11 @@ export class WeekdaySchema {
 	@Column({ type: 'varchar', length: 4, nullable: false })
 	shortName: string;
 
-	@OneToMany(
-		() => CitySchema,
-		(city) => city.state,
-	)
-	cities: CitySchema[];
+	// @OneToMany(
+	// 	() => CitySchema,
+	// 	(city) => city.state,
+	// )
+	// cities: CitySchema[];
 
 	@OneToMany(
 		() => OpeningHourSchema,

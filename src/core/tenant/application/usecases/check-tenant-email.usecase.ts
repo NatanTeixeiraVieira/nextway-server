@@ -19,17 +19,18 @@ export class CheckTenantEmailUseCase implements UseCase<Input, Output> {
 	) {}
 
 	async execute(input: Input): Promise<TenantOutput> {
-		const tenant = await this.tenantRepository.getById(input.email);
+		const tenant = await this.tenantRepository.getByEmail(input.email);
 
 		if (!tenant) {
 			throw new NotFoundError(ErrorMessages.tenantNotFoundByEmail(input.email));
 		}
 
-		if (tenant.verifyEmailCode === input.verifyEmailCode) {
-			tenant.checkEmail();
-			return this.tenantOutputMapper.toOutput(tenant);
+		if (tenant.verifyEmailCode !== input.verifyEmailCode) {
+			throw new InvalidEmailCodeError(ErrorMessages.INVALID_CHECK_EMAIL_CODE);
 		}
 
-		throw new InvalidEmailCodeError(ErrorMessages.INVALID_CHECK_EMAIL_CODE);
+		tenant.checkEmail();
+		await this.tenantRepository.update(tenant);
+		return this.tenantOutputMapper.toOutput(tenant);
 	}
 }

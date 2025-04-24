@@ -40,13 +40,6 @@ export class TenantSchema extends Schema {
 	@Column({ type: 'varchar', length: 8, nullable: false })
 	zipcode: string;
 
-	@ManyToOne(
-		() => CitySchema,
-		(tenant) => tenant.tenants,
-	)
-	@JoinColumn()
-	city: CitySchema;
-
 	@Column({ type: 'varchar', length: 50, nullable: false })
 	neighborhood: string;
 
@@ -56,10 +49,28 @@ export class TenantSchema extends Schema {
 	@Column({ type: 'varchar', length: 10, nullable: false })
 	streetNumber: string;
 
-	@Column({ type: 'decimal', precision: 10, scale: 7, nullable: false })
+	@Column({
+		type: 'decimal',
+		precision: 10,
+		scale: 7,
+		nullable: false,
+		transformer: {
+			to: (value: number) => value,
+			from: (value: string) => Number.parseFloat(value),
+		},
+	})
 	longitude: number;
 
-	@Column({ type: 'decimal', precision: 10, scale: 7, nullable: false })
+	@Column({
+		type: 'decimal',
+		precision: 10,
+		scale: 7,
+		nullable: false,
+		transformer: {
+			to: (value: number) => value,
+			from: (value: string) => Number.parseFloat(value),
+		},
+	})
 	latitude: number;
 
 	@Column({ type: 'varchar', length: 14, unique: true, nullable: false })
@@ -103,6 +114,13 @@ export class TenantSchema extends Schema {
 
 	@Column({ type: 'boolean', default: true })
 	active: boolean;
+
+	@ManyToOne(
+		() => CitySchema,
+		(tenant) => tenant.tenants,
+	)
+	@JoinColumn()
+	city: CitySchema;
 
 	@OneToMany(
 		() => BannerSchema,

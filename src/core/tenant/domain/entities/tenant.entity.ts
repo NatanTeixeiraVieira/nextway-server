@@ -120,6 +120,7 @@ export class Tenant extends Entity<TenantProps> {
 		Tenant.validate(this.props);
 		this.emailVerified = new Date();
 		this.active = true;
+		this.verifyEmailCode = null;
 	}
 
 	deleteAccount(): void {

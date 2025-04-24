@@ -13,7 +13,12 @@ export class TenantTypeOrmRepository implements TenantRepository {
 	) {}
 
 	async getById(id: string): Promise<Tenant | null> {
-		const tenantSchema = await this.tenantRepository.findOneBy({ id });
+		const relations = this.getAllRelations();
+
+		const tenantSchema = await this.tenantRepository.findOne({
+			relations,
+			where: { id },
+		});
 
 		if (!tenantSchema) return null;
 
@@ -21,7 +26,11 @@ export class TenantTypeOrmRepository implements TenantRepository {
 	}
 
 	async getByEmail(email: string): Promise<Tenant | null> {
-		const tenantSchema = await this.tenantRepository.findOneBy({ email });
+		const relations = this.getAllRelations();
+		const tenantSchema = await this.tenantRepository.findOne({
+			relations,
+			where: { email },
+		});
 
 		if (!tenantSchema) return null;
 
@@ -46,5 +55,13 @@ export class TenantTypeOrmRepository implements TenantRepository {
 
 	async hardDelete(id: string): Promise<void> {
 		await this.tenantRepository.delete({ id });
+	}
+
+	private getAllRelations(): string[] {
+		const firstRelations = this.tenantRepository.metadata.relations.map(
+			(rel) => rel.propertyName,
+		);
+
+		return [...firstRelations, 'openingHours.weekday', 'city.state'];
 	}
 }

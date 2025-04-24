@@ -14,7 +14,7 @@ export class CitySchema {
 	@PrimaryGeneratedColumn('increment')
 	id: string;
 
-	@Column({ type: 'varchar', length: 20, nullable: false })
+	@Column({ type: 'varchar', length: 40, nullable: false })
 	name: string;
 
 	@ManyToOne(

@@ -7,6 +7,7 @@ import { BadRequestErrorFilter } from './shared/infra/exception-filters/bad-requ
 import { EntityValidationErrorFilter } from './shared/infra/exception-filters/entity-validation-error/entity-validation-error.filter';
 import { GlobalErrorFilter } from './shared/infra/exception-filters/global-error/global-error.filter';
 import { InvalidCredentialsErrorFilter } from './shared/infra/exception-filters/invalid-credentials-error/invalid-credentials-error.filter';
+import { InvalidEmailCodeErrorFilter } from './shared/infra/exception-filters/invalid-email-code-error/invalid-email-code-error.filter';
 import { InvalidTokenErrorFilter } from './shared/infra/exception-filters/invalid-token-error/invalid-token-error.filter';
 import { NotFoundErrorFilter } from './shared/infra/exception-filters/not-found-error/not-found-error.filter';
 
@@ -57,5 +58,6 @@ export async function applyGlobalConfigs(
 		new NotFoundErrorFilter(),
 		new InvalidTokenErrorFilter(),
 		new InvalidCredentialsErrorFilter(),
+		new InvalidEmailCodeErrorFilter(),
 	);
 }

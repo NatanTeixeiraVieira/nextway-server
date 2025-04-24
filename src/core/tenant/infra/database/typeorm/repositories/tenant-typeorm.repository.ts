@@ -20,6 +20,14 @@ export class TenantTypeOrmRepository implements TenantRepository {
 		return this.tenantRepositoryMapper.toEntity(tenantSchema);
 	}
 
+	async getByEmail(email: string): Promise<Tenant | null> {
+		const tenantSchema = await this.tenantRepository.findOneBy({ email });
+
+		if (!tenantSchema) return null;
+
+		return this.tenantRepositoryMapper.toEntity(tenantSchema);
+	}
+
 	async create(entity: Tenant): Promise<void> {
 		const tenantSchema = this.tenantRepositoryMapper.toSchema(entity);
 		await this.tenantRepository.insert(tenantSchema);

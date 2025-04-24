@@ -17,9 +17,13 @@ export const ErrorMessages = {
 	INACTIVE_USER: 'Usuário não ativo',
 	INVALID_CHANGE_PASSWORD_TOKEN: 'Token de troca de senha inválido',
 	FILE_LIMIT_EXCEEDED: 'Tamanho máximo do arquivo excedido',
+	INVALID_CHECK_EMAIL_CODE: 'Código de verificação inválido',
 
 	userNotFoundByEmail: (email: string) =>
 		`Usuário não encontrado pelo email ${email}`,
+
+	tenantNotFoundByEmail: (email: string) =>
+		`Estabelecimento não encontrado pelo email ${email}`,
 
 	invalidMimetype: (mimetype: string) => `Mimetype ${mimetype} inválido`,
 

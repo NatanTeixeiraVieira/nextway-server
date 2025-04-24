@@ -10,6 +10,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TenantOutputMapper } from '../application/outputs/tenant-output';
 import { TenantQuery } from '../application/queries/tenant.query';
+import { CheckTenantEmailUseCase } from '../application/usecases/check-tenant-email.usecase';
 import { RegisterTenantUseCase } from '../application/usecases/register-tenant.usecase';
 import { TenantRepository } from '../domain/repositories/tenant.repository';
 import { TenantController } from './controllers/tenant.controller';
@@ -77,6 +78,23 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				Providers.CNPJ_SERVICE,
 				TenantProviders.TENANT_OUTPUT_MAPPER,
 				Providers.MAIL_SERVICE,
+			],
+		},
+
+		{
+			provide: CheckTenantEmailUseCase,
+			useFactory: (
+				tenantRepository: TenantRepository,
+				tenantOutputMapper: TenantOutputMapper,
+			) => {
+				return new CheckTenantEmailUseCase(
+					tenantRepository,
+					tenantOutputMapper,
+				);
+			},
+			inject: [
+				TenantProviders.TENANT_REPOSITORY,
+				TenantProviders.TENANT_OUTPUT_MAPPER,
 			],
 		},
 	],

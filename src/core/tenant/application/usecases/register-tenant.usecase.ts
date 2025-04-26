@@ -94,13 +94,13 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		cnpj: string,
 		slug: string,
 	) {
-		const [emailExists, cnpjExists, slugExists] = await Promise.all([
-			this.tenantQuery.emailExists(email),
+		const [isEmailVerified, cnpjExists, slugExists] = await Promise.all([
+			this.tenantQuery.isEmailVerified(email),
 			this.tenantQuery.cnpjExists(cnpj),
 			this.tenantQuery.slugExists(slug),
 		]);
 
-		if (emailExists) {
+		if (isEmailVerified) {
 			throw new ConflictError(ErrorMessages.EMAIL_ALREADY_EXISTS);
 		}
 
@@ -236,8 +236,8 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 			slug: input.slug,
 			state,
 			city,
-			neighborhood: zipcodeInfos.neighborhood,
-			street: zipcodeInfos.street,
+			neighborhood: input.neighborhood,
+			street: input.streetName,
 			streetNumber: input.streetNumber,
 			zipcode: input.zipcode,
 			establishmentName: input.establishmentName,

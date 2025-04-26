@@ -7,7 +7,7 @@ import { CityProps } from '@/core/tenant/domain/entities/city.entity';
 import { PlanProps } from '@/core/tenant/domain/entities/plan.entity';
 import { StateProps } from '@/core/tenant/domain/entities/state.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { CitySchema } from '../schemas/city.schema';
 import { PlanSchema } from '../schemas/plan.schema';
 import { StateSchema } from '../schemas/state.schema';
@@ -57,8 +57,11 @@ export class TenantTypeOrmQuery implements TenantQuery {
 		};
 	}
 
-	async emailExists(email: string): Promise<boolean> {
-		return await this.tenantQuery.existsBy({ email, active: true });
+	async isEmailVerified(email: string): Promise<boolean> {
+		return await this.tenantQuery.existsBy({
+			email,
+			emailVerified: Not(IsNull()),
+		});
 	}
 
 	async cnpjExists(cnpj: string): Promise<boolean> {

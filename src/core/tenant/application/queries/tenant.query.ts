@@ -13,7 +13,7 @@ export type GetInactiveUserIdByEmail = {
 };
 
 export interface TenantQuery {
-	emailExists(email: string): Promise<boolean>;
+	isEmailVerified(email: string): Promise<boolean>;
 	cnpjExists(cnpj: string): Promise<boolean>;
 	slugExists(slug: string): Promise<boolean>;
 	getPlan(): Promise<PlanProps & { id: string }>;

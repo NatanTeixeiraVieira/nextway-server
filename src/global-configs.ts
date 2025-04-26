@@ -4,6 +4,7 @@ import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvConfig } from './shared/application/env-config/env-config';
 import { BadRequestErrorFilter } from './shared/infra/exception-filters/bad-request-error/bad-request-error.filter';
+import { ConflictErrorFilter } from './shared/infra/exception-filters/conflict-error/conflict-error.filter';
 import { EntityValidationErrorFilter } from './shared/infra/exception-filters/entity-validation-error/entity-validation-error.filter';
 import { GlobalErrorFilter } from './shared/infra/exception-filters/global-error/global-error.filter';
 import { InvalidCredentialsErrorFilter } from './shared/infra/exception-filters/invalid-credentials-error/invalid-credentials-error.filter';
@@ -59,5 +60,6 @@ export async function applyGlobalConfigs(
 		new InvalidTokenErrorFilter(),
 		new InvalidCredentialsErrorFilter(),
 		new InvalidEmailCodeErrorFilter(),
+		new ConflictErrorFilter(),
 	);
 }

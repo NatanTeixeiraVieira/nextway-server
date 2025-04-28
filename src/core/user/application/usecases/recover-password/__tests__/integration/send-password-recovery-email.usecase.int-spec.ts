@@ -1,3 +1,4 @@
+import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserOutputMapper } from '@/core/user/application/outputs/user-output';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
@@ -48,13 +49,13 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 			getRepositoryToken(UserSchema),
 		);
 
-		userRepository = module.get(Providers.USER_REPOSITORY);
+		userRepository = module.get(UserProviders.USER_REPOSITORY);
 		mailService = {
 			sendMail: jest.fn(),
 		};
 		jwtService = module.get(Providers.JWT_SERVICE);
 		envConfigService = module.get(Providers.ENV_CONFIG_SERVICE);
-		userOutputMapper = module.get(Providers.USER_OUTPUT_MAPPER);
+		userOutputMapper = module.get(UserProviders.USER_OUTPUT_MAPPER);
 	});
 
 	beforeEach(async () => {

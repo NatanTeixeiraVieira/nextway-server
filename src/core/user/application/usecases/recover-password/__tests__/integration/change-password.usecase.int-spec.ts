@@ -1,3 +1,4 @@
+import { UserProviders } from '@/core/user/application/constants/providers';
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
@@ -40,7 +41,7 @@ describe('ChangePasswordUseCase unit tests', () => {
 		);
 		jwtService = module.get(Providers.JWT_SERVICE);
 		envConfigService = module.get(Providers.ENV_CONFIG_SERVICE);
-		userRepository = module.get(Providers.USER_REPOSITORY);
+		userRepository = module.get(UserProviders.USER_REPOSITORY);
 		hashService = module.get(Providers.HASH_SERVICE);
 		loggedUserService = await module.resolve(Providers.LOGGED_USER_SERVICE);
 	});

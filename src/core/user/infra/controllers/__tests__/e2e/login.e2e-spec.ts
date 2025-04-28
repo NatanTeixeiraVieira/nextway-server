@@ -1,3 +1,4 @@
+import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { CookiesName } from '@/shared/application/constants/cookies';
@@ -24,7 +25,7 @@ describe('UserController userLogin e2e tests', () => {
 
 		dataSource = module.get<DataSource>(DataSource);
 		typeOrmUserRepository = dataSource.getRepository(UserSchema);
-		userRepository = module.get<UserRepository>(Providers.USER_REPOSITORY);
+		userRepository = module.get<UserRepository>(UserProviders.USER_REPOSITORY);
 		envConfigService = module.get<EnvConfig>(Providers.ENV_CONFIG_SERVICE);
 	});
 

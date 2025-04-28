@@ -1,7 +1,6 @@
-import { User } from '@/core/user/domain/entities/user.entity';
+import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { Providers } from '@/shared/application/constants/providers';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { Mutable } from '@/shared/application/types/utils';
 import { appFastifyConfigTest } from '@/testing/app-config-test';
@@ -24,7 +23,7 @@ describe('UserController registerUser e2e tests', () => {
 
 		dataSource = module.get<DataSource>(DataSource);
 		typeOrmUserRepository = dataSource.getRepository(UserSchema);
-		userRepository = module.get<UserRepository>(Providers.USER_REPOSITORY);
+		userRepository = module.get<UserRepository>(UserProviders.USER_REPOSITORY);
 	});
 
 	afterAll(async () => {
@@ -204,7 +203,7 @@ describe('UserController registerUser e2e tests', () => {
 	});
 
 	it('should throw error with status code 400 when email already exists and account is active ', async () => {
-		const userEntity = User.with({
+		const userEntity = UserSchema.with({
 			...UserDataBuilder({ email: registerDto.email, active: true }),
 			id: '029d912d-3fd4-4a96-8811-dd816c120bc8',
 			audit: {

@@ -15,6 +15,11 @@ import { PlanSchema } from './plan.schema';
 
 export type TenantSchemaProps = InstanceType<typeof TenantSchema>;
 
+enum PayerDocumentType {
+	CPF = 'CPF',
+	CNPJ = 'CNPJ',
+}
+
 @Entity('tenant')
 @Index('UQ_tenant_email_active', ['email'], {
 	unique: true,
@@ -73,7 +78,7 @@ export class TenantSchema extends Schema {
 	})
 	latitude: number;
 
-	@Column({ type: 'varchar', length: 14, unique: true, nullable: false })
+	@Column({ type: 'varchar', length: 14, nullable: false })
 	cnpj: string;
 
 	@Column({ type: 'varchar', length: 255, nullable: false })
@@ -114,6 +119,23 @@ export class TenantSchema extends Schema {
 
 	@Column({ type: 'boolean', default: true })
 	active: boolean;
+
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	payerName: string | null;
+
+	@Column({ type: 'varchar', length: 14, nullable: true })
+	payerDocument: string | null;
+
+	@Column({
+		name: 'payer_document_type',
+		type: 'enum',
+		enum: PayerDocumentType,
+		nullable: true,
+	})
+	payerDocumentType: PayerDocumentType | null;
+
+	@Column({ type: 'varchar', length: 255, nullable: true })
+	payerEmail: string | null;
 
 	@ManyToOne(
 		() => CitySchema,

@@ -5,6 +5,7 @@ import {
 	IsCPF,
 	IsDate,
 	IsEmail,
+	IsEnum,
 	IsNotEmpty,
 	IsNumber,
 	IsOptional,
@@ -12,6 +13,7 @@ import {
 	Length,
 	Matches,
 	MaxLength,
+	MinLength,
 	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
@@ -24,6 +26,11 @@ import { DeliveryRules } from './delivery.validator';
 import { OpeningHoursRules } from './opening-hours.validator';
 import { PlanRules } from './plan.validator';
 import { StateRules } from './state.validator';
+
+enum PayerDocumentType {
+	CPF = 'CPF',
+	CNPJ = 'CNPJ',
+}
 
 export class TenantRules {
 	@MaxLength(255)
@@ -176,6 +183,29 @@ export class TenantRules {
 	@Type(() => PlanRules)
 	@IsNotEmpty()
 	plan: PlanRules;
+
+	@IsString()
+	@IsOptional()
+	@MaxLength(255)
+	payerName: string | null;
+
+	@IsString()
+	@IsOptional()
+	@MaxLength(14)
+	payerDocument: string | null;
+
+	@IsString()
+	@IsOptional()
+	@MaxLength(4)
+	@MinLength(3)
+	@IsEnum(PayerDocumentType)
+	payerDocumentType: PayerDocumentType | null;
+
+	@MaxLength(255)
+	@IsString()
+	@IsEmail()
+	@IsOptional()
+	payerEmail: string | null;
 
 	constructor(props: TenantProps) {
 		Object.assign(this, props);

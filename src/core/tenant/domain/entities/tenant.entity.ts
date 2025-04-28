@@ -9,6 +9,8 @@ import { OpeningHoursProps } from './opening-hours';
 import { PlanProps, RegisterTenantPlanProps } from './plan.entity';
 import { StateProps } from './state.entity';
 
+export type PayerDocumentType = 'CPF' | 'CNPJ';
+
 export type TenantProps = {
 	responsibleName: string;
 	responsibleCpf: string;
@@ -42,6 +44,11 @@ export type TenantProps = {
 	verifyEmailCode: string | null;
 	forgotPasswordEmailVerificationToken: string | null;
 	active: boolean;
+
+	payerName: string | null;
+	payerDocument: string | null;
+	payerDocumentType: PayerDocumentType | null;
+	payerEmail: string | null;
 
 	openingHours: OpeningHoursProps[];
 	plan: PlanProps;
@@ -109,6 +116,10 @@ export class Tenant extends Entity<TenantProps> {
 			emailVerified: null,
 			forgotPasswordEmailVerificationToken: null,
 			active: false,
+			payerDocument: null,
+			payerDocumentType: null,
+			payerEmail: null,
+			payerName: null,
 		};
 
 		Tenant.validate(tenantProps);
@@ -137,203 +148,4 @@ export class Tenant extends Entity<TenantProps> {
 			throw new EntityValidationError(validator.errors);
 		}
 	}
-
-	// get responsibleName(): string {
-	// 	return this.props.responsibleName;
-	// }
-
-	// get responsibleCpf(): string {
-	// 	return this.props.responsibleCpf;
-	// }
-
-	// get email(): string {
-	// 	return this.props.email;
-	// }
-
-	// get responsiblePhoneNumber(): string {
-	// 	return this.props.responsiblePhoneNumber;
-	// }
-
-	// get zipcode(): string {
-	// 	return this.props.zipcode;
-	// }
-
-	// get state(): StateProps {
-	// 	return this.props.state;
-	// }
-
-	// get city(): CityProps {
-	// 	return this.props.city;
-	// }
-
-	// get neighborhood(): string {
-	// 	return this.props.neighborhood;
-	// }
-
-	// get street(): string {
-	// 	return this.props.street;
-	// }
-
-	// get streetNumber(): string {
-	// 	return this.props.streetNumber;
-	// }
-
-	// get longitude(): number {
-	// 	return this.props.longitude;
-	// }
-
-	// get latitude(): number {
-	// 	return this.props.latitude;
-	// }
-
-	// get cnpj(): string {
-	// 	return this.props.cnpj;
-	// }
-
-	// get corporateReason(): string {
-	// 	return this.props.corporateReason;
-	// }
-
-	// get establishmentName(): string {
-	// 	return this.props.establishmentName;
-	// }
-
-	// get establishmentPhoneNumber(): string {
-	// 	return this.props.establishmentPhoneNumber;
-	// }
-
-	// get slug(): string {
-	// 	return this.props.slug;
-	// }
-
-	// get password(): string {
-	// 	return this.props.password;
-	// }
-
-	// get mainColor(): string {
-	// 	return this.props.mainColor;
-	// }
-
-	// get coverImagePath(): string | null {
-	// 	return this.props.coverImagePath;
-	// }
-
-	// get logoImagePath(): string | null {
-	// 	return this.props.logoImagePath;
-	// }
-
-	// get description(): string | null {
-	// 	return this.props.description;
-	// }
-
-	// get banners(): BannerProps[] {
-	// 	return this.props.banners;
-	// }
-
-	// get deliveries(): DeliveryProps[] {
-	// 	return this.props.deliveries;
-	// }
-
-	// get emailVerified(): Date | null {
-	// 	return this.props.emailVerified;
-	// }
-
-	// get verifyEmailCode(): string | null {
-	// 	return this.props.verifyEmailCode;
-	// }
-
-	// get forgotPasswordEmailVerificationToken(): string | null {
-	// 	return this.props.forgotPasswordEmailVerificationToken;
-	// }
-
-	// get active(): boolean {
-	// 	return this.props.active;
-	// }
-
-	// get openingHours(): OpeningHoursProps[] {
-	// 	return this.props.openingHours;
-	// }
-
-	// get plan(): PlanProps {
-	// 	return this.props.plan;
-	// }
-
-	// private set responsibleName(responsibleName: string) {
-	// 	this.props.responsibleName = responsibleName;
-	// }
-	// private set email(email: string) {
-	// 	this.props.email = email;
-	// }
-	// private set password(password: string) {
-	// 	this.props.password = password;
-	// }
-	// private set slug(slug: string) {
-	// 	this.props.slug = slug;
-	// }
-	// private set responsiblePhoneNumber(responsiblePhoneNumber: string) {
-	// 	this.props.responsiblePhoneNumber = responsiblePhoneNumber;
-	// }
-	// private set state(state: StateProps) {
-	// 	this.props.state = state;
-	// }
-	// private set city(city: CityProps) {
-	// 	this.props.city = city;
-	// }
-	// private set neighborhood(neighborhood: string) {
-	// 	this.props.neighborhood = neighborhood;
-	// }
-	// private set street(street: string) {
-	// 	this.props.street = street;
-	// }
-	// private set streetNumber(streetNumber: string) {
-	// 	this.props.streetNumber = streetNumber;
-	// }
-	// private set zipcode(zipcode: string) {
-	// 	this.props.zipcode = zipcode;
-	// }
-	// private set mainColor(mainColor: string) {
-	// 	this.props.mainColor = mainColor;
-	// }
-	// private set banners(banners: RegisterTenantBannerProps[]) {
-	// 	this.props.banners = banners;
-	// }
-	// private set establishmentName(establishmentName: string) {
-	// 	this.props.establishmentName = establishmentName;
-	// }
-	// private set longitude(longitude: number) {
-	// 	this.props.longitude = longitude;
-	// }
-	// private set latitude(latitude: number) {
-	// 	this.props.latitude = latitude;
-	// }
-	// private set deliveries(deliveries: RegisterTenantDeliveryProps[]) {
-	// 	this.props.deliveries = deliveries;
-	// }
-	// private set responsibleCpf(responsibleCpf: string) {
-	// 	this.props.responsibleCpf = responsibleCpf;
-	// }
-	// private set cnpj(cnpj: string) {
-	// 	this.props.cnpj = cnpj;
-	// }
-	// private set corporateReason(corporateReason: string) {
-	// 	this.props.corporateReason = corporateReason;
-	// }
-	// private set establishmentPhoneNumber(establishmentPhoneNumber: string) {
-	// 	this.props.establishmentPhoneNumber = establishmentPhoneNumber;
-	// }
-	// private set coverImagePath(coverImagePath: string | null) {
-	// 	this.props.coverImagePath = coverImagePath;
-	// }
-	// private set logoImagePath(logoImagePath: string | null) {
-	// 	this.props.logoImagePath = logoImagePath;
-	// }
-	// private set description(description: string) {
-	// 	this.props.description = description;
-	// }
-	// private set openingHours(openingHours: OpeningHoursProps[]) {
-	// 	this.props.openingHours = openingHours;
-	// }
-	// private set emailVerified(date: Date) {
-	// 	this.props.emailVerified = date;
-	// }
 }

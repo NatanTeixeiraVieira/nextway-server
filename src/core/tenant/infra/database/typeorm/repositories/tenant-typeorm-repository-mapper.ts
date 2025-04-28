@@ -1,4 +1,7 @@
-import { Tenant } from '@/core/tenant/domain/entities/tenant.entity';
+import {
+	Tenant,
+	TenantProps,
+} from '@/core/tenant/domain/entities/tenant.entity';
 import { RepositoryEntityMapper } from '@/shared/domain/repositories/repository-entity-mapper';
 import { RepositorySchemaMapper } from '@/shared/domain/repositories/repository-schema-mapper';
 import { TenantSchema } from '../schemas/tenant.schema';
@@ -40,6 +43,11 @@ export class TenantTypeormRepositoryMapper
 			coverImagePath: schema.coverImagePath,
 			logoImagePath: schema.logoImagePath,
 			description: schema.description,
+			payerDocument: schema.payerDocument,
+			payerDocumentType:
+				schema.payerDocumentType as TenantProps['payerDocumentType'],
+			payerEmail: schema.payerEmail,
+			payerName: schema.payerName,
 			banners: schema.banners.map(({ imagePath, active }) => ({
 				imagePath,
 				active,

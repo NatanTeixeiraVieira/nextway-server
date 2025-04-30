@@ -1,4 +1,5 @@
-import { Body, Controller, Post } from '@/shared/infra/decorators';
+import { Body, Controller, Post, Res } from '@/shared/infra/decorators';
+import { FastifyReply } from 'fastify';
 import { CheckTenantEmailUseCase } from '../../application/usecases/check-tenant-email.usecase';
 import { RegisterTenantUseCase } from '../../application/usecases/register-tenant.usecase';
 import { CheckTenantEmailDto } from '../dtos/check-tenant-email.dto';
@@ -26,10 +27,13 @@ export class TenantController {
 	// TODO Create documentation
 	@Post('/check-email')
 	async checkTenantEmail(
+		@Res({ passthrough: true }) reply: FastifyReply,
 		@Body() registerTenantDto: CheckTenantEmailDto,
 	): Promise<CheckTenantEmailPresenter> {
-		const output =
-			await this.checkTenantEmailUseCase.execute(registerTenantDto);
+		const output = await this.checkTenantEmailUseCase.execute({
+			...registerTenantDto,
+			setCookies: reply.setCookie.bind(reply),
+		});
 
 		return new CheckTenantEmailPresenter(output);
 	}

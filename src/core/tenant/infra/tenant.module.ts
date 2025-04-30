@@ -1,8 +1,10 @@
 import { TenantProviders } from '@/core/tenant/application/constants/providers';
 import { Providers } from '@/shared/application/constants/providers';
+import { AuthService } from '@/shared/application/services/auth.service';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import { ZipcodeService } from '@/shared/application/services/zipcode.service';
+import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
 import { CnpjServiceModule } from '@/shared/infra/services/cnpj-service/cnpj-service.module';
 import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-service.module';
 import { ZipcodeModule } from '@/shared/infra/services/zipcode-service/zipcode.module';
@@ -35,6 +37,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 		ZipcodeModule,
 		CnpjServiceModule,
 		MailServiceModule,
+		AuthServiceModule,
 	],
 	controllers: [TenantController],
 	providers: [
@@ -86,15 +89,18 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 			useFactory: (
 				tenantRepository: TenantRepository,
 				tenantOutputMapper: TenantOutputMapper,
+				authService: AuthService,
 			) => {
 				return new CheckTenantEmailUseCase(
 					tenantRepository,
 					tenantOutputMapper,
+					authService,
 				);
 			},
 			inject: [
 				TenantProviders.TENANT_REPOSITORY,
 				TenantProviders.TENANT_OUTPUT_MAPPER,
+				Providers.AUTH_SERVICE,
 			],
 		},
 	],

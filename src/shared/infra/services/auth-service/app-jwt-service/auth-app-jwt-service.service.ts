@@ -1,10 +1,9 @@
-import { User } from '@/core/user/domain/entities/user.entity';
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import {
 	Authenticate,
 	AuthenticatePayload,
 	AuthService,
+	BaseClient,
 	ClearAuthCookiesProps,
 	Refresh,
 	SetAccessTokenInCookies,
@@ -18,9 +17,11 @@ export class AuthAppJwtService implements AuthService {
 		private readonly envConfigService: EnvConfig,
 	) {}
 
-	async authenticate(user: User): Promise<Authenticate> {
+	async authenticate<Client extends BaseClient>(
+		client: Client,
+	): Promise<Authenticate> {
 		const payload: AuthenticatePayload = {
-			sub: user.id,
+			sub: client.id,
 		};
 
 		const [accessToken, refreshToken] = await Promise.all([
@@ -34,9 +35,9 @@ export class AuthAppJwtService implements AuthService {
 		};
 	}
 
-	async refresh(user: User): Promise<Refresh> {
+	async refresh<Client extends BaseClient>(client: Client): Promise<Refresh> {
 		const payload: AuthenticatePayload = {
-			sub: user.id,
+			sub: client.id,
 		};
 		const accessToken = await this.generateAccessToken(payload);
 
@@ -46,37 +47,54 @@ export class AuthAppJwtService implements AuthService {
 	setTokensInCookies({
 		accessToken,
 		refreshToken,
+		accessTokenName,
+		refreshTokenName,
+		refreshTokenPath,
+		accessTokenPath,
 		setCookies,
 	}: SetTokensInCookiesProps): void {
 		const isSecure = this.envConfigService.getNodeEnv() === 'production';
 
-		this.setAccessTokenInCookies({ accessToken, setCookies });
+		this.setAccessTokenInCookies({
+			accessToken,
+			setCookies,
+			accessTokenPath,
+			accessTokenName,
+		});
 
-		setCookies(CookiesName.REFRESH_TOKEN, refreshToken, {
+		setCookies(refreshTokenName, refreshToken, {
 			httpOnly: true,
 			secure: isSecure,
 			maxAge: this.envConfigService.getRefreshTokenExpiresIn(),
 			sameSite: 'Strict',
-			path: '/api/user/v1/refresh',
+			path: refreshTokenPath,
 		});
 	}
 
 	setAccessTokenInCookies({
 		accessToken,
+		accessTokenPath,
+		accessTokenName,
 		setCookies,
 	}: SetAccessTokenInCookies): void {
 		const isSecure = this.envConfigService.getNodeEnv() === 'production';
 
-		setCookies(CookiesName.ACCESS_TOKEN, accessToken, {
+		setCookies(accessTokenName, accessToken, {
 			httpOnly: true,
 			secure: isSecure,
 			maxAge: this.envConfigService.getJwtExpiresIn(),
 			sameSite: 'Strict',
-			path: '/',
+			path: accessTokenPath,
 		});
 	}
 
-	clearAuthCookies({ clearCookies }: ClearAuthCookiesProps): void {
+	clearAuthCookies({
+		accessTokenName,
+		refreshTokenName,
+		accessTokenPath,
+		refreshTokenPath,
+		clearCookies,
+	}: ClearAuthCookiesProps): void {
 		const isProduction = this.envConfigService.getNodeEnv() === 'production';
 		const cookieOptions = {
 			httpOnly: true,
@@ -85,10 +103,10 @@ export class AuthAppJwtService implements AuthService {
 			sameSite: 'Strict',
 		};
 
-		clearCookies(CookiesName.ACCESS_TOKEN, { ...cookieOptions, path: '/' });
-		clearCookies(CookiesName.REFRESH_TOKEN, {
+		clearCookies(accessTokenName, { ...cookieOptions, path: accessTokenPath });
+		clearCookies(refreshTokenName, {
 			...cookieOptions,
-			path: '/api/user/v1/refresh',
+			path: refreshTokenPath,
 		});
 	}
 

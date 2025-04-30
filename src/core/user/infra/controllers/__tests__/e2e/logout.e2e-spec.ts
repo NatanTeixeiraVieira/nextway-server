@@ -1,4 +1,4 @@
-import { CookiesName } from '@/shared/application/constants/cookies';
+import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { appFastifyConfigTest } from '@/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
@@ -17,8 +17,8 @@ describe('UserController userLogout e2e tests', () => {
 
 	it('should do user logout', async () => {
 		const agent = request.agent(app.getHttpServer());
-		agent.jar.setCookie(`${CookiesName.ACCESS_TOKEN}=accessToken`);
-		agent.jar.setCookie(`${CookiesName.REFRESH_TOKEN}=refreshToken`);
+		agent.jar.setCookie(`${UserCookiesName.ACCESS_TOKEN}=accessToken`);
+		agent.jar.setCookie(`${UserCookiesName.REFRESH_TOKEN}=refreshToken`);
 
 		const response = await request(app.getHttpServer())
 			.post('/api/user/v1/logout')
@@ -32,10 +32,10 @@ describe('UserController userLogout e2e tests', () => {
 			: [cookiesHeader];
 		expect(cookies.length).toBeGreaterThan(0);
 
-		expect(cookies[0]).toContain(`${CookiesName.ACCESS_TOKEN}=;`);
+		expect(cookies[0]).toContain(`${UserCookiesName.ACCESS_TOKEN}=;`);
 		expect(cookies[0]).toContain('SameSite=Strict');
 
-		expect(cookies[1]).toContain(`${CookiesName.REFRESH_TOKEN}=;`);
+		expect(cookies[1]).toContain(`${UserCookiesName.REFRESH_TOKEN}=;`);
 		expect(cookies[1]).toContain('SameSite=Strict');
 	});
 });

@@ -1,6 +1,6 @@
+import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
@@ -16,7 +16,7 @@ function createMockExecutionContext(cookieValue: any): ExecutionContext {
 		switchToHttp: () => ({
 			getRequest: () => ({
 				cookies: {
-					[CookiesName.REFRESH_TOKEN]: cookieValue,
+					[UserCookiesName.REFRESH_TOKEN]: cookieValue,
 				},
 			}),
 		}),

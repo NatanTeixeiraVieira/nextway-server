@@ -1,6 +1,6 @@
+import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { AuthAppJwtService } from '../../auth-app-jwt-service.service';
@@ -100,26 +100,26 @@ describe('AuthAppJwtService unit tests', () => {
 		expect(setCookies).toHaveBeenCalledTimes(2);
 		expect(setCookies).toHaveBeenNthCalledWith(
 			1,
-			CookiesName.ACCESS_TOKEN,
+			UserCookiesName.ACCESS_TOKEN,
 			accessToken,
 			{
 				httpOnly: true,
 				secure: false,
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
-				path: '/',
+				path: UserCookiesName.ACCESS_TOKEN_PATH,
 			},
 		);
 		expect(setCookies).toHaveBeenNthCalledWith(
 			2,
-			CookiesName.REFRESH_TOKEN,
+			UserCookiesName.REFRESH_TOKEN,
 			refreshToken,
 			{
 				httpOnly: true,
 				secure: false,
 				maxAge: envConfigValues.refreshTokenExpiresIn,
 				sameSite: 'Strict',
-				path: '/api/user/v1/refresh',
+				path: UserCookiesName.REFRESH_TOKEN_PATH,
 			},
 		);
 	});
@@ -138,14 +138,22 @@ describe('AuthAppJwtService unit tests', () => {
 		};
 
 		expect(clearCookies).toHaveBeenCalledTimes(2);
-		expect(clearCookies).toHaveBeenNthCalledWith(1, CookiesName.ACCESS_TOKEN, {
-			...cookieOptions,
-			path: '/',
-		});
-		expect(clearCookies).toHaveBeenNthCalledWith(2, CookiesName.REFRESH_TOKEN, {
-			...cookieOptions,
-			path: '/api/user/v1/refresh',
-		});
+		expect(clearCookies).toHaveBeenNthCalledWith(
+			1,
+			UserCookiesName.ACCESS_TOKEN,
+			{
+				...cookieOptions,
+				path: UserCookiesName.ACCESS_TOKEN_PATH,
+			},
+		);
+		expect(clearCookies).toHaveBeenNthCalledWith(
+			2,
+			UserCookiesName.REFRESH_TOKEN,
+			{
+				...cookieOptions,
+				path: UserCookiesName.REFRESH_TOKEN_PATH,
+			},
+		);
 	});
 
 	it('should refresh token', async () => {
@@ -184,12 +192,12 @@ describe('AuthAppJwtService unit tests', () => {
 
 		expect(setCookies).toHaveBeenCalledTimes(1);
 		expect(setCookies).toHaveBeenCalledWith(
-			CookiesName.ACCESS_TOKEN,
+			UserCookiesName.ACCESS_TOKEN,
 			accessToken,
 			{
 				httpOnly: true,
 				secure: false,
-				path: '/',
+				path: UserCookiesName.ACCESS_TOKEN_PATH,
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
 			},

@@ -1,4 +1,3 @@
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
@@ -12,6 +11,7 @@ import {
 	ExecutionContext,
 	Inject,
 } from '@/shared/infra/framework/common';
+import { UserCookiesName } from '../../application/constants/cookies';
 import { UserProviders } from '../../application/constants/providers';
 import { UserRepository } from '../../domain/repositories/user.repository';
 
@@ -29,7 +29,7 @@ export class RefreshTokenGuard implements CanActivate {
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
 		const request = context.switchToHttp().getRequest();
-		const refreshToken = request.cookies[CookiesName.REFRESH_TOKEN];
+		const refreshToken = request.cookies[UserCookiesName.REFRESH_TOKEN];
 
 		if (!refreshToken) {
 			throw new InvalidTokenError(ErrorMessages.INVALID_REFRESH_TOKEN);

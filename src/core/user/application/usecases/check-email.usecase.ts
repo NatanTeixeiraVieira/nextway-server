@@ -9,6 +9,7 @@ import { SetCookies } from '@/shared/application/types/cookies';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { User } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
+import { UserCookiesName } from '../constants/cookies';
 import { UserOutput } from '../outputs/user-output';
 import { RegisterPayload } from './register.usecase';
 
@@ -83,6 +84,10 @@ export class CheckEmailUseCase implements UseCase<Input, Output> {
 			accessToken,
 			refreshToken,
 			setCookies,
+			accessTokenName: UserCookiesName.ACCESS_TOKEN,
+			refreshTokenName: UserCookiesName.REFRESH_TOKEN,
+			accessTokenPath: UserCookiesName.ACCESS_TOKEN_PATH,
+			refreshTokenPath: UserCookiesName.REFRESH_TOKEN_PATH,
 		});
 	}
 }

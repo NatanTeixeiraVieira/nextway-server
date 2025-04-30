@@ -4,6 +4,7 @@ import { AuthService } from '@/shared/application/services/auth.service';
 import { LoggedUserService } from '@/shared/application/services/logged-user.service';
 import { SetCookies } from '@/shared/application/types/cookies';
 import { UseCase } from '@/shared/application/usecases/use-case';
+import { UserCookiesName } from '../constants/cookies';
 
 export type Input = {
 	setCookies: SetCookies;
@@ -26,6 +27,11 @@ export class RefreshTokenUseCase implements UseCase<Input, Output> {
 
 		const { accessToken } = await this.authService.refresh(loggedUser);
 
-		this.authService.setAccessTokenInCookies({ accessToken, setCookies });
+		this.authService.setAccessTokenInCookies({
+			accessToken,
+			setCookies,
+			accessTokenName: UserCookiesName.ACCESS_TOKEN,
+			accessTokenPath: UserCookiesName.REFRESH_TOKEN_PATH,
+		});
 	}
 }

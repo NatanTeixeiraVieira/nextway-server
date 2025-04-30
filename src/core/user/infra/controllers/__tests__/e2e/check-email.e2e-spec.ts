@@ -1,7 +1,7 @@
+import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
@@ -102,7 +102,7 @@ describe('UserController checkUserEmail e2e tests', () => {
 		});
 
 		expect(response.headers['set-cookie'][0]).toContain(
-			`${CookiesName.ACCESS_TOKEN}=`,
+			`${UserCookiesName.ACCESS_TOKEN}=`,
 		);
 		expect(response.headers['set-cookie'][0]).toContain(
 			`Max-Age=${envConfigService.getJwtExpiresIn()}`,
@@ -111,7 +111,7 @@ describe('UserController checkUserEmail e2e tests', () => {
 		expect(response.headers['set-cookie'][0]).toContain(`SameSite=Strict`);
 
 		expect(response.headers['set-cookie'][1]).toContain(
-			`${CookiesName.REFRESH_TOKEN}=`,
+			`${UserCookiesName.REFRESH_TOKEN}=`,
 		);
 		expect(response.headers['set-cookie'][1]).toContain(
 			`Max-Age=${envConfigService.getRefreshTokenExpiresIn()}`,

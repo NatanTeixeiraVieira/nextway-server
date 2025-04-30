@@ -1,7 +1,7 @@
+import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { CookiesName } from '@/shared/application/constants/cookies';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
@@ -41,7 +41,7 @@ describe('UserController refreshToken e2e tests', () => {
 
 	it('should throw an error when refresh token is not provided', async () => {
 		const response = await request(app.getHttpServer())
-			.post('/api/user/v1/refresh')
+			.post(UserCookiesName.REFRESH_TOKEN_PATH)
 			.expect(401);
 
 		expect(response.body).toStrictEqual({
@@ -53,8 +53,8 @@ describe('UserController refreshToken e2e tests', () => {
 
 	it('should throw an error when refresh token is invalid', async () => {
 		const response = await request(app.getHttpServer())
-			.post('/api/user/v1/refresh')
-			.set('Cookie', `${CookiesName.REFRESH_TOKEN}=invalid-token`)
+			.post(UserCookiesName.REFRESH_TOKEN_PATH)
+			.set('Cookie', `${UserCookiesName.REFRESH_TOKEN}=invalid-token`)
 			.expect(401);
 
 		expect(response.body).toStrictEqual({
@@ -74,8 +74,8 @@ describe('UserController refreshToken e2e tests', () => {
 		);
 
 		const response = await request(app.getHttpServer())
-			.post('/api/user/v1/refresh')
-			.set('Cookie', `${CookiesName.REFRESH_TOKEN}=${token}`)
+			.post(UserCookiesName.REFRESH_TOKEN_PATH)
+			.set('Cookie', `${UserCookiesName.REFRESH_TOKEN}=${token}`)
 			.expect(404);
 
 		expect(response.body).toStrictEqual({
@@ -105,12 +105,12 @@ describe('UserController refreshToken e2e tests', () => {
 		);
 
 		const response = await request(app.getHttpServer())
-			.post('/api/user/v1/refresh')
-			.set('Cookie', `${CookiesName.REFRESH_TOKEN}=${token}`)
+			.post(UserCookiesName.REFRESH_TOKEN_PATH)
+			.set('Cookie', `${UserCookiesName.REFRESH_TOKEN}=${token}`)
 			.expect(200);
 
 		expect(response.headers['set-cookie'][0]).toContain(
-			`${CookiesName.ACCESS_TOKEN}=`,
+			`${UserCookiesName.ACCESS_TOKEN}=`,
 		);
 		expect(response.headers['set-cookie'][0]).toContain(
 			`Max-Age=${envConfigService.getJwtExpiresIn()}`,

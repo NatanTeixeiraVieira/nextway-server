@@ -5,12 +5,12 @@ import {
 	PlanProps,
 	RegisterTenantPlanProps,
 } from '../../../../shared/domain/entities/plan.entity';
+import { StateProps } from '../../../../shared/domain/entities/state.entity';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps } from './banner.entity';
 import { CityProps } from './city.entity';
 import { DeliveryProps } from './delivery.entity';
 import { OpeningHoursProps } from './opening-hours';
-import { StateProps } from './state.entity';
 
 export type PayerDocumentType = 'CPF' | 'CNPJ';
 

@@ -10,4 +10,5 @@ export const Providers = {
 	CNPJ_SERVICE: 'CnpjService',
 	FILE_SERVICE: 'FileService',
 	PLAN_QUERY: 'PlanQuery',
+	STATE_QUERY: 'StateQuery',
 } as const;

@@ -20,12 +20,12 @@ import {
 import { IsCNPJ } from '@/shared/infra/decorators/validation/cnpj.decorator';
 import { Type } from 'class-transformer';
 import { PlanRules } from '../../../../shared/domain/validators/plan.validator';
+import { StateRules } from '../../../../shared/domain/validators/state.validator';
 import { TenantProps } from '../entities/tenant.entity';
 import { BannerRules } from './banner.validator';
 import { CityRules } from './city.validator';
 import { DeliveryRules } from './delivery.validator';
 import { OpeningHoursRules } from './opening-hours.validator';
-import { StateRules } from './state.validator';
 
 enum PayerDocumentType {
 	CPF = 'CPF',

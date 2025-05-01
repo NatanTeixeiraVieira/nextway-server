@@ -1,6 +1,7 @@
 import { TenantProviders } from '@/core/tenant/application/constants/providers';
 import { Providers } from '@/shared/application/constants/providers';
 import { PlanQuery } from '@/shared/application/queries/plan.query';
+import { StateQuery } from '@/shared/application/queries/state.query';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
@@ -13,6 +14,7 @@ import { SharedModule } from '@/shared/infra/shared.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PlanSchema } from '../../../shared/infra/database/typeorm/schemas/plan.schema';
+import { StateSchema } from '../../../shared/infra/database/typeorm/schemas/state.schema';
 import { TenantOutputMapper } from '../application/outputs/tenant-output';
 import { TenantQuery } from '../application/queries/tenant.query';
 import { CheckTenantEmailUseCase } from '../application/usecases/check-tenant-email.usecase';
@@ -23,7 +25,6 @@ import { TenantTypeOrmQuery } from './database/typeorm/queries/tenant-typeorm.qu
 import { TenantTypeormRepositoryMapper } from './database/typeorm/repositories/tenant-typeorm-repository-mapper';
 import { TenantTypeOrmRepository } from './database/typeorm/repositories/tenant-typeorm.repository';
 import { CitySchema } from './database/typeorm/schemas/city.schema';
-import { StateSchema } from './database/typeorm/schemas/state.schema';
 import { TenantSchema } from './database/typeorm/schemas/tenant.schema';
 import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 
@@ -64,6 +65,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				tenantRepository: TenantRepository,
 				tenantQuery: TenantQuery,
 				planQuery: PlanQuery,
+				stateQuery: StateQuery,
 				zipcodeService: ZipcodeService,
 				cnpjService: CnpjService,
 				tenantOutputMapper: TenantOutputMapper,
@@ -73,6 +75,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 					tenantRepository,
 					tenantQuery,
 					planQuery,
+					stateQuery,
 					zipcodeService,
 					cnpjService,
 					tenantOutputMapper,
@@ -83,6 +86,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				TenantProviders.TENANT_REPOSITORY,
 				TenantProviders.TENANT_QUERY,
 				Providers.PLAN_QUERY,
+				Providers.STATE_QUERY,
 				Providers.ZIPCODE_SERVICE,
 				Providers.CNPJ_SERVICE,
 				TenantProviders.TENANT_OUTPUT_MAPPER,

@@ -3,6 +3,7 @@ import { ErrorMessages } from '@/shared/application/error-messages/error-message
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
 import { PlanQuery } from '@/shared/application/queries/plan.query';
+import { StateQuery } from '@/shared/application/queries/state.query';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import {
@@ -12,8 +13,8 @@ import {
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { randomBytes } from 'node:crypto';
 import { RegisterTenantPlanProps } from '../../../../shared/domain/entities/plan.entity';
+import { StateProps } from '../../../../shared/domain/entities/state.entity';
 import { CityProps } from '../../domain/entities/city.entity';
-import { StateProps } from '../../domain/entities/state.entity';
 import {
 	RegisterTenantProps,
 	Tenant,
@@ -53,6 +54,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		private readonly tenantRepository: TenantRepository,
 		private readonly tenantQuery: TenantQuery,
 		private readonly planQuery: PlanQuery,
+		private readonly stateQuery: StateQuery,
 		private readonly zipcodeService: ZipcodeService,
 		private readonly cnpjService: CnpjService,
 		private readonly tenantOutputMapper: TenantOutputMapper,
@@ -187,7 +189,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		city: CityProps;
 	}> {
 		const [state, city] = await Promise.all([
-			this.tenantQuery.getOneStateByName(stateName),
+			this.stateQuery.getOneStateByName(stateName),
 			this.tenantQuery.getOneCityByName(cityName),
 		]);
 

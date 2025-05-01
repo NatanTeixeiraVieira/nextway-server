@@ -1,8 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class PopulateTableState1745262432814 implements MigrationInterface {
-	name = 'PopulateTableState1745262432814';
-
+export class PopulateTableState1746136554113 implements MigrationInterface {
 	public async up(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.query(`
       INSERT INTO state (id, name, uf) VALUES
@@ -36,5 +34,14 @@ export class PopulateTableState1745262432814 implements MigrationInterface {
     `);
 	}
 
-	public async down(queryRunner: QueryRunner): Promise<void> {}
+	public async down(queryRunner: QueryRunner): Promise<void> {
+		await queryRunner.query(`
+      DELETE FROM state
+      WHERE id IN (
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+        11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        21, 22, 23, 24, 25, 26, 27
+      );
+    `);
+	}
 }

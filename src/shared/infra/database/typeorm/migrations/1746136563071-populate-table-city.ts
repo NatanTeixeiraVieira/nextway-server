@@ -1,9 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class PopulateTableCity1745262446997 implements MigrationInterface {
-	transaction?: boolean | undefined;
-
-	name = 'PopulateTableCity1745262446997';
+export class PopulateTableCity1746136563071 implements MigrationInterface {
 	public async up(queryRunner: QueryRunner): Promise<void> {
 		await queryRunner.query(`
       INSERT INTO city (id, name, state_id) VALUES

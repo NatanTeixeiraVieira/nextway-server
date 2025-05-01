@@ -216,11 +216,8 @@ export class TenantSchema extends Schema {
 	@Column({ name: 'payer_email', type: 'varchar', length: 255, nullable: true })
 	payerEmail: string | null;
 
-	@ManyToOne(
-		() => CitySchema,
-		// (tenant) => tenant.tenants,
-	)
-	@JoinColumn()
+	@ManyToOne(() => CitySchema)
+	@JoinColumn({ name: 'city_id' })
 	city: CitySchema;
 
 	@OneToMany(
@@ -241,10 +238,7 @@ export class TenantSchema extends Schema {
 	)
 	openingHours: OpeningHourSchema[];
 
-	@ManyToOne(
-		() => PlanSchema,
-		// (plan) => plan.tenants,
-	)
+	@ManyToOne(() => PlanSchema)
 	@JoinColumn({ name: 'plan_id' })
 	plan: PlanSchema;
 }

@@ -23,8 +23,8 @@
 		"containers:dev": "npx dotenv-cli -e .env.development -- docker compose up -d",
 		"typeorm": "ts-node ./node_modules/typeorm/cli",
 		"migration-run:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:run",
-		"migration-generate:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:generate ./src/core/$npm_config_module/infra/database/typeorm/migrations/$npm_config_name",
-		"migration-create:dev": "npx dotenv-cli -e .env.development -- npm run typeorm -- migration:create ./src/core/$npm_config_module/infra/database/typeorm/migrations/$npm_config_name",
+		"migration-generate:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:generate ./src/$npm_config_module/infra/database/typeorm/migrations/$npm_config_name",
+		"migration-create:dev": "npx dotenv-cli -e .env.development -- npm run typeorm -- migration:create ./src/$npm_config_module/infra/database/typeorm/migrations/$npm_config_name",
 		"migration-revert:dev": "npx dotenv-cli -e .env.development -- ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js -d ./src/shared/infra/database/typeorm/config.ts migration:revert"
 	},
 	"dependencies": {

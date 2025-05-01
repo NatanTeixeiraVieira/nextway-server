@@ -12,12 +12,6 @@ export class WeekdaySchema {
 	@Column({ name: 'short_name', type: 'varchar', length: 4, nullable: false })
 	shortName: string;
 
-	// @OneToMany(
-	// 	() => CitySchema,
-	// 	(city) => city.state,
-	// )
-	// cities: CitySchema[];
-
 	@OneToMany(
 		() => OpeningHourSchema,
 		(openingHour) => openingHour.weekday,

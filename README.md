@@ -1,3 +1,4 @@
 # NextWay Server
 
-npx typeorm migration:generate -n DbTestMigration src/shared/infra/database/migrations/db-test src/core/db-test/infra/db-test.schema.ts
+To create the migrations, first create an run shared.
+After, create an run the modules

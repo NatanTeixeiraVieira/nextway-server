@@ -68,8 +68,11 @@ export const dataSourceOptions: DataSourceOptions = {
 	password: envConfig.getDbPassword(),
 	database: envConfig.getDbName(),
 	schema: envConfig.getDbSchema(),
-	// entities: [`src/*/${moduleName}/infra/database/typeorm/schemas/*.schema.ts`],
 	entities: [
+		path.resolve(
+			__dirname,
+			'../../../../shared/infra/database/typeorm/schemas/*.schema.{ts,js}',
+		),
 		path.resolve(
 			__dirname,
 			`../../../../**/${moduleName}/infra/database/typeorm/schemas/*.schema.{ts,js}`,

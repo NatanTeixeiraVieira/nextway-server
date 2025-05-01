@@ -218,7 +218,7 @@ export class TenantSchema extends Schema {
 
 	@ManyToOne(
 		() => CitySchema,
-		(tenant) => tenant.tenants,
+		// (tenant) => tenant.tenants,
 	)
 	@JoinColumn()
 	city: CitySchema;
@@ -243,7 +243,7 @@ export class TenantSchema extends Schema {
 
 	@ManyToOne(
 		() => PlanSchema,
-		(plan) => plan.tenants,
+		// (plan) => plan.tenants,
 	)
 	@JoinColumn({ name: 'plan_id' })
 	plan: PlanSchema;

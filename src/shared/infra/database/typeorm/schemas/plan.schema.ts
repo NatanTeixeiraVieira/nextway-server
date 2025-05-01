@@ -1,5 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { TenantSchema } from '../../../../../core/tenant/infra/database/typeorm/schemas/tenant.schema';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('plan')
 export class PlanSchema {
@@ -25,10 +24,4 @@ export class PlanSchema {
 		nullable: false,
 	})
 	price: string;
-
-	@OneToMany(
-		() => TenantSchema,
-		(tenant) => tenant.plan,
-	)
-	tenants: TenantSchema[];
 }

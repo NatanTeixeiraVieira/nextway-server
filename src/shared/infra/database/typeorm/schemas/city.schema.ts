@@ -3,10 +3,8 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
-	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { TenantSchema } from '../../../../../core/tenant/infra/database/typeorm/schemas/tenant.schema';
 import { StateSchema } from './state.schema';
 
 @Entity('city')
@@ -23,10 +21,4 @@ export class CitySchema {
 	)
 	@JoinColumn({ name: 'state_id' })
 	state: StateSchema;
-
-	@OneToMany(
-		() => TenantSchema,
-		(tenant) => tenant.city,
-	)
-	tenants: TenantSchema[];
 }

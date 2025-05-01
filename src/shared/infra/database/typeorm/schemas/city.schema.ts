@@ -6,8 +6,8 @@ import {
 	OneToMany,
 	PrimaryGeneratedColumn,
 } from 'typeorm';
-import { StateSchema } from '../../../../../../shared/infra/database/typeorm/schemas/state.schema';
-import { TenantSchema } from './tenant.schema';
+import { TenantSchema } from '../../../../../core/tenant/infra/database/typeorm/schemas/tenant.schema';
+import { StateSchema } from './state.schema';
 
 @Entity('city')
 export class CitySchema {

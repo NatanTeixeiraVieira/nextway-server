@@ -19,11 +19,11 @@ import {
 } from '@/shared/domain/validators/validator-fields';
 import { IsCNPJ } from '@/shared/infra/decorators/validation/cnpj.decorator';
 import { Type } from 'class-transformer';
+import { CityRules } from '../../../../shared/domain/validators/city.validator';
 import { PlanRules } from '../../../../shared/domain/validators/plan.validator';
 import { StateRules } from '../../../../shared/domain/validators/state.validator';
 import { TenantProps } from '../entities/tenant.entity';
 import { BannerRules } from './banner.validator';
-import { CityRules } from './city.validator';
 import { DeliveryRules } from './delivery.validator';
 import { OpeningHoursRules } from './opening-hours.validator';
 

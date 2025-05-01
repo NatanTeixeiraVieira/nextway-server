@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CitySchema } from '../../../../../core/tenant/infra/database/typeorm/schemas/city.schema';
+import { CitySchema } from './city.schema';
 
 @Entity('state')
 export class StateSchema {

@@ -3,10 +3,8 @@ import {
 	GetWeekdayById,
 	TenantQuery,
 } from '@/core/tenant/application/queries/tenant.query';
-import { CityProps } from '@/core/tenant/domain/entities/city.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
-import { CitySchema } from '../schemas/city.schema';
 import { TenantSchema } from '../schemas/tenant.schema';
 import { WeekdaySchema } from '../schemas/weekday.schema';
 
@@ -16,23 +14,7 @@ export class TenantTypeOrmQuery implements TenantQuery {
 		private readonly tenantQuery: Repository<TenantSchema>,
 		@InjectRepository(WeekdaySchema)
 		private readonly weekdayQuery: Repository<WeekdaySchema>,
-		@InjectRepository(CitySchema)
-		private readonly cityQuery: Repository<CitySchema>,
 	) {}
-
-	async getOneCityByName(name: string): Promise<CityProps | null> {
-		const schema = await this.cityQuery.findOne({
-			select: ['id', 'name'],
-			where: { name },
-		});
-
-		if (!schema) return null;
-
-		return {
-			id: schema.id,
-			name: schema.name,
-		};
-	}
 
 	async isEmailVerified(email: string): Promise<boolean> {
 		return await this.tenantQuery.existsBy({

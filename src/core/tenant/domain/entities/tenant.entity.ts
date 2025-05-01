@@ -1,6 +1,7 @@
 import { Data } from '@/shared/domain/decorators/data.decorator';
 import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
+import { CityProps } from '../../../../shared/domain/entities/city.entity';
 import {
 	PlanProps,
 	RegisterTenantPlanProps,
@@ -8,7 +9,6 @@ import {
 import { StateProps } from '../../../../shared/domain/entities/state.entity';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps } from './banner.entity';
-import { CityProps } from './city.entity';
 import { DeliveryProps } from './delivery.entity';
 import { OpeningHoursProps } from './opening-hours';
 

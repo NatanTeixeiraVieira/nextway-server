@@ -2,6 +2,7 @@ import { Transactional } from '@/shared/application/database/decorators/transact
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
+import { CityQuery } from '@/shared/application/queries/city.query';
 import { PlanQuery } from '@/shared/application/queries/plan.query';
 import { StateQuery } from '@/shared/application/queries/state.query';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
@@ -12,9 +13,9 @@ import {
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { randomBytes } from 'node:crypto';
+import { CityProps } from '../../../../shared/domain/entities/city.entity';
 import { RegisterTenantPlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { StateProps } from '../../../../shared/domain/entities/state.entity';
-import { CityProps } from '../../domain/entities/city.entity';
 import {
 	RegisterTenantProps,
 	Tenant,
@@ -55,6 +56,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		private readonly tenantQuery: TenantQuery,
 		private readonly planQuery: PlanQuery,
 		private readonly stateQuery: StateQuery,
+		private readonly cityQuery: CityQuery,
 		private readonly zipcodeService: ZipcodeService,
 		private readonly cnpjService: CnpjService,
 		private readonly tenantOutputMapper: TenantOutputMapper,
@@ -190,7 +192,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 	}> {
 		const [state, city] = await Promise.all([
 			this.stateQuery.getOneStateByName(stateName),
-			this.tenantQuery.getOneCityByName(cityName),
+			this.cityQuery.getOneCityByName(cityName),
 		]);
 
 		if (!state) {

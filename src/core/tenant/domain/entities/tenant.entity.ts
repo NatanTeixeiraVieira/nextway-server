@@ -1,12 +1,15 @@
 import { Data } from '@/shared/domain/decorators/data.decorator';
 import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
+import {
+	PlanProps,
+	RegisterTenantPlanProps,
+} from '../../../../shared/domain/entities/plan.entity';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps } from './banner.entity';
 import { CityProps } from './city.entity';
 import { DeliveryProps } from './delivery.entity';
 import { OpeningHoursProps } from './opening-hours';
-import { PlanProps, RegisterTenantPlanProps } from './plan.entity';
 import { StateProps } from './state.entity';
 
 export type PayerDocumentType = 'CPF' | 'CNPJ';

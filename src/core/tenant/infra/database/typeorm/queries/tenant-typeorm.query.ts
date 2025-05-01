@@ -4,8 +4,8 @@ import {
 	TenantQuery,
 } from '@/core/tenant/application/queries/tenant.query';
 import { CityProps } from '@/core/tenant/domain/entities/city.entity';
-import { PlanProps } from '@/core/tenant/domain/entities/plan.entity';
 import { StateProps } from '@/core/tenant/domain/entities/state.entity';
+import { PlanProps } from '@/shared/domain/entities/plan.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, Not, Repository } from 'typeorm';
 import { CitySchema } from '../schemas/city.schema';

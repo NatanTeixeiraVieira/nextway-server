@@ -10,6 +10,14 @@ export class PlanSchema {
 	name: string;
 
 	@Column({
+		name: 'external_id',
+		type: 'varchar',
+		length: 255,
+		nullable: false,
+	})
+	externalId: string;
+
+	@Column({
 		name: 'price',
 		type: 'decimal',
 		precision: 6,

@@ -10,8 +10,8 @@ import {
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { randomBytes } from 'node:crypto';
+import { RegisterTenantPlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { CityProps } from '../../domain/entities/city.entity';
-import { RegisterTenantPlanProps } from '../../domain/entities/plan.entity';
 import { StateProps } from '../../domain/entities/state.entity';
 import {
 	RegisterTenantProps,

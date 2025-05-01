@@ -1,5 +1,5 @@
+import { PlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { CityProps } from '../../domain/entities/city.entity';
-import { PlanProps } from '../../domain/entities/plan.entity';
 import { StateProps } from '../../domain/entities/state.entity';
 
 export type GetWeekdayById = {

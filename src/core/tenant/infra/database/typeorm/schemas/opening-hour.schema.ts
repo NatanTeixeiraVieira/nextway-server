@@ -5,10 +5,10 @@ import { WeekdaySchema } from './weekday.schema';
 
 @Entity('opening_hour')
 export class OpeningHourSchema extends Schema {
-	@Column({ type: 'varchar', length: 5, nullable: false })
+	@Column({ name: 'start', type: 'varchar', length: 5, nullable: false })
 	start: string;
 
-	@Column({ type: 'varchar', length: 5, nullable: false })
+	@Column({ name: 'end', type: 'varchar', length: 5, nullable: false })
 	end: string;
 
 	@ManyToOne(

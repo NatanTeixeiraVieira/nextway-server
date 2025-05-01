@@ -6,10 +6,10 @@ export class WeekdaySchema {
 	@PrimaryGeneratedColumn('increment')
 	id: string;
 
-	@Column({ type: 'varchar', length: 7, nullable: false })
+	@Column({ name: 'name', type: 'varchar', length: 7, nullable: false })
 	name: string;
 
-	@Column({ type: 'varchar', length: 4, nullable: false })
+	@Column({ name: 'short_name', type: 'varchar', length: 4, nullable: false })
 	shortName: string;
 
 	// @OneToMany(

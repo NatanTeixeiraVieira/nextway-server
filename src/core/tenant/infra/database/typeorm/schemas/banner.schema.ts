@@ -4,10 +4,10 @@ import { TenantSchema } from './tenant.schema';
 
 @Entity('banner')
 export class BannerSchema extends Schema {
-	@Column({ type: 'varchar', length: 70, nullable: false })
+	@Column({ name: 'image_path', type: 'varchar', length: 70, nullable: false })
 	imagePath: string;
 
-	@Column({ type: 'boolean', nullable: false })
+	@Column({ name: 'active', type: 'boolean', nullable: false })
 	active: boolean;
 
 	@ManyToOne(

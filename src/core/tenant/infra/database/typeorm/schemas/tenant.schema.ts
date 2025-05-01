@@ -30,31 +30,63 @@ enum PayerDocumentType {
 	where: '"deleted_at" IS NULL',
 })
 export class TenantSchema extends Schema {
-	@Column({ type: 'varchar', length: 255, nullable: false })
+	@Column({
+		name: 'responsible_name',
+		type: 'varchar',
+		length: 255,
+		nullable: false,
+	})
 	responsibleName: string;
 
-	@Column({ type: 'varchar', length: 11, nullable: false })
+	@Column({
+		name: 'responsible_cpf',
+		type: 'varchar',
+		length: 11,
+		nullable: false,
+	})
 	responsibleCpf: string;
 
-	@Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+	@Column({
+		name: 'email',
+		type: 'varchar',
+		length: 255,
+		unique: true,
+		nullable: false,
+	})
 	email: string;
 
-	@Column({ type: 'varchar', length: 13, nullable: false })
+	@Column({
+		name: 'responsible_phone_number',
+		type: 'varchar',
+		length: 13,
+		nullable: false,
+	})
 	responsiblePhoneNumber: string;
 
-	@Column({ type: 'varchar', length: 8, nullable: false })
+	@Column({ name: 'zipcode', type: 'varchar', length: 8, nullable: false })
 	zipcode: string;
 
-	@Column({ type: 'varchar', length: 50, nullable: false })
+	@Column({
+		name: 'neighborhood',
+		type: 'varchar',
+		length: 50,
+		nullable: false,
+	})
 	neighborhood: string;
 
-	@Column({ type: 'varchar', length: 100, nullable: false })
+	@Column({ name: 'street', type: 'varchar', length: 100, nullable: false })
 	street: string;
 
-	@Column({ type: 'varchar', length: 10, nullable: false })
+	@Column({
+		name: 'street_number',
+		type: 'varchar',
+		length: 10,
+		nullable: false,
+	})
 	streetNumber: string;
 
 	@Column({
+		name: 'longitude',
 		type: 'decimal',
 		precision: 10,
 		scale: 7,
@@ -67,6 +99,7 @@ export class TenantSchema extends Schema {
 	longitude: number;
 
 	@Column({
+		name: 'latitude',
 		type: 'decimal',
 		precision: 10,
 		scale: 7,
@@ -78,52 +111,98 @@ export class TenantSchema extends Schema {
 	})
 	latitude: number;
 
-	@Column({ type: 'varchar', length: 14, nullable: false })
+	@Column({ name: 'cnpj', type: 'varchar', length: 14, nullable: false })
 	cnpj: string;
 
-	@Column({ type: 'varchar', length: 255, nullable: false })
+	@Column({
+		name: 'corporate_reason',
+		type: 'varchar',
+		length: 255,
+		nullable: false,
+	})
 	corporateReason: string;
 
-	@Column({ type: 'varchar', length: 255, nullable: false })
+	@Column({
+		name: 'establishment_name',
+		type: 'varchar',
+		length: 255,
+		nullable: false,
+	})
 	establishmentName: string;
 
-	@Column({ type: 'varchar', length: 13, nullable: true })
+	@Column({
+		name: 'establishment_phone_number',
+		type: 'varchar',
+		length: 13,
+		nullable: true,
+	})
 	establishmentPhoneNumber: string;
 
-	@Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+	@Column({
+		name: 'slug',
+		type: 'varchar',
+		length: 255,
+		unique: true,
+		nullable: false,
+	})
 	slug: string;
 
-	@Column({ type: 'varchar', length: 100, nullable: false })
+	@Column({ name: 'password', type: 'varchar', length: 100, nullable: false })
 	password: string;
 
-	@Column({ type: 'varchar', length: 7, nullable: false })
+	@Column({ name: 'main_color', type: 'varchar', length: 7, nullable: false })
 	mainColor: string;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({
+		name: 'cover_image_path',
+		type: 'varchar',
+		length: 255,
+		nullable: true,
+	})
 	coverImagePath: string | null;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({
+		name: 'logo_image_path',
+		type: 'varchar',
+		length: 255,
+		nullable: true,
+	})
 	logoImagePath: string | null;
 
-	@Column({ type: 'text', nullable: true })
+	@Column({ name: 'description', type: 'text', nullable: true })
 	description: string | null;
 
-	@Column({ type: 'timestamp', nullable: true })
+	@Column({ name: 'email_verified', type: 'timestamp', nullable: true })
 	emailVerified: Date | null;
 
-	@Column({ type: 'varchar', length: 6, nullable: true })
+	@Column({
+		name: 'verify_email_code',
+		type: 'varchar',
+		length: 6,
+		nullable: true,
+	})
 	verifyEmailCode: string | null;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({
+		name: 'forgot_password_email_verification_token',
+		type: 'varchar',
+		length: 255,
+		nullable: true,
+	})
 	forgotPasswordEmailVerificationToken: string | null;
 
-	@Column({ type: 'boolean', default: true })
+	@Column({ name: 'active', type: 'boolean', default: true })
 	active: boolean;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({ name: 'payer_name', type: 'varchar', length: 255, nullable: true })
 	payerName: string | null;
 
-	@Column({ type: 'varchar', length: 14, nullable: true })
+	@Column({
+		name: 'payer_document',
+		type: 'varchar',
+		length: 14,
+		nullable: true,
+	})
 	payerDocument: string | null;
 
 	@Column({
@@ -134,7 +213,7 @@ export class TenantSchema extends Schema {
 	})
 	payerDocumentType: PayerDocumentType | null;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({ name: 'payer_email', type: 'varchar', length: 255, nullable: true })
 	payerEmail: string | null;
 
 	@ManyToOne(

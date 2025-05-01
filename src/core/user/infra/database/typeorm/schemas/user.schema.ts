@@ -7,24 +7,35 @@ import { Column, Entity, Index } from 'typeorm';
 	where: '"deleted_at" IS NULL',
 })
 export class UserSchema extends Schema {
-	@Column({ type: 'varchar', length: 255, nullable: false })
+	@Column({ name: 'name', type: 'varchar', length: 255, nullable: false })
 	name: string;
 
-	@Column({ type: 'varchar', length: 255, unique: true, nullable: false })
+	@Column({
+		name: 'email',
+		type: 'varchar',
+		length: 255,
+		unique: true,
+		nullable: false,
+	})
 	email: string;
 
-	@Column({ type: 'varchar', length: 100, nullable: false })
+	@Column({ name: 'password', type: 'varchar', length: 100, nullable: false })
 	password: string;
 
-	@Column({ type: 'varchar', length: 13, nullable: true })
+	@Column({ name: 'phone_number', type: 'varchar', length: 13, nullable: true })
 	phoneNumber: string | null;
 
-	@Column({ type: 'timestamp', nullable: true })
+	@Column({ name: 'email_verified', type: 'timestamp', nullable: true })
 	emailVerified: Date | null;
 
-	@Column({ type: 'varchar', length: 255, nullable: true })
+	@Column({
+		name: 'forgot_password_email_verification_token',
+		type: 'varchar',
+		length: 255,
+		nullable: true,
+	})
 	forgotPasswordEmailVerificationToken: string | null;
 
-	@Column({ type: 'boolean', default: false })
+	@Column({ name: 'active', type: 'boolean', default: false })
 	active: boolean;
 }

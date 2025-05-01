@@ -9,4 +9,5 @@ export const Providers = {
 	HTTP_SERVICE: 'HttpService',
 	CNPJ_SERVICE: 'CnpjService',
 	FILE_SERVICE: 'FileService',
+	PLAN_QUERY: 'PlanQuery',
 } as const;

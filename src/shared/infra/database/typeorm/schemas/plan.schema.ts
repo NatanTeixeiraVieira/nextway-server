@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { TenantSchema } from './tenant.schema';
+import { TenantSchema } from '../../../../../core/tenant/infra/database/typeorm/schemas/tenant.schema';
 
 @Entity('plan')
 export class PlanSchema {

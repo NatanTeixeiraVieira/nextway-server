@@ -1,5 +1,6 @@
 import { TenantProviders } from '@/core/tenant/application/constants/providers';
 import { Providers } from '@/shared/application/constants/providers';
+import { PlanQuery } from '@/shared/application/queries/plan.query';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
@@ -8,8 +9,10 @@ import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-ser
 import { CnpjServiceModule } from '@/shared/infra/services/cnpj-service/cnpj-service.module';
 import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-service.module';
 import { ZipcodeModule } from '@/shared/infra/services/zipcode-service/zipcode.module';
+import { SharedModule } from '@/shared/infra/shared.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PlanSchema } from '../../../shared/infra/database/typeorm/schemas/plan.schema';
 import { TenantOutputMapper } from '../application/outputs/tenant-output';
 import { TenantQuery } from '../application/queries/tenant.query';
 import { CheckTenantEmailUseCase } from '../application/usecases/check-tenant-email.usecase';
@@ -20,7 +23,6 @@ import { TenantTypeOrmQuery } from './database/typeorm/queries/tenant-typeorm.qu
 import { TenantTypeormRepositoryMapper } from './database/typeorm/repositories/tenant-typeorm-repository-mapper';
 import { TenantTypeOrmRepository } from './database/typeorm/repositories/tenant-typeorm.repository';
 import { CitySchema } from './database/typeorm/schemas/city.schema';
-import { PlanSchema } from './database/typeorm/schemas/plan.schema';
 import { StateSchema } from './database/typeorm/schemas/state.schema';
 import { TenantSchema } from './database/typeorm/schemas/tenant.schema';
 import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
@@ -34,6 +36,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 			CitySchema,
 			PlanSchema,
 		]),
+		SharedModule,
 		ZipcodeModule,
 		CnpjServiceModule,
 		MailServiceModule,
@@ -60,6 +63,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 			useFactory: (
 				tenantRepository: TenantRepository,
 				tenantQuery: TenantQuery,
+				planQuery: PlanQuery,
 				zipcodeService: ZipcodeService,
 				cnpjService: CnpjService,
 				tenantOutputMapper: TenantOutputMapper,
@@ -68,6 +72,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				return new RegisterTenantUseCase(
 					tenantRepository,
 					tenantQuery,
+					planQuery,
 					zipcodeService,
 					cnpjService,
 					tenantOutputMapper,
@@ -77,6 +82,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 			inject: [
 				TenantProviders.TENANT_REPOSITORY,
 				TenantProviders.TENANT_QUERY,
+				Providers.PLAN_QUERY,
 				Providers.ZIPCODE_SERVICE,
 				Providers.CNPJ_SERVICE,
 				TenantProviders.TENANT_OUTPUT_MAPPER,

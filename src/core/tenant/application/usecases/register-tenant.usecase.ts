@@ -2,6 +2,7 @@ import { Transactional } from '@/shared/application/database/decorators/transact
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
+import { PlanQuery } from '@/shared/application/queries/plan.query';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import {
@@ -51,6 +52,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 	constructor(
 		private readonly tenantRepository: TenantRepository,
 		private readonly tenantQuery: TenantQuery,
+		private readonly planQuery: PlanQuery,
 		private readonly zipcodeService: ZipcodeService,
 		private readonly cnpjService: CnpjService,
 		private readonly tenantOutputMapper: TenantOutputMapper,
@@ -117,7 +119,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		input: Input,
 		zipcodeInfos: ZipcodeServiceResponse,
 	): Promise<RegisterTenantProps> {
-		const plan = await this.tenantQuery.getPlan();
+		const plan = await this.planQuery.getPlan();
 		const cnpjInfos = await this.cnpjService.getInfosByCnpj(input.cnpj);
 
 		if (!cnpjInfos) {

@@ -1,4 +1,3 @@
-import { PlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { CityProps } from '../../domain/entities/city.entity';
 import { StateProps } from '../../domain/entities/state.entity';
 
@@ -16,7 +15,7 @@ export interface TenantQuery {
 	isEmailVerified(email: string): Promise<boolean>;
 	cnpjExists(cnpj: string): Promise<boolean>;
 	slugExists(slug: string): Promise<boolean>;
-	getPlan(): Promise<PlanProps & { id: string }>;
+	// getPlan(): Promise<PlanProps & { id: string }>;
 	getWeekdayById(id: string): Promise<GetWeekdayById | null>;
 	getOneStateByName(name: string): Promise<StateProps | null>;
 	getOneCityByName(name: string): Promise<CityProps | null>;

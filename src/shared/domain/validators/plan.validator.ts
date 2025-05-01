@@ -3,7 +3,7 @@ import {
 	IsString,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
-import { PlanProps } from '../../../../shared/domain/entities/plan.entity';
+import { PlanProps } from '../entities/plan.entity';
 
 export class PlanRules {
 	@IsString()

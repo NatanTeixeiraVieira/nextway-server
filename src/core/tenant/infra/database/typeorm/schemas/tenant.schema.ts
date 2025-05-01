@@ -7,11 +7,11 @@ import {
 	ManyToOne,
 	OneToMany,
 } from 'typeorm';
+import { PlanSchema } from '../../../../../../shared/infra/database/typeorm/schemas/plan.schema';
 import { BannerSchema } from './banner.schema';
 import { CitySchema } from './city.schema';
 import { DeliverySchema } from './delivery.schema';
 import { OpeningHourSchema } from './opening-hour.schema';
-import { PlanSchema } from './plan.schema';
 
 export type TenantSchemaProps = InstanceType<typeof TenantSchema>;
 

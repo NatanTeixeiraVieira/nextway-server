@@ -11,9 +11,11 @@ import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-servic
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
 import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
+import { SharedModule } from './shared/infra/shared.module';
 
 @Module({
 	imports: [
+		SharedModule,
 		TenantModule,
 		// FileModule,
 		HttpServiceModule,

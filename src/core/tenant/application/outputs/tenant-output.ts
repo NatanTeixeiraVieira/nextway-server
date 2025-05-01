@@ -1,10 +1,10 @@
 import { OutputMapper } from '@/shared/application/outputs/output-mapper';
 import { Audit } from '@/shared/domain/entities/entity';
+import { PlanOutput } from '../../../../shared/application/outputs/plan-output';
 import { Tenant } from '../../domain/entities/tenant.entity';
 import { BannerOutput } from './banner-output';
 import { DeliveryOutput } from './delivery-output';
 import { OpeningHoursOutput } from './opening-hours-output';
-import { PlanOutput } from './plan-output';
 
 export type TenantOutput = {
 	id: string;

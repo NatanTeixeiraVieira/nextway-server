@@ -13,7 +13,7 @@ import {
 } from '@/shared/infra/framework/common';
 import { UserCookiesName } from '../../application/constants/cookies';
 import { UserProviders } from '../../application/constants/providers';
-import { UserRepository } from '../../domain/repositories/user.repository';
+import { UserQuery } from '../../application/queries/user.query';
 
 export class RefreshTokenGuard implements CanActivate {
 	constructor(
@@ -21,8 +21,8 @@ export class RefreshTokenGuard implements CanActivate {
 		private readonly envConfigService: EnvConfig,
 		@Inject(Providers.JWT_SERVICE)
 		private readonly jwtService: JwtService,
-		@Inject(UserProviders.USER_REPOSITORY)
-		private readonly userRepository: UserRepository,
+		@Inject(UserProviders.USER_QUERY)
+		private readonly userQuery: UserQuery,
 		@Inject(Providers.LOGGED_USER_SERVICE)
 		private readonly loggedUserService: LoggedUserService,
 	) {}
@@ -48,13 +48,13 @@ export class RefreshTokenGuard implements CanActivate {
 		const jwtPayload =
 			await this.jwtService.decodeJwt<AuthenticatePayload>(refreshToken);
 
-		const loggedUser = await this.userRepository.getById(jwtPayload.sub);
+		const loggedUser = await this.userQuery.existsActiveById(jwtPayload.sub);
 
 		if (!loggedUser) {
 			throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 		}
 
-		this.loggedUserService.setLoggedUser(loggedUser);
+		this.loggedUserService.setLoggedUser({ id: jwtPayload.sub });
 
 		return true;
 	}

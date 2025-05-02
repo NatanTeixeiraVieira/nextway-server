@@ -12,7 +12,7 @@ import {
 	Inject,
 } from '@/shared/infra/framework/common';
 import { UserProviders } from '../../application/constants/providers';
-import { UserRepository } from '../../domain/repositories/user.repository';
+import { UserQuery } from '../../application/queries/user.query';
 import { ChangePasswordDto } from '../dtos/change-password.dto';
 
 export class RecoverPasswordGuard implements CanActivate {
@@ -21,8 +21,8 @@ export class RecoverPasswordGuard implements CanActivate {
 		private readonly envConfigService: EnvConfig,
 		@Inject(Providers.JWT_SERVICE)
 		private readonly jwtService: JwtService,
-		@Inject(UserProviders.USER_REPOSITORY)
-		private readonly userRepository: UserRepository,
+		@Inject(UserProviders.USER_QUERY)
+		private readonly userQuery: UserQuery,
 		@Inject(Providers.LOGGED_USER_SERVICE)
 		private readonly loggedUserService: LoggedUserService,
 	) {}
@@ -52,13 +52,15 @@ export class RecoverPasswordGuard implements CanActivate {
 		const jwtPayload =
 			await this.jwtService.decodeJwt<AuthenticatePayload>(changePasswordToken);
 
-		const loggedUser = await this.userRepository.getById(jwtPayload.sub);
+		const loggedUserExists = await this.userQuery.existsActiveById(
+			jwtPayload.sub,
+		);
 
-		if (!loggedUser) {
+		if (!loggedUserExists) {
 			throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 		}
 
-		this.loggedUserService.setLoggedUser(loggedUser);
+		this.loggedUserService.setLoggedUser({ id: jwtPayload.sub });
 
 		return true;
 	}

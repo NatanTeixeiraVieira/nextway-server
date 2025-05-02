@@ -24,8 +24,6 @@ export class ChangePasswordUseCase implements UseCase<Input, Output> {
 	) {}
 
 	async execute(input: Input): Promise<Output> {
-		await this.validateChangePasswordToken(input.changePasswordToken);
-
 		const { sub } = await this.jwtService.decodeJwt<RecoverPasswordPayload>(
 			input.changePasswordToken,
 		);
@@ -36,6 +34,11 @@ export class ChangePasswordUseCase implements UseCase<Input, Output> {
 			throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 		}
 
+		await this.validateChangePasswordToken(
+			input.changePasswordToken,
+			user.forgotPasswordEmailVerificationToken,
+		);
+
 		const hashedPassword = await this.hashService.generate(input.password);
 
 		user.changePassword(hashedPassword);
@@ -43,14 +46,13 @@ export class ChangePasswordUseCase implements UseCase<Input, Output> {
 		await this.userRepository.update(user);
 	}
 
-	private async validateChangePasswordToken(token: string): Promise<void> {
-		const loggedUserToken =
-			this.loggedUserService.getLoggedUser()
-				?.forgotPasswordEmailVerificationToken;
-
+	private async validateChangePasswordToken(
+		token: string,
+		loggedUserToken: string | null,
+	): Promise<void> {
 		const isTokenEqualLoggedUserToken = token === loggedUserToken;
 
-		if (!isTokenEqualLoggedUserToken) {
+		if (!isTokenEqualLoggedUserToken || !loggedUserToken) {
 			throw new InvalidTokenError(ErrorMessages.INVALID_CHANGE_PASSWORD_TOKEN);
 		}
 	}

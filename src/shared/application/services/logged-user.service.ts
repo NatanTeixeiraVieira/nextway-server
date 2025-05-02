@@ -1,7 +1,7 @@
-import { User } from '@/core/user/domain/entities/user.entity';
-
-// TODO Replace User with id only
+export type LoggedUser = {
+	id: string;
+};
 export interface LoggedUserService {
-	getLoggedUser(): User | null;
-	setLoggedUser(loggedUser: User): void;
+	getLoggedUser(): LoggedUser | null;
+	setLoggedUser(loggedUser: LoggedUser): void;
 }

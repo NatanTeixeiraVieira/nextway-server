@@ -11,7 +11,7 @@ export enum TenantPaymentStatus {
 
 type TenantPaymentProps = {
 	tenantId: string;
-	price: string;
+	price: number;
 	currency: string;
 	card: CardProps;
 	status: TenantPaymentStatus;
@@ -20,7 +20,7 @@ type TenantPaymentProps = {
 
 type PayProps = {
 	tenantId: string;
-	price: string;
+	price: number;
 	currency: string;
 	cardToken: string;
 	cardLastDigits: string;

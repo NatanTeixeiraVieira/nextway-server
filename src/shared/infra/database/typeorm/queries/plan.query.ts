@@ -14,4 +14,9 @@ export class PlanTypeOrmQuery implements PlanQuery {
 		const plans = await this.planQuery.find();
 		return plans[0];
 	}
+
+	async getPlanPrice(): Promise<number> {
+		const plans = await this.planQuery.find({ select: ['price'] });
+		return plans[0].price;
+	}
 }

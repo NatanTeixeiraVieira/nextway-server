@@ -1,5 +1,6 @@
 import {
 	IsNotEmpty,
+	IsPositive,
 	IsString,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
@@ -15,8 +16,12 @@ export class PlanRules {
 	name: string;
 
 	@IsString()
+	@IsPositive()
+	price: number;
+
+	@IsString()
 	@IsNotEmpty()
-	price: string;
+	externalId: string;
 
 	constructor(props: PlanProps) {
 		Object.assign(this, props);

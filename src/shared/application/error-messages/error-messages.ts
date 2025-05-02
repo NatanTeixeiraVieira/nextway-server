@@ -9,6 +9,7 @@ export const ErrorMessages = {
 	INVALID_TOKEN: 'Token inválido',
 	INVALID_PHONE: 'Telefone inválido',
 	USER_NOT_FOUND: 'Usuário não encontrado',
+	TENANT_NOT_FOUND: 'Estabelecimento não encontrado',
 	EMAIL_ALREADY_EXISTS: 'Email já em uso',
 	CNPJ_ALREADY_EXISTS: 'CNPJ já em uso',
 	SLUG_ALREADY_EXISTS: 'Slug já em uso',

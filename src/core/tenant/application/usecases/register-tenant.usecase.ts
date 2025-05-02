@@ -12,9 +12,9 @@ import {
 	ZipcodeServiceResponse,
 } from '@/shared/application/services/zipcode.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
+import { PlanProps } from '@/shared/domain/entities/plan.entity';
 import { randomBytes } from 'node:crypto';
 import { CityProps } from '../../../../shared/domain/entities/city.entity';
-import { RegisterTenantPlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { StateProps } from '../../../../shared/domain/entities/state.entity';
 import {
 	RegisterTenantProps,
@@ -227,7 +227,7 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		state: StateProps,
 		city: CityProps,
 		corporateReason: string,
-		plan: RegisterTenantPlanProps,
+		plan: PlanProps,
 		verifyEmailCode: string,
 	): RegisterTenantProps {
 		return {

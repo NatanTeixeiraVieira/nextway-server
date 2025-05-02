@@ -8,6 +8,7 @@ import { CnpjServiceModule } from './shared/infra/services/cnpj-service/cnpj-ser
 import { HashServiceModule } from './shared/infra/services/hash-service/hash-service.module';
 import { HttpServiceModule } from './shared/infra/services/http-service/http-service.module';
 import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-service.module';
+import { LoggedTenantModule } from './shared/infra/services/logged-tenant/logged-tenant.module';
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
 import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
@@ -15,6 +16,7 @@ import { SharedModule } from './shared/infra/shared.module';
 
 @Module({
 	imports: [
+		LoggedTenantModule,
 		SharedModule,
 		TenantModule,
 		// FileModule,

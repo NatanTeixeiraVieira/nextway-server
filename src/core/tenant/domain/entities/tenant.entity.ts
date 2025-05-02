@@ -2,10 +2,7 @@ import { Data } from '@/shared/domain/decorators/data.decorator';
 import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { CityProps } from '../../../../shared/domain/entities/city.entity';
-import {
-	PlanProps,
-	RegisterTenantPlanProps,
-} from '../../../../shared/domain/entities/plan.entity';
+import { PlanProps } from '../../../../shared/domain/entities/plan.entity';
 import { StateProps } from '../../../../shared/domain/entities/state.entity';
 import { TenantValidatorFactory } from '../validators/tenant.validator';
 import { BannerProps } from './banner.entity';
@@ -80,7 +77,7 @@ export type RegisterTenantProps = {
 	password: string;
 	verifyEmailCode: string;
 
-	plan: RegisterTenantPlanProps;
+	plan: PlanProps;
 };
 
 export interface Tenant extends TenantProps {}

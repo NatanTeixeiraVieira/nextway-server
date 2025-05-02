@@ -5,6 +5,7 @@ export const Providers = {
 	MAIL_SERVICE: 'MailService',
 	ENV_CONFIG_SERVICE: 'EnvConfigService',
 	LOGGED_USER_SERVICE: 'LoggedUserService',
+	LOGGED_TENANT_SERVICE: 'LoggedTenantService',
 	ZIPCODE_SERVICE: 'ZipcodeService',
 	HTTP_SERVICE: 'HttpService',
 	CNPJ_SERVICE: 'CnpjService',

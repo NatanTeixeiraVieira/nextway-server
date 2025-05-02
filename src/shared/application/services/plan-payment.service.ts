@@ -2,7 +2,6 @@ export type CreateSignatureProps = {
 	externalPlanId: string;
 	payerEmail: string;
 	cardToken: string;
-	backUrl: string;
 	autoRecurring: {
 		frequency: number;
 		frequencyType: 'days' | 'months';

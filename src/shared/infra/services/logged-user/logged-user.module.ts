@@ -3,8 +3,6 @@ import { Module } from '@nestjs/common';
 import { LoggedUserNestjsService } from './nestjs/logged-user.service';
 
 @Module({
-	imports: [],
-	controllers: [],
 	providers: [
 		{
 			provide: Providers.LOGGED_USER_SERVICE,

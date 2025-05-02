@@ -76,6 +76,7 @@ export class TenantTypeormRepositoryMapper
 				id: schema.plan.id,
 				name: schema.plan.name,
 				price: schema.plan.price,
+				externalId: schema.plan.externalId,
 			},
 			audit: {
 				createdAt: schema.createdAt,

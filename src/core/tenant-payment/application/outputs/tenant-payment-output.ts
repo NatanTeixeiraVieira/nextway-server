@@ -1,4 +1,8 @@
-import { TenantPaymentStatus } from '../../domain/entities/tenant-payment.entity';
+import { OutputMapper } from '@/shared/application/outputs/output-mapper';
+import {
+	TenantPayment,
+	TenantPaymentStatus,
+} from '../../domain/entities/tenant-payment.entity';
 import { CardOutput } from './card-output';
 
 export type TenantPaymentOutput = {
@@ -10,3 +14,8 @@ export type TenantPaymentOutput = {
 	status: TenantPaymentStatus;
 	nextDueDate: Date;
 };
+
+export class TenantPaymentOutputMapper extends OutputMapper<
+	TenantPayment,
+	TenantPaymentOutput
+> {}

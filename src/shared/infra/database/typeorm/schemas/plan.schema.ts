@@ -23,5 +23,5 @@ export class PlanSchema {
 		scale: 2,
 		nullable: false,
 	})
-	price: string;
+	price: number;
 }

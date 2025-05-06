@@ -1,5 +1,8 @@
 import { Data } from '@/shared/domain/decorators/data.decorator';
 import { Entity } from '@/shared/domain/entities/entity';
+import { EntityValidationError } from '@/shared/domain/errors/validation-error';
+import { PaymentFinishedEvent } from '../events/payment-finished.event';
+import { TenantPaymentValidatorFactory } from '../validators/tenant-payment.validator';
 import { CardProps } from './card.entity';
 
 export enum TenantPaymentStatus {
@@ -9,13 +12,13 @@ export enum TenantPaymentStatus {
 	CANCELED = 'CANCELED',
 }
 
-type TenantPaymentProps = {
+export type TenantPaymentProps = {
 	tenantId: string;
 	price: number;
 	currency: string;
 	card: CardProps;
 	status: TenantPaymentStatus;
-	nextDueDate: Date;
+	nextDueDate: Date | null;
 };
 
 type PayProps = {
@@ -25,6 +28,13 @@ type PayProps = {
 	cardToken: string;
 	cardLastDigits: string;
 	cardBrand: string;
+};
+
+type FinishPaymentProps = {
+	payerEmail: string;
+	payerName: string;
+	payerDocument: string;
+	status: TenantPaymentStatus;
 };
 
 export interface TenantPayment extends TenantPaymentProps {}
@@ -44,24 +54,40 @@ export class TenantPayment extends Entity<TenantPaymentProps> {
 				active: true,
 			},
 			status: TenantPaymentStatus.PENDING,
-			nextDueDate: new Date(),
+			nextDueDate: null,
 		};
 		TenantPayment.validate(tenantPaymentProps);
 
 		return new TenantPayment(tenantPaymentProps);
 	}
 
-	finishPayment(status: TenantPaymentStatus): void {
+	finishPayment(finishPaymentProps: FinishPaymentProps): void {
+		const { status, ...finishPaymentPropsRest } = finishPaymentProps;
 		TenantPayment.validate({ ...this.props, status });
+
+		const today = new Date();
+		const signatureNumberOfMonths = 1;
+		const nextMonthDate = new Date(
+			today.getFullYear(),
+			today.getMonth() + signatureNumberOfMonths,
+			today.getDate(),
+		);
+
 		this.status = status;
+		this.nextDueDate = nextMonthDate;
+
+		const paymentFinishedEvent = new PaymentFinishedEvent(
+			finishPaymentPropsRest,
+		);
+		this.addDomainEvent(paymentFinishedEvent);
 	}
 
 	private static validate(props: TenantPaymentProps) {
-		// const tenantPaymentValidatorFactory = new TenantPaymentValidatorFactory();
-		// const validator = tenantPaymentValidatorFactory.create();
-		// const isValid = validator.validate(props);
-		// if (!isValid) {
-		//   throw new EntityValidationError(validator.errors);
-		// }
+		const tenantPaymentValidatorFactory = new TenantPaymentValidatorFactory();
+		const validator = tenantPaymentValidatorFactory.create();
+		const isValid = validator.validate(props);
+		if (!isValid) {
+			throw new EntityValidationError(validator.errors);
+		}
 	}
 }

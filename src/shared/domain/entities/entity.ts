@@ -1,3 +1,5 @@
+import { DomainEvent } from '../events/domain-event';
+
 /**
  * Type representing the audit properties of an entity.
  * It includes the creation, update, and deletion (soft delete) dates.
@@ -41,7 +43,7 @@ export type BaseProps = Record<string, unknown>;
  */
 export abstract class Entity<Props extends BaseProps> {
 	readonly props: Props & EntityProps;
-
+	protected readonly events: DomainEvent[] = [];
 	/**
 	 * Constructor of the `Entity` class that initializes the entity's properties.
 	 * If `id` is not provided, it is automatically generated.
@@ -91,6 +93,22 @@ export abstract class Entity<Props extends BaseProps> {
 		if (this.props.audit) {
 			this.props.audit.updatedAt = new Date();
 		}
+	}
+
+	/**
+	 * Method to add a new domain event.
+	 */
+	protected addDomainEvent(domainEvent: DomainEvent) {
+		this.events.push(domainEvent);
+	}
+
+	/**
+	 * Clear domain events and return them.
+	 */
+	pullDomainEvents(): DomainEvent[] {
+		const events = [...this.events];
+		this.events.length = 0;
+		return events;
 	}
 
 	/**

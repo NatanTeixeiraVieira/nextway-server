@@ -1,7 +1,13 @@
-import { TenantPaymentStatus } from '@/core/tenant-payment/domain/entities/tenant-payment.entity';
 import { Schema } from '@/shared/infra/database/typeorm/schemas/schema';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { CardSchema } from './card.schema';
+
+enum TenantPaymentStatus {
+	PAID = 'PAID',
+	PENDING = 'PENDING',
+	FAILED = 'FAILED',
+	CANCELED = 'CANCELED',
+}
 
 @Entity('tenant-payment')
 export class TenantPaymentSchema extends Schema {
@@ -28,10 +34,13 @@ export class TenantPaymentSchema extends Schema {
 	@Column({ name: 'next_due_date', type: 'timestamp', nullable: true })
 	nextDueDate: Date | null;
 
-	@JoinColumn({ name: 'card' })
-	@ManyToOne(() => CardSchema)
+	@JoinColumn({ name: 'card_id' })
+	@ManyToOne(
+		() => CardSchema,
+		(card) => card.tenantPaymentSchemas,
+	)
 	card: CardSchema;
 
-	// @JoinColumn({ type: 'uuid', nullable: false })
-	// tenant: string;
+	@Column({ name: 'tenant_id', type: 'uuid', nullable: false })
+	tenantId: string;
 }

@@ -2,14 +2,11 @@ import {
 	Tenant,
 	TenantProps,
 } from '@/core/tenant/domain/entities/tenant.entity';
-import { RepositoryEntityMapper } from '@/shared/domain/repositories/repository-entity-mapper';
-import { RepositorySchemaMapper } from '@/shared/domain/repositories/repository-schema-mapper';
+import { RepositoryMapper } from '@/shared/domain/repositories/repository-mapper';
 import { TenantSchema } from '../schemas/tenant.schema';
 
 export class TenantTypeormRepositoryMapper
-	implements
-		RepositoryEntityMapper<TenantSchema, Tenant>,
-		RepositorySchemaMapper<TenantSchema, Tenant>
+	implements RepositoryMapper<TenantSchema, Tenant>
 {
 	toEntity(schema: TenantSchema): Tenant {
 		return Tenant.with({

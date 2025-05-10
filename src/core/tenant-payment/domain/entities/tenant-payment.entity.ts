@@ -5,12 +5,7 @@ import { PaymentFinishedEvent } from '../events/payment-finished.event';
 import { TenantPaymentValidatorFactory } from '../validators/tenant-payment.validator';
 import { CardProps } from './card.entity';
 
-export enum TenantPaymentStatus {
-	PAID = 'PAID',
-	PENDING = 'PENDING',
-	FAILED = 'FAILED',
-	CANCELED = 'CANCELED',
-}
+export type TenantPaymentStatus = 'PAID' | 'PENDING' | 'FAILED' | 'CANCELED';
 
 export type TenantPaymentProps = {
 	tenantId: string;
@@ -53,7 +48,7 @@ export class TenantPayment extends Entity<TenantPaymentProps> {
 				brand: payProps.cardBrand,
 				active: true,
 			},
-			status: TenantPaymentStatus.PENDING,
+			status: 'PENDING',
 			nextDueDate: null,
 		};
 		TenantPayment.validate(tenantPaymentProps);

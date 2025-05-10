@@ -1,8 +1,9 @@
 import { Providers } from '@/shared/application/constants/providers';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@/shared/infra/decorators/index';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtNestjsService } from './nestjs/jwt-nestjs.service';
 
+@Global()
 @Module({
 	imports: [
 		JwtModule.registerAsync({

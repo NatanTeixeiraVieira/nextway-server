@@ -5,6 +5,7 @@ import { UserModule } from './core/user/infra/user.module';
 import { DatabaseModule } from './shared/infra/database/database.module';
 import { EnvConfigModule } from './shared/infra/env-config/env-config.module';
 import { AuthServiceModule } from './shared/infra/services/auth-service/auth-service.module';
+import { CardServiceModule } from './shared/infra/services/card-service/card-service.module';
 import { CnpjServiceModule } from './shared/infra/services/cnpj-service/cnpj-service.module';
 import { HashServiceModule } from './shared/infra/services/hash-service/hash-service.module';
 import { HttpServiceModule } from './shared/infra/services/http-service/http-service.module';
@@ -18,6 +19,7 @@ import { SharedModule } from './shared/infra/shared.module';
 
 @Module({
 	imports: [
+		CardServiceModule,
 		TenantPaymentModule,
 		PlanPaymentServiceModule,
 		LoggedTenantModule,

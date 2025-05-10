@@ -9,11 +9,15 @@ import {
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { Type } from 'class-transformer';
-import {
-	TenantPaymentProps,
-	TenantPaymentStatus,
-} from '../entities/tenant-payment.entity';
+import { TenantPaymentProps } from '../entities/tenant-payment.entity';
 import { CardRules } from './card.validator';
+
+export enum TenantPaymentStatusRules {
+	PAID = 'PAID',
+	PENDING = 'PENDING',
+	FAILED = 'FAILED',
+	CANCELED = 'CANCELED',
+}
 
 export class TenantPaymentRules {
 	@IsString()
@@ -33,9 +37,9 @@ export class TenantPaymentRules {
 	@IsNotEmpty()
 	card: CardRules;
 
-	@IsEnum(TenantPaymentStatus)
+	@IsEnum(TenantPaymentStatusRules)
 	@IsNotEmpty()
-	status: TenantPaymentStatus;
+	status: TenantPaymentStatusRules;
 
 	@IsDate()
 	@IsOptional()

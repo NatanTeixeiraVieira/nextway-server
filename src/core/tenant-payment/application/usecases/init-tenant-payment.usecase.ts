@@ -49,6 +49,7 @@ export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 			input.cardToken,
 			plan.externalId,
 			input.payerEmail,
+			loggedTenant.id,
 		);
 
 		const tenantPayment = TenantPayment.initPayment({
@@ -69,11 +70,13 @@ export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 		cardToken: string,
 		externalPlanId: string,
 		payerEmail: string,
+		loggedTenantId: string,
 	): Promise<void> {
 		await this.planPaymentService.createSignature({
 			cardToken,
 			externalPlanId,
 			payerEmail,
+			payerId: loggedTenantId,
 		});
 	}
 }

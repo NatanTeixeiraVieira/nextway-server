@@ -9,5 +9,6 @@ import { PlanPaymentMercadopagoService } from './mercadopago/plan-payment-mercad
 			useClass: PlanPaymentMercadopagoService,
 		},
 	],
+	exports: [Providers.PLAN_PAYMENT_SERVICE],
 })
 export class PlanPaymentServiceModule {}

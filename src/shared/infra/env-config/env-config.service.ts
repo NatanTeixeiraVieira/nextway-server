@@ -12,6 +12,9 @@ export class EnvConfigService implements EnvConfig {
 	getStorageApiKey(): string {
 		throw new Error('Method not implemented.');
 	}
+	getPaymentAccessToken(): string {
+		return this.configService.get<string>('PAYMENT_ACCESS_TOKEN') as string;
+	}
 
 	getCnpjApiBaseUrl(): string {
 		return this.configService.get<string>('CNPJ_API_BASE_URL') as string;

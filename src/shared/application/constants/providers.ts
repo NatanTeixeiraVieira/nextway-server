@@ -14,4 +14,5 @@ export const Providers = {
 	STATE_QUERY: 'StateQuery',
 	CITY_QUERY: 'CityQuery',
 	PLAN_PAYMENT_SERVICE: 'PlanPaymentService',
+	CARD_SERVICE: 'CardService',
 } as const;

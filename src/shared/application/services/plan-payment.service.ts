@@ -2,6 +2,7 @@ export type CreateSignatureProps = {
 	externalPlanId: string;
 	payerEmail: string;
 	cardToken: string;
+	payerId: string;
 };
 
 export type CreateSignatureResponse = {

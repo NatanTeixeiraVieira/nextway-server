@@ -49,7 +49,6 @@ export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 			input.cardToken,
 			plan.externalId,
 			input.payerEmail,
-			plan.price,
 		);
 
 		const tenantPayment = TenantPayment.initPayment({
@@ -70,18 +69,11 @@ export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 		cardToken: string,
 		externalPlanId: string,
 		payerEmail: string,
-		planPrice: number,
 	): Promise<void> {
 		await this.planPaymentService.createSignature({
 			cardToken,
 			externalPlanId,
 			payerEmail,
-			autoRecurring: {
-				currency: 'BRL',
-				frequency: 1,
-				frequencyType: 'months',
-				transactionAmount: planPrice,
-			},
 		});
 	}
 }

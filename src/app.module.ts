@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { TenantPaymentModule } from './core/tenant-payment/infra/tenant-payment.module';
 import { TenantModule } from './core/tenant/infra/tenant.module';
 import { UserModule } from './core/user/infra/user.module';
 import { DatabaseModule } from './shared/infra/database/database.module';
@@ -11,11 +12,14 @@ import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-servic
 import { LoggedTenantModule } from './shared/infra/services/logged-tenant/logged-tenant.module';
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
+import { PlanPaymentServiceModule } from './shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
 import { SharedModule } from './shared/infra/shared.module';
 
 @Module({
 	imports: [
+		TenantPaymentModule,
+		PlanPaymentServiceModule,
 		LoggedTenantModule,
 		SharedModule,
 		TenantModule,

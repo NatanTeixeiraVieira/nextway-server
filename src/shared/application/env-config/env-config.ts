@@ -31,4 +31,5 @@ export interface EnvConfig {
 	getCnpjApiBaseUrl(): string;
 	getStorageUrl(): string;
 	getStorageApiKey(): string;
+	getPaymentAccessToken(): string;
 }

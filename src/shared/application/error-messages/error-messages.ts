@@ -19,6 +19,7 @@ export const ErrorMessages = {
 	INVALID_CHANGE_PASSWORD_TOKEN: 'Token de troca de senha inválido',
 	FILE_LIMIT_EXCEEDED: 'Tamanho máximo do arquivo excedido',
 	INVALID_CHECK_EMAIL_CODE: 'Código de verificação inválido',
+	FAILED_TO_CREATE_SIGNATURE: 'Falha ao criar assinatura',
 
 	userNotFoundByEmail: (email: string) =>
 		`Usuário não encontrado pelo email ${email}`,

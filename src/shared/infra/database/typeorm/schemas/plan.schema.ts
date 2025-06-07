@@ -22,6 +22,10 @@ export class PlanSchema {
 		precision: 6,
 		scale: 2,
 		nullable: false,
+		transformer: {
+			to: (value: number) => value,
+			from: (value: string) => Number.parseFloat(value),
+		},
 	})
 	price: number;
 }

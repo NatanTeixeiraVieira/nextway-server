@@ -3,7 +3,6 @@ import { Entity } from '@/shared/domain/entities/entity';
 import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { PaymentFinishedEvent } from '../events/payment-finished.event';
 import { TenantPaymentValidatorFactory } from '../validators/tenant-payment.validator';
-import { CardProps } from './card.entity';
 
 export type TenantPaymentStatus = 'PAID' | 'PENDING' | 'FAILED' | 'CANCELED';
 
@@ -11,69 +10,50 @@ export type TenantPaymentProps = {
 	tenantId: string;
 	price: number;
 	currency: string;
-	card: CardProps;
 	status: TenantPaymentStatus;
 	nextDueDate: Date | null;
 };
 
-type PayProps = {
-	tenantId: string;
-	price: number;
-	currency: string;
-	cardToken: string;
-	cardLastDigits: string;
-	cardBrand: string;
+export type FinishPaymentProps = {
+	status: TenantPaymentStatus;
+	nextDueDate: Date;
 };
 
-type FinishPaymentProps = {
-	payerEmail: string;
-	payerName: string;
-	payerDocument: string;
-	status: TenantPaymentStatus;
+export type InitPaymentProps = {
+	price: number;
+	tenantId: string;
 };
 
 export interface TenantPayment extends TenantPaymentProps {}
 
 @Data()
 export class TenantPayment extends Entity<TenantPaymentProps> {
-	static initPayment(payProps: PayProps): TenantPayment {
+	static initPayment(initPaymentProps: InitPaymentProps): TenantPayment {
 		const tenantPaymentProps: TenantPaymentProps = {
-			tenantId: payProps.tenantId,
-			price: payProps.price,
-			currency: payProps.currency,
-			card: {
-				tenantId: payProps.tenantId,
-				token: payProps.cardToken,
-				lastDigits: payProps.cardLastDigits,
-				brand: payProps.cardBrand,
-				active: true,
-			},
+			currency: 'BRL',
+			price: initPaymentProps.price,
 			status: 'PENDING',
+			tenantId: initPaymentProps.tenantId,
 			nextDueDate: null,
 		};
+
 		TenantPayment.validate(tenantPaymentProps);
 
-		return new TenantPayment(tenantPaymentProps);
+		const tenantPayment = new TenantPayment(tenantPaymentProps);
+		return tenantPayment;
 	}
 
-	finishPayment(finishPaymentProps: FinishPaymentProps): void {
-		const { status, ...finishPaymentPropsRest } = finishPaymentProps;
-		TenantPayment.validate({ ...this.props, status });
+	finishPayment(payProps: FinishPaymentProps): void {
+		TenantPayment.validate({ ...this.props, ...payProps });
 
-		const today = new Date();
-		const signatureNumberOfMonths = 1;
-		const nextMonthDate = new Date(
-			today.getFullYear(),
-			today.getMonth() + signatureNumberOfMonths,
-			today.getDate(),
-		);
+		this.nextDueDate = payProps.nextDueDate;
+		this.status = payProps.status;
+		this.updateTimestamp();
 
-		this.status = status;
-		this.nextDueDate = nextMonthDate;
+		const paymentFinishedEvent = new PaymentFinishedEvent({
+			nextDueDate: payProps.nextDueDate,
+		});
 
-		const paymentFinishedEvent = new PaymentFinishedEvent(
-			finishPaymentPropsRest,
-		);
 		this.addDomainEvent(paymentFinishedEvent);
 	}
 

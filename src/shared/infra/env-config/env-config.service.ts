@@ -6,6 +6,7 @@ import {
 
 export class EnvConfigService implements EnvConfig {
 	constructor(private readonly configService: ConfigService) {}
+
 	getStorageUrl(): string {
 		throw new Error('Method not implemented.');
 	}
@@ -14,6 +15,9 @@ export class EnvConfigService implements EnvConfig {
 	}
 	getPaymentAccessToken(): string {
 		return this.configService.get<string>('PAYMENT_ACCESS_TOKEN') as string;
+	}
+	getPaymentTestPayerEmail(): string {
+		return this.configService.get<string>('PAYMENT_TEST_PAYER_EMAIL') as string;
 	}
 
 	getCnpjApiBaseUrl(): string {

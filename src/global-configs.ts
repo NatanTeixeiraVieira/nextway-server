@@ -11,6 +11,7 @@ import { InvalidCredentialsErrorFilter } from './shared/infra/exception-filters/
 import { InvalidEmailCodeErrorFilter } from './shared/infra/exception-filters/invalid-email-code-error/invalid-email-code-error.filter';
 import { InvalidTokenErrorFilter } from './shared/infra/exception-filters/invalid-token-error/invalid-token-error.filter';
 import { NotFoundErrorFilter } from './shared/infra/exception-filters/not-found-error/not-found-error.filter';
+import { UnauthorizedErrorFilter } from './shared/infra/exception-filters/unauthorized-error/unauthorized-error.filter';
 
 export async function applyGlobalConfigs(
 	app: NestFastifyApplication,
@@ -61,5 +62,6 @@ export async function applyGlobalConfigs(
 		new InvalidCredentialsErrorFilter(),
 		new InvalidEmailCodeErrorFilter(),
 		new ConflictErrorFilter(),
+		new UnauthorizedErrorFilter(),
 	);
 }

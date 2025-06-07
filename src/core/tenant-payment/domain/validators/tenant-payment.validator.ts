@@ -5,12 +5,9 @@ import {
 	IsOptional,
 	IsPositive,
 	IsString,
-	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
-import { Type } from 'class-transformer';
 import { TenantPaymentProps } from '../entities/tenant-payment.entity';
-import { CardRules } from './card.validator';
 
 export enum TenantPaymentStatusRules {
 	PAID = 'PAID',
@@ -32,10 +29,10 @@ export class TenantPaymentRules {
 	@IsNotEmpty()
 	currency: string;
 
-	@ValidateNested()
-	@Type(() => CardRules)
-	@IsNotEmpty()
-	card: CardRules;
+	// @ValidateNested()
+	// @Type(() => CardRules)
+	// @IsNotEmpty()
+	// card: CardRules;
 
 	@IsEnum(TenantPaymentStatusRules)
 	@IsNotEmpty()

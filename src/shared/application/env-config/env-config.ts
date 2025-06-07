@@ -32,4 +32,5 @@ export interface EnvConfig {
 	getStorageUrl(): string;
 	getStorageApiKey(): string;
 	getPaymentAccessToken(): string;
+	getPaymentTestPayerEmail(): string;
 }

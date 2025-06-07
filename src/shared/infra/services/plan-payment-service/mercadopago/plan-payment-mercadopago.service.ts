@@ -5,6 +5,9 @@ import { InternalServerError } from '@/shared/application/errors/internal-server
 import {
 	CreateSignatureProps,
 	CreateSignatureResponse,
+	GrantFinishedPaymentProps,
+	GrantFinishedPaymentResponse,
+	PaymentInfos,
 	PlanPaymentService,
 } from '@/shared/application/services/plan-payment.service';
 import { Inject } from '@/shared/infra/decorators/index';
@@ -14,7 +17,8 @@ export class PlanPaymentMercadopagoService implements PlanPaymentService {
 	private readonly preApproval: PreApproval;
 
 	constructor(
-		@Inject(Providers.ENV_CONFIG_SERVICE) envConfigService: EnvConfig,
+		@Inject(Providers.ENV_CONFIG_SERVICE)
+		private readonly envConfigService: EnvConfig,
 	) {
 		const client = new MercadoPagoConfig({
 			accessToken: envConfigService.getPaymentAccessToken(),
@@ -27,19 +31,61 @@ export class PlanPaymentMercadopagoService implements PlanPaymentService {
 	async createSignature(
 		props: CreateSignatureProps,
 	): Promise<CreateSignatureResponse> {
+		const payerEmail = this.getPayerEmail(props.payerEmail);
 		const response = await this.preApproval.create({
 			body: {
+				payer_email: payerEmail,
+				auto_recurring: {
+					frequency: 1,
+					frequency_type: 'months',
+					transaction_amount: props.planPrice,
+					currency_id: 'BRL',
+				},
+				reason: 'Subscription',
+				status: 'pending',
 				external_reference: props.payerId,
-				payer_email: props.payerEmail,
-				card_token_id: props.cardToken,
-				preapproval_plan_id: props.externalPlanId,
+				back_url: 'https://www.google.com',
 			},
 		});
 
-		if (!response.id) {
+		if (!response.id || !response.init_point) {
 			throw new InternalServerError(ErrorMessages.FAILED_TO_CREATE_SIGNATURE);
 		}
 
-		return { signatureId: response.id };
+		return { initUrl: response.init_point };
+	}
+
+	isPaymentFinished(paymentInfos: PaymentInfos): boolean {
+		return (
+			paymentInfos.action === 'updated' && paymentInfos.entity === 'preapproval'
+		);
+	}
+
+	async grantFinishedPayment(
+		props: GrantFinishedPaymentProps,
+	): Promise<GrantFinishedPaymentResponse | null> {
+		const response = await this.preApproval.get({ id: props.payerId });
+
+		if (
+			!response.external_reference ||
+			response.status !== 'authorized' ||
+			!response.next_payment_date
+		) {
+			return null;
+		}
+
+		return {
+			applicationPayerId: response.external_reference,
+			nextPaymentDate: new Date(response.next_payment_date),
+		};
+	}
+
+	private getPayerEmail(payerEmail: string): string {
+		const nodeEnv = this.envConfigService.getNodeEnv();
+		if (nodeEnv !== 'production') {
+			return this.envConfigService.getPaymentTestPayerEmail();
+		}
+
+		return payerEmail;
 	}
 }

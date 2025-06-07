@@ -1,15 +1,12 @@
-import { Data } from '@/shared/domain/decorators/data.decorator';
 import { DomainEvent } from '@/shared/domain/events/domain-event';
 
-type PaymentFinishedEventProps = {
-	payerEmail: string;
-	payerName: string;
-	payerDocument: string;
+type PaymentMadeEventProps = {
+	nextDueDate: Date;
 };
 
-@Data()
-export class PaymentFinishedEvent extends DomainEvent {
-	constructor(readonly props: PaymentFinishedEventProps) {
-		super();
-	}
+export class PaymentFinishedEvent
+	extends DomainEvent
+	implements PaymentMadeEventProps
+{
+	nextDueDate: Date;
 }

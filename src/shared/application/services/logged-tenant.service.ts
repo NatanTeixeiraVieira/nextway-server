@@ -1,5 +1,6 @@
 export type LoggedTenant = {
 	id: string;
+	email: string;
 };
 
 export interface LoggedTenantService {

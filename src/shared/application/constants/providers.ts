@@ -15,4 +15,5 @@ export const Providers = {
 	CITY_QUERY: 'CityQuery',
 	PLAN_PAYMENT_SERVICE: 'PlanPaymentService',
 	CARD_SERVICE: 'CardService',
+	MESSAGING_SERVICE: 'MessagingService',
 } as const;

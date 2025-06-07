@@ -11,13 +11,13 @@ export class TenantPaymentTypeormRepositoryMapper
 	toEntity(schema: TenantPaymentSchema): TenantPayment {
 		return TenantPayment.with({
 			id: schema.id,
-			card: {
-				active: schema.card.active,
-				brand: schema.card.brand,
-				lastDigits: schema.card.lastDigits,
-				tenantId: schema.card.tenantId,
-				token: schema.card.token,
-			},
+			// card: {
+			// 	active: schema.card.active,
+			// 	brand: schema.card.brand,
+			// 	lastDigits: schema.card.lastDigits,
+			// 	tenantId: schema.card.tenantId,
+			// 	token: schema.card.token,
+			// },
 			currency: schema.currency,
 			nextDueDate: schema.nextDueDate,
 			price: schema.price,
@@ -34,13 +34,13 @@ export class TenantPaymentTypeormRepositoryMapper
 	toSchema(entity: TenantPayment): TenantPaymentSchema {
 		return TenantPaymentSchema.with({
 			id: entity.id,
-			card: {
-				active: entity.card.active,
-				brand: entity.card.brand,
-				lastDigits: entity.card.lastDigits,
-				tenantId: entity.card.tenantId,
-				token: entity.card.token,
-			},
+			// card: {
+			// 	active: entity.card.active,
+			// 	brand: entity.card.brand,
+			// 	lastDigits: entity.card.lastDigits,
+			// 	tenantId: entity.card.tenantId,
+			// 	token: entity.card.token,
+			// },
 			currency: entity.currency,
 			nextDueDate: entity.nextDueDate,
 			price: entity.price,

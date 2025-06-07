@@ -22,6 +22,7 @@ export class AuthAppJwtService implements AuthService {
 	): Promise<Authenticate> {
 		const payload: AuthenticatePayload = {
 			sub: client.id,
+			email: client.email,
 		};
 
 		const [accessToken, refreshToken] = await Promise.all([
@@ -38,6 +39,7 @@ export class AuthAppJwtService implements AuthService {
 	async refresh<Client extends BaseClient>(client: Client): Promise<Refresh> {
 		const payload: AuthenticatePayload = {
 			sub: client.id,
+			email: client.email,
 		};
 		const accessToken = await this.generateAccessToken(payload);
 

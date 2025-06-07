@@ -54,7 +54,10 @@ export class RefreshTokenGuard implements CanActivate {
 			throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 		}
 
-		this.loggedUserService.setLoggedUser({ id: jwtPayload.sub });
+		this.loggedUserService.setLoggedUser({
+			id: jwtPayload.sub,
+			email: jwtPayload.email,
+		});
 
 		return true;
 	}

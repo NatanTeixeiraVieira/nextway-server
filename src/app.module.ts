@@ -13,12 +13,14 @@ import { JwtServiceModule } from './shared/infra/services/jwt-service/jwt-servic
 import { LoggedTenantModule } from './shared/infra/services/logged-tenant/logged-tenant.module';
 import { LoggedUserModule } from './shared/infra/services/logged-user/logged-user.module';
 import { MailServiceModule } from './shared/infra/services/mail-service/mail-service.module';
+import { MessagingModule } from './shared/infra/services/messaging-service/messaging.module';
 import { PlanPaymentServiceModule } from './shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
 import { SharedModule } from './shared/infra/shared.module';
 
 @Module({
 	imports: [
+		MessagingModule,
 		CardServiceModule,
 		TenantPaymentModule,
 		PlanPaymentServiceModule,

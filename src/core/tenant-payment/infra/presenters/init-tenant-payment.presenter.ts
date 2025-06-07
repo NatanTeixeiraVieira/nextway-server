@@ -2,10 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Output } from '../../application/usecases/init-tenant-payment.usecase';
 
 export class InitTenantPaymentPresenter {
-	@ApiProperty({ description: 'Tenant payment ID' })
-	readonly id: string;
+	@ApiProperty({
+		description:
+			'Init url that redirects to payment gateway to create signature',
+	})
+	readonly initUrl: string;
 
 	constructor(output: Output) {
-		this.id = output.id;
+		this.initUrl = output.initUrl;
 	}
 }

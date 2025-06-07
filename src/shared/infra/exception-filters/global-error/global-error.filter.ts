@@ -27,7 +27,7 @@ export class GlobalErrorFilter implements ExceptionFilter {
 				name: exception.name,
 			});
 		} else {
-			exceptionDetails = String(exception);
+			exceptionDetails = JSON.stringify(exception);
 		}
 
 		this.logger.error(`Erro desconhecido ocorreu: ${exceptionDetails}`);

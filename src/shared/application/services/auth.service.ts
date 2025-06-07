@@ -36,10 +36,12 @@ export type ClearAuthCookiesProps = {
 
 export type AuthenticatePayload = {
 	sub: string;
+	email: string;
 };
 
 export type BaseClient = {
 	id: string;
+	email: string;
 };
 
 export interface AuthService {

@@ -46,7 +46,10 @@ export class TenantAuthGuard implements CanActivate {
 			const payload =
 				await this.jwtService.decodeJwt<AuthenticatePayload>(token);
 
-			this.loggedTenantService.setLoggedTenant({ id: payload.sub });
+			this.loggedTenantService.setLoggedTenant({
+				id: payload.sub,
+				email: payload.email,
+			});
 		} catch (_error) {
 			throw new UnauthorizedError(unauthorizedMessage);
 		}

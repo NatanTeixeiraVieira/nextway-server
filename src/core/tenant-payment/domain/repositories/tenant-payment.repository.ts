@@ -8,4 +8,9 @@ import { TenantPayment } from '../entities/tenant-payment.entity';
 export interface TenantPaymentRepository
 	extends GetByIdRepository<TenantPayment>,
 		CreateRepository<TenantPayment>,
-		UpdateRepository<TenantPayment> {}
+		UpdateRepository<TenantPayment> {
+	getPreviousPaymentByTenantId(tenantId: string): Promise<TenantPayment | null>;
+	getLastPendingPaymentByTenantId(
+		tenantId: string,
+	): Promise<TenantPayment | null>;
+}

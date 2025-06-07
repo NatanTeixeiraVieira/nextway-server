@@ -1,8 +1,7 @@
 import { Schema } from '@/shared/infra/database/typeorm/schemas/schema';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { CardSchema } from './card.schema';
+import { Column, Entity } from 'typeorm';
 
-enum TenantPaymentStatus {
+export enum TenantPaymentStatus {
 	PAID = 'PAID',
 	PENDING = 'PENDING',
 	FAILED = 'FAILED',
@@ -17,6 +16,10 @@ export class TenantPaymentSchema extends Schema {
 		precision: 6,
 		scale: 2,
 		nullable: false,
+		transformer: {
+			to: (value: number) => value,
+			from: (value: string) => Number.parseFloat(value),
+		},
 	})
 	price: number;
 
@@ -33,13 +36,6 @@ export class TenantPaymentSchema extends Schema {
 
 	@Column({ name: 'next_due_date', type: 'timestamp', nullable: true })
 	nextDueDate: Date | null;
-
-	@JoinColumn({ name: 'card_id' })
-	@ManyToOne(
-		() => CardSchema,
-		(card) => card.tenantPaymentSchemas,
-	)
-	card: CardSchema;
 
 	@Column({ name: 'tenant_id', type: 'uuid', nullable: false })
 	tenantId: string;

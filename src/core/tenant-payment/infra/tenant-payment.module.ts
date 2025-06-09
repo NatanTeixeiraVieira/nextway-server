@@ -3,7 +3,6 @@ import { PlanQuery } from '@/shared/application/queries/plan.query';
 import { LoggedTenantService } from '@/shared/application/services/logged-tenant.service';
 import { PlanPaymentService } from '@/shared/application/services/plan-payment.service';
 import { CardServiceModule } from '@/shared/infra/services/card-service/card-service.module';
-import { MessagingModule } from '@/shared/infra/services/messaging-service/messaging.module';
 import { PlanPaymentServiceModule } from '@/shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { SharedModule } from '@/shared/infra/shared.module';
 import { Module } from '@nestjs/common';
@@ -23,7 +22,6 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 		PlanPaymentServiceModule,
 		CardServiceModule,
 		SharedModule,
-		MessagingModule,
 		TypeOrmModule.forFeature([TenantPaymentSchema]),
 	],
 	controllers: [TenantPaymentController],

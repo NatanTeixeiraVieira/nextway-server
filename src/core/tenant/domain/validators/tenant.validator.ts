@@ -207,6 +207,10 @@ export class TenantRules {
 	@IsOptional()
 	payerEmail: string | null;
 
+	@IsDate()
+	@IsOptional()
+	nextDueDate: Date | null;
+
 	constructor(props: TenantProps) {
 		Object.assign(this, props);
 	}

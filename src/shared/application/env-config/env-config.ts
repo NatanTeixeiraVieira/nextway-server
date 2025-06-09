@@ -33,4 +33,8 @@ export interface EnvConfig {
 	getStorageApiKey(): string;
 	getPaymentAccessToken(): string;
 	getPaymentTestPayerEmail(): string;
+	getMessagingBrokerUrls(): string[];
+	getMessagingBrokerQueueName(): string;
+	getPaymentSecretSignature(): string;
+	getPaymentRedirectUrl(): string;
 }

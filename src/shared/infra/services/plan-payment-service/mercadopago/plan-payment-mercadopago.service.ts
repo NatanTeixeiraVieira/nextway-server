@@ -44,7 +44,7 @@ export class PlanPaymentMercadopagoService implements PlanPaymentService {
 				reason: 'Subscription',
 				status: 'pending',
 				external_reference: props.payerId,
-				back_url: 'https://www.google.com',
+				back_url: this.envConfigService.getPaymentRedirectUrl(),
 			},
 		});
 

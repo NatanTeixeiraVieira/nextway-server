@@ -12,6 +12,7 @@ import {
 	Inject,
 	Injectable,
 } from '@/shared/infra/decorators/index';
+import { FastifyRequest } from 'fastify';
 
 @Injectable()
 export class TenantAuthGuard implements CanActivate {
@@ -25,7 +26,7 @@ export class TenantAuthGuard implements CanActivate {
 	) {}
 
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		const request = context.switchToHttp().getRequest();
+		const request = context.switchToHttp().getRequest<FastifyRequest>();
 		const token = request.cookies[TenantCookiesName.ACCESS_TOKEN];
 
 		const unauthorizedMessage = ErrorMessages.INVALID_TOKEN;

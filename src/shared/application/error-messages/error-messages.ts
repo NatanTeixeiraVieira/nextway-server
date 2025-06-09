@@ -27,6 +27,9 @@ export const ErrorMessages = {
 	tenantNotFoundByEmail: (email: string) =>
 		`Estabelecimento não encontrado pelo email ${email}`,
 
+	tenantNotFoundById: (id: string) =>
+		`Estabelecimento não encontrado pelo ID ${id}`,
+
 	invalidMimetype: (mimetype: string) => `Mimetype ${mimetype} inválido`,
 
 	stateNotFound: (state: string) => `Estado ${state} não encontrado`,

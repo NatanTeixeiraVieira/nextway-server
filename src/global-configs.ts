@@ -1,5 +1,6 @@
 import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@nestjs/common';
+import { RmqOptions, Transport } from '@nestjs/microservices';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { EnvConfig } from './shared/application/env-config/env-config';
@@ -12,6 +13,26 @@ import { InvalidEmailCodeErrorFilter } from './shared/infra/exception-filters/in
 import { InvalidTokenErrorFilter } from './shared/infra/exception-filters/invalid-token-error/invalid-token-error.filter';
 import { NotFoundErrorFilter } from './shared/infra/exception-filters/not-found-error/not-found-error.filter';
 import { UnauthorizedErrorFilter } from './shared/infra/exception-filters/unauthorized-error/unauthorized-error.filter';
+
+export function getMessagingBrokerConfigs(
+	envConfigService: EnvConfig,
+): RmqOptions {
+	return {
+		transport: Transport.RMQ,
+		options: {
+			exchange: 'my-cool-delayed-exchange-name',
+			exchangeType: 'x-delayed-message',
+			exchangeArguments: { 'x-delayed-type': 'direct' },
+
+			queue: envConfigService.getMessagingBrokerQueueName(),
+			urls: envConfigService.getMessagingBrokerUrls(),
+			queueOptions: {
+				durable: false,
+			},
+			// persistent: true,
+		},
+	};
+}
 
 export async function applyGlobalConfigs(
 	app: NestFastifyApplication,

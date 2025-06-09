@@ -20,6 +20,7 @@ import { StateSchema } from '../../../shared/infra/database/typeorm/schemas/stat
 import { TenantOutputMapper } from '../application/outputs/tenant-output';
 import { TenantQuery } from '../application/queries/tenant.query';
 import { CheckTenantEmailUseCase } from '../application/usecases/check-tenant-email.usecase';
+import { handleFinishedPaymentUseCase } from '../application/usecases/handle-finished-payment.usecase';
 import { RegisterTenantUseCase } from '../application/usecases/register-tenant.usecase';
 import { TenantRepository } from '../domain/repositories/tenant.repository';
 import { TenantController } from './controllers/tenant.controller';
@@ -116,6 +117,14 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				TenantProviders.TENANT_OUTPUT_MAPPER,
 				Providers.AUTH_SERVICE,
 			],
+		},
+
+		{
+			provide: handleFinishedPaymentUseCase,
+			useFactory: (tenantRepository: TenantRepository) => {
+				return new handleFinishedPaymentUseCase(tenantRepository);
+			},
+			inject: [TenantProviders.TENANT_REPOSITORY],
 		},
 	],
 })

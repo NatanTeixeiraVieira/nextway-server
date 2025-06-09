@@ -52,6 +52,8 @@ export type TenantProps = {
 
 	openingHours: OpeningHoursProps[];
 	plan: PlanProps;
+
+	nextDueDate: Date | null;
 };
 
 export type RegisterTenantProps = {
@@ -78,6 +80,10 @@ export type RegisterTenantProps = {
 	verifyEmailCode: string;
 
 	plan: PlanProps;
+};
+
+export type ActivateAccountProps = {
+	nextDueDate: Date;
 };
 
 export interface Tenant extends TenantProps {}
@@ -120,6 +126,7 @@ export class Tenant extends Entity<TenantProps> {
 			payerDocumentType: null,
 			payerEmail: null,
 			payerName: null,
+			nextDueDate: null,
 		};
 
 		Tenant.validate(tenantProps);
@@ -131,6 +138,12 @@ export class Tenant extends Entity<TenantProps> {
 		Tenant.validate(this.props);
 		this.emailVerified = new Date();
 		this.verifyEmailCode = null;
+	}
+
+	activateAccount({ nextDueDate }: ActivateAccountProps): void {
+		Tenant.validate({ ...this.props, nextDueDate });
+		this.nextDueDate = nextDueDate;
+		this.active = true;
 	}
 
 	deleteAccount(): void {

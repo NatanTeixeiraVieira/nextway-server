@@ -36,7 +36,9 @@ export class GlobalErrorFilter implements ExceptionFilter {
 			statusCode: 500,
 			error: 'Internal Server Error',
 			message:
-				exception instanceof Error ? exception.message : String(exception),
+				exception instanceof Error
+					? exception.message
+					: JSON.stringify(exception),
 		});
 	}
 }

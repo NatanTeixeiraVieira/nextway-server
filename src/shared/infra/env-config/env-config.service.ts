@@ -10,14 +10,25 @@ export class EnvConfigService implements EnvConfig {
 	getStorageUrl(): string {
 		throw new Error('Method not implemented.');
 	}
+
 	getStorageApiKey(): string {
 		throw new Error('Method not implemented.');
 	}
+
 	getPaymentAccessToken(): string {
 		return this.configService.get<string>('PAYMENT_ACCESS_TOKEN') as string;
 	}
+
 	getPaymentTestPayerEmail(): string {
 		return this.configService.get<string>('PAYMENT_TEST_PAYER_EMAIL') as string;
+	}
+
+	getPaymentSecretSignature(): string {
+		return this.configService.get<string>('PAYMENT_SECRET_SIGNATURE') as string;
+	}
+
+	getPaymentRedirectUrl(): string {
+		return this.configService.get<string>('PAYMENT_REDIRECT_URL') as string;
 	}
 
 	getCnpjApiBaseUrl(): string {
@@ -146,5 +157,13 @@ export class EnvConfigService implements EnvConfig {
 
 	getZipcodeApiBaseUrl(): string {
 		return this.configService.get<string>('ZIPCODE_API_BASE_URL') as string;
+	}
+
+	getMessagingBrokerUrls(): string[] {
+		return [this.configService.get<string>('RABBITMQ_URL') as string];
+	}
+
+	getMessagingBrokerQueueName(): string {
+		return this.configService.get<string>('RABBITMQ_QUEUE_NAME') as string;
 	}
 }

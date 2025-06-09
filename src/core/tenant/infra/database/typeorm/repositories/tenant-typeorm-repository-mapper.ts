@@ -55,6 +55,7 @@ export class TenantTypeormRepositoryMapper
 					deliveryPrice,
 				}),
 			),
+			nextDueDate: schema.nextDueDate,
 			emailVerified: schema.emailVerified,
 			verifyEmailCode: schema.verifyEmailCode,
 			forgotPasswordEmailVerificationToken:
@@ -117,6 +118,7 @@ export class TenantTypeormRepositoryMapper
 			coverImagePath: entity.coverImagePath,
 			logoImagePath: entity.logoImagePath,
 			description: entity.description,
+			nextDueDate: entity.nextDueDate,
 			banners: entity.banners.map((banner) => ({
 				imagePath: banner.imagePath,
 				active: banner.active,

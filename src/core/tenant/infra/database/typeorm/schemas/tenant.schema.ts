@@ -216,6 +216,9 @@ export class TenantSchema extends Schema {
 	@Column({ name: 'payer_email', type: 'varchar', length: 255, nullable: true })
 	payerEmail: string | null;
 
+	@Column({ name: 'next_due_date', type: 'timestamp', nullable: true })
+	nextDueDate: Date | null;
+
 	@ManyToOne(() => CitySchema)
 	@JoinColumn({ name: 'city_id' })
 	city: CitySchema;

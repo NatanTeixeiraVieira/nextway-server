@@ -52,6 +52,7 @@ export class TenantPayment extends Entity<TenantPaymentProps> {
 
 		const paymentFinishedEvent = new PaymentFinishedEvent({
 			nextDueDate: payProps.nextDueDate,
+			tenantId: this.tenantId,
 		});
 
 		this.addDomainEvent(paymentFinishedEvent);

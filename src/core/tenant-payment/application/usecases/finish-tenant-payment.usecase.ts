@@ -7,9 +7,9 @@ import {
 } from '@/shared/application/services/plan-payment.service';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { DomainEvent } from '@/shared/domain/events/domain-event';
+import { MessagingTopics } from '../../../../shared/application/constants/messaging';
 import { TenantPayment } from '../../domain/entities/tenant-payment.entity';
 import { TenantPaymentRepository } from '../../domain/repositories/tenant-payment.repository';
-import { MessagingTopics } from '../constants/messaging';
 
 export type Input = {
 	payerId: string;

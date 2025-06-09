@@ -6,11 +6,12 @@ import {
 	Post,
 	UseGuards,
 } from '@/shared/infra/decorators';
-import { TenantAuthGuard } from '@/shared/infra/guards/tenant-payment.guard';
+import { TenantAuthGuard } from '@/shared/infra/guards/tenant-auth.guard';
 import { FinishTenantPaymentUseCase } from '../../application/usecases/finish-tenant-payment.usecase';
 import { InitTenantPaymentUseCase } from '../../application/usecases/init-tenant-payment.usecase';
 import { TenantPaymentInitPaymentDocResponse } from '../decorators/tenant-payment-init-payment-doc-response.decorator';
 import { FinishTenantPaymentDto } from '../dtos/finish-tenant-payment.dto';
+import { PaymentGuard } from '../guards/payment.guard';
 import { InitTenantPaymentPresenter } from '../presenters/init-tenant-payment.presenter';
 
 @Controller('tenant-payment')
@@ -29,7 +30,7 @@ export class TenantPaymentController {
 		return new InitTenantPaymentPresenter(output);
 	}
 
-	// TODO Add guard to verify payment gateway token
+	@UseGuards(PaymentGuard)
 	@Post('/finish-payment')
 	async finishTenantPayment(
 		@Body() dto: FinishTenantPaymentDto,

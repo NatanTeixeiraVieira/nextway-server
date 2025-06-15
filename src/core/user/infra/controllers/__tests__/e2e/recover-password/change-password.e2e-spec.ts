@@ -61,6 +61,7 @@ describe('UserController changeUserPassword e2e test', () => {
 
 		await typeOrmRepositoryUser.save({
 			...UserDataBuilder({
+				active: true,
 				email: 'test@email.com',
 				forgotPasswordEmailVerificationToken: token,
 			}),
@@ -71,6 +72,10 @@ describe('UserController changeUserPassword e2e test', () => {
 			changePasswordToken: token,
 			password: 'new_password_test',
 		};
+	});
+
+	afterAll(async () => {
+		await app.close();
 	});
 
 	it('should throw an error when change password token is invalid', async () => {
@@ -92,12 +97,12 @@ describe('UserController changeUserPassword e2e test', () => {
 		await typeOrmRepositoryUser.clear();
 		await typeOrmRepositoryUser.save({
 			...UserDataBuilder({
+				active: true,
 				email: 'test@email.com',
 				forgotPasswordEmailVerificationToken: 'different_token',
 			}),
 			id: userId,
 		});
-
 		const response = await request(app.getHttpServer())
 			.post('/api/user/v1/recover-password/change-password')
 			.send(changePasswordDto)

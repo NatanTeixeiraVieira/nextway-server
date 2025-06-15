@@ -7,6 +7,7 @@ import { InvalidCredentialsError } from '@/shared/application/errors/invalid-cre
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
 import { EntityProps } from '@/shared/domain/entities/entity';
+import { UserCookiesName } from '../../../constants/cookies';
 import { Input, LoginUseCase } from '../../login.usecase';
 
 jest.mock(
@@ -138,6 +139,10 @@ describe('LoginUseCase unit tests', () => {
 		expect(authService.setTokensInCookies).toHaveBeenCalledWith({
 			accessToken: 'test accessToken',
 			refreshToken: 'test refreshToken',
+			accessTokenName: UserCookiesName.ACCESS_TOKEN,
+			refreshTokenName: UserCookiesName.REFRESH_TOKEN,
+			accessTokenPath: UserCookiesName.ACCESS_TOKEN_PATH,
+			refreshTokenPath: UserCookiesName.REFRESH_TOKEN_PATH,
 			setCookies,
 		});
 

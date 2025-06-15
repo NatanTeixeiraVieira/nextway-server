@@ -1,4 +1,3 @@
-import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { JwtService } from '@/shared/application/services/jwt.service';
@@ -62,7 +61,7 @@ describe('AuthAppJwtService unit tests', () => {
 		expect(jwtService.generateJwt).toHaveBeenCalledTimes(2);
 		expect(jwtService.generateJwt).toHaveBeenNthCalledWith(
 			1,
-			{ sub: user.id },
+			{ sub: user.id, email: user.email },
 			{
 				expiresIn: envConfigValues.jwtExpiresIn,
 				secret: envConfigValues.jwtSecret,
@@ -72,7 +71,7 @@ describe('AuthAppJwtService unit tests', () => {
 		expect(envConfigService.getRefreshTokenExpiresIn).toHaveBeenCalledTimes(1);
 		expect(jwtService.generateJwt).toHaveBeenNthCalledWith(
 			2,
-			{ sub: user.id },
+			{ sub: user.id, email: user.email },
 			{
 				expiresIn: envConfigValues.refreshTokenExpiresIn,
 				secret: envConfigValues.refreshTokenSecret,
@@ -90,36 +89,44 @@ describe('AuthAppJwtService unit tests', () => {
 
 		const accessToken = 'mockAccessToken';
 		const refreshToken = 'mockRefreshToken';
+		const accessTokenName = 'testAccessTokenName';
+		const refreshTokenName = 'testRefreshTokenName';
+		const refreshTokenPath = 'testRefreshTokenPath';
+		const accessTokenPath = 'testAccessTokenPath';
 
 		sut.setTokensInCookies({
 			accessToken,
 			refreshToken,
+			accessTokenName,
+			refreshTokenName,
+			refreshTokenPath,
+			accessTokenPath,
 			setCookies,
 		});
 
 		expect(setCookies).toHaveBeenCalledTimes(2);
 		expect(setCookies).toHaveBeenNthCalledWith(
 			1,
-			UserCookiesName.ACCESS_TOKEN,
+			accessTokenName,
 			accessToken,
 			{
 				httpOnly: true,
 				secure: false,
 				maxAge: envConfigValues.jwtExpiresIn,
 				sameSite: 'Strict',
-				path: UserCookiesName.ACCESS_TOKEN_PATH,
+				path: accessTokenPath,
 			},
 		);
 		expect(setCookies).toHaveBeenNthCalledWith(
 			2,
-			UserCookiesName.REFRESH_TOKEN,
+			refreshTokenName,
 			refreshToken,
 			{
 				httpOnly: true,
 				secure: false,
 				maxAge: envConfigValues.refreshTokenExpiresIn,
 				sameSite: 'Strict',
-				path: UserCookiesName.REFRESH_TOKEN_PATH,
+				path: refreshTokenPath,
 			},
 		);
 	});
@@ -127,8 +134,18 @@ describe('AuthAppJwtService unit tests', () => {
 	it('should clear auth cookies', () => {
 		(envConfigService.getNodeEnv as jest.Mock).mockReturnValue('test');
 		const clearCookies = jest.fn();
+		const refreshTokenName = 'refreshTokenName';
+		const accessTokenName = 'testAccessTokenName';
+		const accessTokenPath = 'testAccessTokenPath';
+		const refreshTokenPath = 'testRefreshTokenPath';
 
-		sut.clearAuthCookies({ clearCookies });
+		sut.clearAuthCookies({
+			accessTokenPath,
+			refreshTokenName,
+			accessTokenName,
+			refreshTokenPath,
+			clearCookies,
+		});
 
 		const cookieOptions = {
 			httpOnly: true,
@@ -138,22 +155,14 @@ describe('AuthAppJwtService unit tests', () => {
 		};
 
 		expect(clearCookies).toHaveBeenCalledTimes(2);
-		expect(clearCookies).toHaveBeenNthCalledWith(
-			1,
-			UserCookiesName.ACCESS_TOKEN,
-			{
-				...cookieOptions,
-				path: UserCookiesName.ACCESS_TOKEN_PATH,
-			},
-		);
-		expect(clearCookies).toHaveBeenNthCalledWith(
-			2,
-			UserCookiesName.REFRESH_TOKEN,
-			{
-				...cookieOptions,
-				path: UserCookiesName.REFRESH_TOKEN_PATH,
-			},
-		);
+		expect(clearCookies).toHaveBeenNthCalledWith(1, accessTokenName, {
+			...cookieOptions,
+			path: accessTokenPath,
+		});
+		expect(clearCookies).toHaveBeenNthCalledWith(2, refreshTokenName, {
+			...cookieOptions,
+			path: refreshTokenPath,
+		});
 	});
 
 	it('should refresh token', async () => {
@@ -172,7 +181,7 @@ describe('AuthAppJwtService unit tests', () => {
 		expect(envConfigService.getJwtExpiresIn).toHaveBeenCalledTimes(1);
 		expect(jwtService.generateJwt).toHaveBeenCalledTimes(1);
 		expect(jwtService.generateJwt).toHaveBeenCalledWith(
-			{ sub: user.id },
+			{ sub: user.id, email: user.email },
 			{
 				expiresIn: envConfigValues.jwtExpiresIn,
 				secret: envConfigValues.jwtSecret,
@@ -187,20 +196,23 @@ describe('AuthAppJwtService unit tests', () => {
 	it('should set access token in cookies', () => {
 		const setCookies = jest.fn();
 		const accessToken = 'mockAccessToken';
+		const accessTokenName = 'testName';
+		const accessTokenPath = 'testPath';
 
-		sut.setAccessTokenInCookies({ accessToken, setCookies });
+		sut.setAccessTokenInCookies({
+			accessToken,
+			accessTokenName,
+			accessTokenPath,
+			setCookies,
+		});
 
 		expect(setCookies).toHaveBeenCalledTimes(1);
-		expect(setCookies).toHaveBeenCalledWith(
-			UserCookiesName.ACCESS_TOKEN,
-			accessToken,
-			{
-				httpOnly: true,
-				secure: false,
-				path: UserCookiesName.ACCESS_TOKEN_PATH,
-				maxAge: envConfigValues.jwtExpiresIn,
-				sameSite: 'Strict',
-			},
-		);
+		expect(setCookies).toHaveBeenCalledWith(accessTokenName, accessToken, {
+			httpOnly: true,
+			secure: false,
+			maxAge: envConfigValues.jwtExpiresIn,
+			sameSite: 'Strict',
+			path: accessTokenPath,
+		});
 	});
 });

@@ -8,6 +8,7 @@ import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { NotFoundError } from '@/shared/application/errors/not-found-error';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { UserCookiesName } from '../../../constants/cookies';
 import { CheckEmailUseCase } from '../../check-email.usecase';
 
 jest.mock(
@@ -121,6 +122,10 @@ describe('CheckEmailUseCase unit tests', () => {
 			accessToken: 'accessTokenTest',
 			refreshToken: 'refreshTokenTest',
 			setCookies,
+			accessTokenName: UserCookiesName.ACCESS_TOKEN,
+			refreshTokenName: UserCookiesName.REFRESH_TOKEN,
+			accessTokenPath: UserCookiesName.ACCESS_TOKEN_PATH,
+			refreshTokenPath: UserCookiesName.REFRESH_TOKEN_PATH,
 		});
 
 		expect(user.toJSON).toHaveBeenCalledTimes(1);

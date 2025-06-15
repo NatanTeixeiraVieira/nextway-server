@@ -36,9 +36,10 @@ describe('ChangePasswordUseCase unit tests', () => {
 		userChangePassword = jest.fn();
 
 		userRepository = {
-			getById: jest
-				.fn()
-				.mockResolvedValue({ changePassword: userChangePassword }),
+			getById: jest.fn().mockResolvedValue({
+				changePassword: userChangePassword,
+				forgotPasswordEmailVerificationToken: 'valid_token',
+			}),
 			update: jest.fn(),
 		} as unknown as UserRepository;
 
@@ -88,7 +89,9 @@ describe('ChangePasswordUseCase unit tests', () => {
 	});
 
 	it('should throw an error when user token is not equal logged user token', async () => {
-		(userRepository.getById as jest.Mock).mockResolvedValue(null);
+		(userRepository.getById as jest.Mock).mockResolvedValue({
+			forgotPasswordEmailVerificationToken: 'invalid_user_token',
+		});
 
 		await expect(
 			sut.execute({
@@ -123,6 +126,7 @@ describe('ChangePasswordUseCase unit tests', () => {
 		expect(userRepository.update).toHaveBeenCalledTimes(1);
 		expect(userRepository.update).toHaveBeenCalledWith({
 			changePassword: userChangePassword,
+			forgotPasswordEmailVerificationToken: 'valid_token',
 		});
 	});
 });

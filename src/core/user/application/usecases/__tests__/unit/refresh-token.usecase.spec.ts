@@ -3,6 +3,7 @@ import { ErrorMessages } from '@/shared/application/error-messages/error-message
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { LoggedUserService } from '@/shared/application/services/logged-user.service';
+import { UserCookiesName } from '../../../constants/cookies';
 import { RefreshTokenUseCase } from '../../refresh-token.usecase';
 
 describe('RefreshTokenUseCase unit tests', () => {
@@ -43,6 +44,8 @@ describe('RefreshTokenUseCase unit tests', () => {
 
 		expect(authService.setAccessTokenInCookies).toHaveBeenCalledWith({
 			accessToken: 'mockAccessToken',
+			accessTokenName: UserCookiesName.ACCESS_TOKEN,
+			accessTokenPath: UserCookiesName.REFRESH_TOKEN_PATH,
 			setCookies,
 		});
 	});

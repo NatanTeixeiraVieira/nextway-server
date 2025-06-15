@@ -1,5 +1,5 @@
 import { UserCookiesName } from '@/core/user/application/constants/cookies';
-import { UserRepository } from '@/core/user/domain/repositories/user.repository';
+import { UserQuery } from '@/core/user/application/queries/user.query';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
@@ -27,10 +27,11 @@ describe('RefreshTokenGuard unit tests', () => {
 	let sut: RefreshTokenGuard;
 	let envConfigService: EnvConfig;
 	let jwtService: JwtService;
-	let userRepository: UserRepository;
+	let userQuery: UserQuery;
 	let loggedUserService: LoggedUserService;
 	const loggedUser = UserDataBuilder();
 	let context: ExecutionContext;
+	let payload: AuthenticatePayload;
 
 	beforeEach(() => {
 		envConfigService = {
@@ -41,8 +42,9 @@ describe('RefreshTokenGuard unit tests', () => {
 
 		context = createMockExecutionContext('validToken');
 
-		const payload: AuthenticatePayload = {
+		payload = {
 			sub: 'mockSub',
+			email: 'testEmail@email.com',
 		};
 
 		jwtService = {
@@ -50,9 +52,9 @@ describe('RefreshTokenGuard unit tests', () => {
 			decodeJwt: jest.fn().mockResolvedValue(payload),
 		} as unknown as JwtService;
 
-		userRepository = {
-			getById: jest.fn().mockReturnValue(loggedUser),
-		} as unknown as UserRepository;
+		userQuery = {
+			existsActiveById: jest.fn().mockReturnValue(loggedUser),
+		} as unknown as UserQuery;
 
 		loggedUserService = {
 			setLoggedUser: jest.fn(),
@@ -61,7 +63,7 @@ describe('RefreshTokenGuard unit tests', () => {
 		sut = new RefreshTokenGuard(
 			envConfigService,
 			jwtService,
-			userRepository,
+			userQuery,
 			loggedUserService,
 		);
 	});
@@ -86,7 +88,7 @@ describe('RefreshTokenGuard unit tests', () => {
 	});
 
 	it('should throw an error if user is not found', async () => {
-		(userRepository.getById as jest.Mock).mockResolvedValue(null);
+		(userQuery.existsActiveById as jest.Mock).mockResolvedValue(null);
 
 		await expect(sut.canActivate(context)).rejects.toThrow(
 			new BadRequestError(ErrorMessages.USER_NOT_FOUND),
@@ -107,10 +109,13 @@ describe('RefreshTokenGuard unit tests', () => {
 		expect(jwtService.decodeJwt).toHaveBeenCalledTimes(1);
 		expect(jwtService.decodeJwt).toHaveBeenCalledWith('validToken');
 
-		expect(userRepository.getById).toHaveBeenCalledTimes(1);
-		expect(userRepository.getById).toHaveBeenCalledWith('mockSub');
+		expect(userQuery.existsActiveById).toHaveBeenCalledTimes(1);
+		expect(userQuery.existsActiveById).toHaveBeenCalledWith('mockSub');
 
 		expect(loggedUserService.setLoggedUser).toHaveBeenCalledTimes(1);
-		expect(loggedUserService.setLoggedUser).toHaveBeenCalledWith(loggedUser);
+		expect(loggedUserService.setLoggedUser).toHaveBeenCalledWith({
+			id: payload.sub,
+			email: payload.email,
+		});
 	});
 });

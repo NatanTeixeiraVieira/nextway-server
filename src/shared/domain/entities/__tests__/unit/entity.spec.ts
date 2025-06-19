@@ -1,3 +1,4 @@
+import { DomainEvent } from '@/shared/domain/events/domain-event';
 import { Audit, Entity } from '../../entity';
 
 type StubProps = {
@@ -50,7 +51,7 @@ describe('Entity unit tests', () => {
 		expect(entity['props']).toStrictEqual({ ...props, id, audit });
 	});
 
-	it('Should convert a entity to a Javascript Object', () => {
+	it('should convert a entity to a Javascript Object', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
 			prop1: 'value1',
@@ -66,7 +67,7 @@ describe('Entity unit tests', () => {
 		expect(entity.toJSON()).toStrictEqual(props);
 	});
 
-	it('Should mark entity as deleted', () => {
+	it('should mark entity as deleted', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
 			prop1: 'value1',
@@ -83,7 +84,7 @@ describe('Entity unit tests', () => {
 		expect(entity.audit.deletedAt).toBeInstanceOf(Date);
 	});
 
-	it('Should update the entity updatedAt', () => {
+	it('should update the entity updatedAt', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
 			prop1: 'value1',
@@ -100,7 +101,7 @@ describe('Entity unit tests', () => {
 		expect(entity.audit.updatedAt).toBeInstanceOf(Date);
 	});
 
-	it('Should get id (getter)', () => {
+	it('should get id (getter)', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
 			prop1: 'value1',
@@ -116,7 +117,7 @@ describe('Entity unit tests', () => {
 		expect(entity.id).toBe(props.id);
 	});
 
-	it('Should get audit (getter)', () => {
+	it('should get audit (getter)', () => {
 		const props = {
 			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
 			prop1: 'value1',
@@ -134,5 +135,45 @@ describe('Entity unit tests', () => {
 		expect(entity.audit.createdAt).toBe(props.audit.createdAt);
 		expect(entity.audit.updatedAt).toBe(props.audit.updatedAt);
 		expect(entity.audit.deletedAt).toBe(props.audit.deletedAt);
+	});
+
+	it('should add a domain event', () => {
+		const props = {
+			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
+			prop1: 'value1',
+			prop2: 21,
+			audit: {
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				deletedAt: null,
+			},
+		};
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
+
+		const event = { type: 'EVENT_1' } as unknown as DomainEvent;
+		entity['addDomainEvent'](event);
+
+		expect(entity['events']).toEqual([event]);
+	});
+
+	it('should pull and clear domain events', () => {
+		const props = {
+			id: '25113aa4-a82a-4018-9726-ed9606afcb91',
+			prop1: 'value1',
+			prop2: 21,
+			audit: {
+				createdAt: new Date(),
+				updatedAt: new Date(),
+				deletedAt: null,
+			},
+		};
+		const entity = StubEntity.with<StubProps, StubEntity>(props);
+
+		const event = { type: 'EVENT_2' } as unknown as DomainEvent;
+		entity['addDomainEvent'](event);
+
+		const pulled = entity.pullDomainEvents();
+		expect(pulled).toEqual([event]);
+		expect(entity['events']).toEqual([]);
 	});
 });

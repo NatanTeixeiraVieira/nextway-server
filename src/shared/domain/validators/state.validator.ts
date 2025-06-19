@@ -14,12 +14,12 @@ export class StateRules {
 
 	@IsString()
 	@IsNotEmpty()
-	@MaxLength(255)
+	@MaxLength(20)
 	name: string;
 
 	@IsString()
 	@IsNotEmpty()
-	@MaxLength(255)
+	@MaxLength(2)
 	uf: string;
 
 	constructor(props: StateProps) {

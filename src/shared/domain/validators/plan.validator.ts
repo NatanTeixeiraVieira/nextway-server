@@ -1,7 +1,9 @@
 import {
 	IsNotEmpty,
+	IsNumber,
 	IsPositive,
 	IsString,
+	MaxLength,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { PlanProps } from '../entities/plan.entity';
@@ -9,18 +11,21 @@ import { PlanProps } from '../entities/plan.entity';
 export class PlanRules {
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(255)
 	id: string;
 
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(30)
 	name: string;
 
-	@IsString()
+	@IsNumber()
 	@IsPositive()
 	price: number;
 
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(255)
 	externalId: string;
 
 	constructor(props: PlanProps) {

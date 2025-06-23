@@ -1,19 +1,19 @@
 import { User, UserProps } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
-import { mockTransactionTest } from '@/shared/application/database/decorators/testing/mock-transaction-test';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { InvalidCredentialsError } from '@/shared/application/errors/invalid-credentials-error';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { EntityProps } from '@/shared/domain/entities/entity';
 import { UserCookiesName } from '../../../constants/cookies';
 import { Input, LoginUseCase } from '../../login.usecase';
 
-jest.mock(
-	'@/shared/application/database/decorators/transactional.decorator',
-	() => mockTransactionTest(),
-);
+// jest.mock(
+// 	'@/shared/application/database/decorators/transactional.decorator',
+// 	() => mockTransactionTest(),
+// );
 
 describe('LoginUseCase unit tests', () => {
 	let sut: LoginUseCase;
@@ -34,6 +34,7 @@ describe('LoginUseCase unit tests', () => {
 	let input: Input;
 	const setCookies = jest.fn();
 	let user: User;
+	let uow: UnitOfWork;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -69,7 +70,11 @@ describe('LoginUseCase unit tests', () => {
 			setTokensInCookies: jest.fn(),
 		} as unknown as AuthService;
 
-		sut = new LoginUseCase(userRepository, hashService, authService);
+		uow = {
+			execute: jest.fn().mockImplementation((fn) => fn()),
+		};
+
+		sut = new LoginUseCase(uow, userRepository, hashService, authService);
 	});
 
 	it('should throw error when email is not provided', async () => {

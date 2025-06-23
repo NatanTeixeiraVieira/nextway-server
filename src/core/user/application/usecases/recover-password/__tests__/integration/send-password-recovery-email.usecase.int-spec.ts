@@ -8,7 +8,9 @@ import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
+import { UnitOfWorkModule } from '@/shared/infra/unit-of-work/unit-of-work.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -27,6 +29,7 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 	let jwtService: JwtService;
 	let envConfigService: EnvConfig;
 	let userOutputMapper: UserOutputMapper;
+	let uow: UnitOfWork;
 
 	let sut: SendPasswordRecoveryEmailUseCase;
 
@@ -36,6 +39,7 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 		module = await Test.createTestingModule({
 			imports: [
 				TypeOrmModule.forFeature([UserSchema]),
+				UnitOfWorkModule,
 				configTypeOrmModule(),
 				UserModule,
 			],
@@ -53,6 +57,7 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 		mailService = {
 			sendMail: jest.fn(),
 		};
+		uow = module.get(Providers.UNIT_OF_WORK);
 		jwtService = module.get(Providers.JWT_SERVICE);
 		envConfigService = module.get(Providers.ENV_CONFIG_SERVICE);
 		userOutputMapper = module.get(UserProviders.USER_OUTPUT_MAPPER);
@@ -60,6 +65,7 @@ describe('SendPasswordRecoveryEmailUseCase integration tests', () => {
 
 	beforeEach(async () => {
 		sut = new SendPasswordRecoveryEmailUseCase(
+			uow,
 			userRepository,
 			mailService,
 			jwtService,

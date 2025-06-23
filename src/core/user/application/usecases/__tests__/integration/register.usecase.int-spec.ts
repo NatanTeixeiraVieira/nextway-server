@@ -4,14 +4,17 @@ import { UserTypeOrmQuery } from '@/core/user/infra/database/typeorm/queries/use
 import { UserTypeormRepositoryMapper } from '@/core/user/infra/database/typeorm/repositories/user-typeorm-repository-mapper';
 import { UserTypeOrmRepository } from '@/core/user/infra/database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { HashBcryptService } from '@/shared/infra/services/hash-service/bcrypt/hash-bcrypt.service';
 import { JwtNestjsService } from '@/shared/infra/services/jwt-service/nestjs/jwt-nestjs.service';
+import { UnitOfWorkModule } from '@/shared/infra/unit-of-work/unit-of-work.module';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -38,6 +41,7 @@ describe('RegisterUseCase integration tests', () => {
 	let jwtService: JwtService;
 	let envConfigService: EnvConfig;
 	let userOutputMapper: UserOutputMapper;
+	let uow: UnitOfWork;
 
 	let sut: RegisterUseCase;
 
@@ -45,7 +49,11 @@ describe('RegisterUseCase integration tests', () => {
 		initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
 
 		module = await Test.createTestingModule({
-			imports: [TypeOrmModule.forFeature([UserSchema]), configTypeOrmModule()],
+			imports: [
+				TypeOrmModule.forFeature([UserSchema]),
+				configTypeOrmModule(),
+				UnitOfWorkModule,
+			],
 		}).compile();
 
 		typeOrmRepositoryUser = module.get<Repository<UserSchema>>(
@@ -69,10 +77,12 @@ describe('RegisterUseCase integration tests', () => {
 
 		jwtService = new JwtNestjsService(new NestJwtService());
 		userOutputMapper = new UserOutputMapper();
+		uow = module.get(Providers.UNIT_OF_WORK);
 	});
 
 	beforeEach(async () => {
 		sut = new RegisterUseCase(
+			uow,
 			userRepository,
 			userQuery,
 			hashService,

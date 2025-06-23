@@ -1,4 +1,3 @@
-import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { ConflictError } from '@/shared/application/errors/conflict-error';
@@ -11,6 +10,7 @@ import {
 	ZipcodeService,
 	ZipcodeServiceResponse,
 } from '@/shared/application/services/zipcode.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { PlanProps } from '@/shared/domain/entities/plan.entity';
 import { randomBytes } from 'node:crypto';
@@ -52,6 +52,7 @@ export type Output = TenantOutput;
 
 export class RegisterTenantUseCase implements UseCase<Input, Output> {
 	constructor(
+		private readonly uow: UnitOfWork,
 		private readonly tenantRepository: TenantRepository,
 		private readonly tenantQuery: TenantQuery,
 		private readonly planQuery: PlanQuery,
@@ -63,36 +64,36 @@ export class RegisterTenantUseCase implements UseCase<Input, Output> {
 		private readonly mailService: MailService,
 	) {}
 
-	@Transactional()
 	async execute(input: Input): Promise<TenantOutput> {
-		await this.validateRepeatedData(input.email, input.cnpj, input.slug);
-		const zipcodeInfos = await this.zipcodeService.getInfosByZipcode(
-			input.zipcode,
-		);
+		return this.uow.execute(async () => {
+			await this.validateRepeatedData(input.email, input.cnpj, input.slug);
+			const zipcodeInfos = await this.zipcodeService.getInfosByZipcode(
+				input.zipcode,
+			);
 
-		const registerTenantProps = await this.createRegisterTenantProps(
-			input,
-			zipcodeInfos,
-		);
+			const registerTenantProps = await this.createRegisterTenantProps(
+				input,
+				zipcodeInfos,
+			);
 
-		const foundInactiveTenant = await this.tenantQuery.getInactiveUserIdByEmail(
-			input.email,
-		);
+			const foundInactiveTenant =
+				await this.tenantQuery.getInactiveUserIdByEmail(input.email);
 
-		if (foundInactiveTenant) {
-			await this.tenantRepository.hardDelete(foundInactiveTenant.id);
-		}
+			if (foundInactiveTenant) {
+				await this.tenantRepository.hardDelete(foundInactiveTenant.id);
+			}
 
-		const tenant = Tenant.registerTenant(registerTenantProps);
+			const tenant = Tenant.registerTenant(registerTenantProps);
 
-		await this.tenantRepository.create(tenant);
+			await this.tenantRepository.create(tenant);
 
-		await this.sendActivateAccountEmailCode(
-			input.email,
-			registerTenantProps.verifyEmailCode,
-		);
+			await this.sendActivateAccountEmailCode(
+				input.email,
+				registerTenantProps.verifyEmailCode,
+			);
 
-		return this.tenantOutputMapper.toOutput(tenant);
+			return this.tenantOutputMapper.toOutput(tenant);
+		});
 	}
 
 	private async validateRepeatedData(

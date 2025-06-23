@@ -1,10 +1,10 @@
-import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { User } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
@@ -26,6 +26,7 @@ export type RegisterPayload = {
 
 export class RegisterUseCase implements UseCase<Input, Output> {
 	constructor(
+		private readonly uow: UnitOfWork,
 		private readonly userRepository: UserRepository,
 		private readonly userQuery: UserQuery,
 		private readonly hashService: HashService,
@@ -35,21 +36,23 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 		private readonly userOutputMapper: UserOutputMapper,
 	) {}
 
-	@Transactional()
 	async execute(input: Input): Promise<Output> {
-		this.validateInput(input);
+		return this.uow.execute(async () => {
+			this.validateInput(input);
 
-		const { email, name, password } = input;
+			const { email, name, password } = input;
 
-		await this.validateEmailAlreadyInUse(email);
+			await this.validateEmailAlreadyInUse(email);
 
-		const user = await this.createUser(name, email, password);
+			const user = await this.createUser(name, email, password);
 
-		const activateAccountToken = await this.generateActivateAccountToken(user);
+			const activateAccountToken =
+				await this.generateActivateAccountToken(user);
 
-		await this.sendActivateAccountEmail(name, email, activateAccountToken);
+			await this.sendActivateAccountEmail(name, email, activateAccountToken);
 
-		return this.userOutputMapper.toOutput(user);
+			return this.userOutputMapper.toOutput(user);
+		});
 	}
 
 	private validateInput(input?: Partial<Input>): void {
@@ -97,6 +100,7 @@ export class RegisterUseCase implements UseCase<Input, Output> {
 
 		const user = User.register(registerProps);
 		await this.userRepository.create(user);
+
 		return user;
 	}
 

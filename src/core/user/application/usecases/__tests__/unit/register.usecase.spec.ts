@@ -1,21 +1,21 @@
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
-import { mockTransactionTest } from '@/shared/application/database/decorators/testing/mock-transaction-test';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UserOutputMapper } from '../../../outputs/user-output';
 import { UserQuery } from '../../../queries/user.query';
 import { Input, RegisterUseCase } from '../../register.usecase';
 
 jest.mock('@/core/user/domain/entities/user.entity');
-jest.mock(
-	'@/shared/application/database/decorators/transactional.decorator',
-	() => mockTransactionTest(),
-);
+// jest.mock(
+// 	'@/shared/application/database/decorators/transactional.decorator',
+// 	() => mockTransactionTest(),
+// );
 
 describe('RegisterUseCase unit tests', () => {
 	let sut: RegisterUseCase;
@@ -26,6 +26,7 @@ describe('RegisterUseCase unit tests', () => {
 	let jwtService: JwtService;
 	let envConfigService: EnvConfig;
 	let userOutputMapper: UserOutputMapper;
+	let uow: UnitOfWork;
 
 	beforeEach(() => {
 		jest.clearAllMocks();
@@ -62,7 +63,12 @@ describe('RegisterUseCase unit tests', () => {
 			getClientBaseUrl: jest.fn(),
 		} as unknown as EnvConfig;
 
+		uow = {
+			execute: jest.fn().mockImplementation((fn) => fn()),
+		};
+
 		sut = new RegisterUseCase(
+			uow,
 			userRepository,
 			userQuery,
 			hashService,

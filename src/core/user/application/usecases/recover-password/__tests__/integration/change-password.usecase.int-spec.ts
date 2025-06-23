@@ -3,15 +3,14 @@ import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
-import { UserModule } from '@/core/user/infra/user.module';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { LoggedUserService } from '@/shared/application/services/logged-user.service';
-import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { appFastifyConfigTest } from '@/testing/app-config-test';
+import { TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ChangePasswordUseCase } from '../../change-password.usecase';
 import { RecoverPasswordPayload } from '../../send-password-recovery-email.usecase';
@@ -28,13 +27,14 @@ describe('ChangePasswordUseCase unit tests', () => {
 	let sut: ChangePasswordUseCase;
 
 	beforeAll(async () => {
-		module = await Test.createTestingModule({
-			imports: [
-				TypeOrmModule.forFeature([UserSchema]),
-				configTypeOrmModule(),
-				UserModule,
-			],
-		}).compile();
+		module = (await appFastifyConfigTest()).module;
+		// module = await Test.createTestingModule({
+		// 	imports: [
+		// 		TypeOrmModule.forFeature([UserSchema]),
+		// 		configTypeOrmModule(),
+		// 		UserModule,
+		// 	],
+		// }).compile();
 
 		typeOrmRepositoryUser = module.get<Repository<UserSchema>>(
 			getRepositoryToken(UserSchema),
@@ -55,10 +55,6 @@ describe('ChangePasswordUseCase unit tests', () => {
 		);
 
 		await typeOrmRepositoryUser.clear();
-	});
-
-	afterAll(async () => {
-		await module.close();
 	});
 
 	it('should change user password', async () => {
@@ -104,5 +100,11 @@ describe('ChangePasswordUseCase unit tests', () => {
 
 		expect(isPasswordValid).toBeTruthy();
 		expect(output).toBeUndefined();
+	});
+
+	afterAll(async () => {
+		if (module) {
+			await module.close();
+		}
 	});
 });

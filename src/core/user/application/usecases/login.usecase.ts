@@ -1,9 +1,9 @@
-import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { InvalidCredentialsError } from '@/shared/application/errors/invalid-credentials-error';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
 import { SetCookies } from '@/shared/application/types/cookies';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { User } from '../../domain/entities/user.entity';
 import { UserRepository } from '../../domain/repositories/user.repository';
@@ -20,26 +20,28 @@ export type Output = UserOutput;
 
 export class LoginUseCase implements UseCase<Input, Output> {
 	constructor(
+		private readonly uow: UnitOfWork,
 		private readonly userRepository: UserRepository,
 		private readonly hashService: HashService,
 		private readonly authService: AuthService,
 	) {}
 
-	@Transactional()
 	async execute(input: Input): Promise<Output> {
-		this.validateInput(input);
+		return this.uow.execute(async () => {
+			this.validateInput(input);
 
-		const user = await this.userRepository.getByEmail(input.email);
+			const user = await this.userRepository.getByEmail(input.email);
 
-		if (!user || !user.active) {
-			throw new InvalidCredentialsError(ErrorMessages.INVALID_CREDENTIALS);
-		}
+			if (!user || !user.active) {
+				throw new InvalidCredentialsError(ErrorMessages.INVALID_CREDENTIALS);
+			}
 
-		await this.validatePassword(input.password, user.password);
+			await this.validatePassword(input.password, user.password);
 
-		await this.authenticateAndHandleTokens(user, input.setCookies);
+			await this.authenticateAndHandleTokens(user, input.setCookies);
 
-		return user.toJSON();
+			return user.toJSON();
+		});
 	}
 
 	private validateInput({ email, password }: Input): void {

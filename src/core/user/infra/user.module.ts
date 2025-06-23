@@ -5,6 +5,7 @@ import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { LoggedUserService } from '@/shared/application/services/logged-user.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
 import { HashServiceModule } from '@/shared/infra/services/hash-service/hash-service.module';
 import { JwtServiceModule } from '@/shared/infra/services/jwt-service/jwt-service.module';
@@ -74,6 +75,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		{
 			provide: RegisterUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				repository: UserRepository,
 				query: UserQuery,
 				hashService: HashService,
@@ -83,6 +85,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				outputMapper: UserOutputMapper,
 			) => {
 				return new RegisterUseCase(
+					uow,
 					repository,
 					query,
 					hashService,
@@ -93,6 +96,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				UserProviders.USER_REPOSITORY,
 				UserProviders.USER_QUERY,
 				Providers.HASH_SERVICE,
@@ -106,12 +110,14 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		{
 			provide: CheckEmailUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				envConfigService: EnvConfig,
 				jwtService: JwtService,
 				userRepository: UserRepository,
 				authService: AuthService,
 			) => {
 				return new CheckEmailUseCase(
+					uow,
 					envConfigService,
 					jwtService,
 					userRepository,
@@ -119,6 +125,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				Providers.ENV_CONFIG_SERVICE,
 				Providers.JWT_SERVICE,
 				UserProviders.USER_REPOSITORY,
@@ -129,13 +136,15 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		{
 			provide: LoginUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				userRepository: UserRepository,
 				hashService: HashService,
 				authService: AuthService,
 			) => {
-				return new LoginUseCase(userRepository, hashService, authService);
+				return new LoginUseCase(uow, userRepository, hashService, authService);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				UserProviders.USER_REPOSITORY,
 				Providers.HASH_SERVICE,
 				Providers.AUTH_SERVICE,
@@ -164,6 +173,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 		{
 			provide: SendPasswordRecoveryEmailUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				userRepository: UserRepository,
 				mailService: MailService,
 				jwtService: JwtService,
@@ -171,6 +181,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				userOutputMapper: UserOutputMapper,
 			) => {
 				return new SendPasswordRecoveryEmailUseCase(
+					uow,
 					userRepository,
 					mailService,
 					jwtService,
@@ -179,6 +190,7 @@ import { UserSchema } from './database/typeorm/schemas/user.schema';
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				UserProviders.USER_REPOSITORY,
 				Providers.MAIL_SERVICE,
 				Providers.JWT_SERVICE,

@@ -3,7 +3,9 @@ import { UserModule } from '@/core/user/infra/user.module';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
+import { UnitOfWorkModule } from '@/shared/infra/unit-of-work/unit-of-work.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -20,6 +22,7 @@ describe('VerifyRecoverPasswordTokenUseCase integration tests', () => {
 	let jwtService: JwtService;
 	let module: TestingModule;
 	let typeOrmRepositoryUser: Repository<UserSchema>;
+	let uow: UnitOfWork;
 
 	beforeAll(async () => {
 		initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
@@ -29,6 +32,7 @@ describe('VerifyRecoverPasswordTokenUseCase integration tests', () => {
 				TypeOrmModule.forFeature([UserSchema]),
 				configTypeOrmModule(),
 				UserModule,
+				UnitOfWorkModule,
 			],
 		}).compile();
 
@@ -39,6 +43,7 @@ describe('VerifyRecoverPasswordTokenUseCase integration tests', () => {
 		typeOrmRepositoryUser = module.get<Repository<UserSchema>>(
 			getRepositoryToken(UserSchema),
 		);
+		uow = module.get(Providers.UNIT_OF_WORK);
 
 		jwtService = module.get(Providers.JWT_SERVICE);
 		envConfigService = module.get(Providers.ENV_CONFIG_SERVICE);

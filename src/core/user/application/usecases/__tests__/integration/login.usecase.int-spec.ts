@@ -3,13 +3,16 @@ import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-bu
 import { UserTypeormRepositoryMapper } from '@/core/user/infra/database/typeorm/repositories/user-typeorm-repository-mapper';
 import { UserTypeOrmRepository } from '@/core/user/infra/database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { Providers } from '@/shared/application/constants/providers';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { HashService } from '@/shared/application/services/hash.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { AuthAppJwtService } from '@/shared/infra/services/auth-service/app-jwt-service/auth-app-jwt-service.service';
 import { HashBcryptService } from '@/shared/infra/services/hash-service/bcrypt/hash-bcrypt.service';
 import { JwtNestjsService } from '@/shared/infra/services/jwt-service/nestjs/jwt-nestjs.service';
+import { UnitOfWorkModule } from '@/shared/infra/unit-of-work/unit-of-work.module';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -33,12 +36,17 @@ describe('LoginUseCase integration tests', () => {
 	let authService: AuthService;
 
 	let sut: LoginUseCase;
+	let uow: UnitOfWork;
 
 	beforeAll(async () => {
 		initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
 
 		module = await Test.createTestingModule({
-			imports: [TypeOrmModule.forFeature([UserSchema]), configTypeOrmModule()],
+			imports: [
+				TypeOrmModule.forFeature([UserSchema]),
+				configTypeOrmModule(),
+				UnitOfWorkModule,
+			],
 		}).compile();
 
 		typeOrmRepositoryUser = module.get<Repository<UserSchema>>(
@@ -62,10 +70,12 @@ describe('LoginUseCase integration tests', () => {
 			new JwtNestjsService(new JwtService()),
 			envConfigService,
 		);
+
+		uow = module.get(Providers.UNIT_OF_WORK);
 	});
 
 	beforeEach(async () => {
-		sut = new LoginUseCase(userRepository, hashService, authService);
+		sut = new LoginUseCase(uow, userRepository, hashService, authService);
 		await typeOrmRepositoryUser.clear();
 	});
 

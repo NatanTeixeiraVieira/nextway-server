@@ -17,9 +17,11 @@ import { MessagingModule } from './shared/infra/services/messaging-service/messa
 import { PlanPaymentServiceModule } from './shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { ZipcodeModule } from './shared/infra/services/zipcode-service/zipcode.module';
 import { SharedModule } from './shared/infra/shared.module';
+import { UnitOfWorkModule } from './shared/infra/unit-of-work/unit-of-work.module';
 
 @Module({
 	imports: [
+		UnitOfWorkModule,
 		MessagingModule,
 		CardServiceModule,
 		TenantPaymentModule,

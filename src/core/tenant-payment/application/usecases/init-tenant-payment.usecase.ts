@@ -1,4 +1,3 @@
-import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { PlanQuery } from '@/shared/application/queries/plan.query';
@@ -7,6 +6,7 @@ import {
 	CreateSignatureResponse,
 	PlanPaymentService,
 } from '@/shared/application/services/plan-payment.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { TenantPayment } from '../../domain/entities/tenant-payment.entity';
 import { TenantPaymentRepository } from '../../domain/repositories/tenant-payment.repository';
@@ -20,6 +20,7 @@ export type Output = {
 
 export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 	constructor(
+		private readonly uow: UnitOfWork,
 		private readonly planPaymentService: PlanPaymentService,
 		private readonly planQuery: PlanQuery,
 		private readonly tenantPaymentRepository: TenantPaymentRepository,
@@ -27,29 +28,30 @@ export class InitTenantPaymentUseCase implements UseCase<Input, Output> {
 		private readonly tenantPaymentOutputMapper: TenantPaymentOutputMapper,
 	) {}
 
-	@Transactional()
 	async execute(): Promise<Output> {
-		const plan = await this.planQuery.getPlan();
-		const loggedTenant = this.loggedTenantService.getLoggedTenant();
+		return this.uow.execute(async () => {
+			const plan = await this.planQuery.getPlan();
+			const loggedTenant = this.loggedTenantService.getLoggedTenant();
 
-		if (!loggedTenant) {
-			throw new BadRequestError(ErrorMessages.TENANT_NOT_FOUND);
-		}
+			if (!loggedTenant) {
+				throw new BadRequestError(ErrorMessages.TENANT_NOT_FOUND);
+			}
 
-		const { initUrl } = await this.createSignature(
-			plan.price,
-			loggedTenant.id,
-			loggedTenant.email,
-		);
+			const { initUrl } = await this.createSignature(
+				plan.price,
+				loggedTenant.id,
+				loggedTenant.email,
+			);
 
-		const tenantPayment = TenantPayment.initPayment({
-			tenantId: loggedTenant.id,
-			price: plan.price,
+			const tenantPayment = TenantPayment.initPayment({
+				tenantId: loggedTenant.id,
+				price: plan.price,
+			});
+
+			await this.tenantPaymentRepository.create(tenantPayment);
+
+			return { initUrl };
 		});
-
-		await this.tenantPaymentRepository.create(tenantPayment);
-
-		return { initUrl };
 	}
 
 	private async createSignature(

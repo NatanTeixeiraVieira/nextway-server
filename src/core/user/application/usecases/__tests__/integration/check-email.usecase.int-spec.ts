@@ -3,13 +3,16 @@ import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-bu
 import { UserTypeormRepositoryMapper } from '@/core/user/infra/database/typeorm/repositories/user-typeorm-repository-mapper';
 import { UserTypeOrmRepository } from '@/core/user/infra/database/typeorm/repositories/user-typeorm.repository';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { AuthService } from '@/shared/application/services/auth.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { configTypeOrmModule } from '@/shared/infra/database/typeorm/testing/config-typeorm-module-tests';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { AuthAppJwtService } from '@/shared/infra/services/auth-service/app-jwt-service/auth-app-jwt-service.service';
 import { JwtNestjsService } from '@/shared/infra/services/jwt-service/nestjs/jwt-nestjs.service';
+import { UnitOfWorkModule } from '@/shared/infra/unit-of-work/unit-of-work.module';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -30,14 +33,18 @@ describe('CheckEmailUseCase integration tests', () => {
 	let jwtService: JwtService;
 	let envConfigService: EnvConfig;
 	let authService: AuthService;
-
+	let uow: UnitOfWork;
 	let sut: CheckEmailUseCase;
 
 	beforeAll(async () => {
 		initializeTransactionalContext({ storageDriver: StorageDriver.AUTO });
 
 		module = await Test.createTestingModule({
-			imports: [TypeOrmModule.forFeature([UserSchema]), configTypeOrmModule()],
+			imports: [
+				TypeOrmModule.forFeature([UserSchema]),
+				configTypeOrmModule(),
+				UnitOfWorkModule,
+			],
 		}).compile();
 
 		typeOrmRepositoryUser = module.get<Repository<UserSchema>>(
@@ -56,10 +63,12 @@ describe('CheckEmailUseCase integration tests', () => {
 
 		envConfigService = new EnvConfigService(new ConfigService());
 		authService = new AuthAppJwtService(jwtService, envConfigService);
+		uow = module.get(Providers.UNIT_OF_WORK);
 	});
 
 	beforeEach(async () => {
 		sut = new CheckEmailUseCase(
+			uow,
 			envConfigService,
 			jwtService,
 			userRepository,

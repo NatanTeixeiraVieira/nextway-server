@@ -1,7 +1,9 @@
 import { Providers } from '@/shared/application/constants/providers';
 import { PlanQuery } from '@/shared/application/queries/plan.query';
 import { LoggedTenantService } from '@/shared/application/services/logged-tenant.service';
+import { MessagingService } from '@/shared/application/services/messaging.service';
 import { PlanPaymentService } from '@/shared/application/services/plan-payment.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { CardServiceModule } from '@/shared/infra/services/card-service/card-service.module';
 import { PlanPaymentServiceModule } from '@/shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { SharedModule } from '@/shared/infra/shared.module';
@@ -38,17 +40,20 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 		{
 			provide: FinishTenantPaymentUseCase,
 			useFactory: (
-				planPaymentService,
-				tenantPaymentRepository,
-				messagingService,
+				uow: UnitOfWork,
+				planPaymentService: PlanPaymentService,
+				tenantPaymentRepository: TenantPaymentRepository,
+				messagingService: MessagingService,
 			) => {
 				return new FinishTenantPaymentUseCase(
+					uow,
 					planPaymentService,
 					tenantPaymentRepository,
 					messagingService,
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				Providers.PLAN_PAYMENT_SERVICE,
 				TenantPaymentProviders.TENANT_PAYMENT_REPOSITORY,
 				Providers.MESSAGING_SERVICE,
@@ -57,6 +62,7 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 		{
 			provide: InitTenantPaymentUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				planPaymentService: PlanPaymentService,
 				planQuery: PlanQuery,
 				tenantPaymentRepository: TenantPaymentRepository,
@@ -64,6 +70,7 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 				tenantPaymentOutputMapper: TenantPaymentOutputMapper,
 			) => {
 				return new InitTenantPaymentUseCase(
+					uow,
 					planPaymentService,
 					planQuery,
 					tenantPaymentRepository,
@@ -72,6 +79,7 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				Providers.PLAN_PAYMENT_SERVICE,
 				Providers.PLAN_QUERY,
 				TenantPaymentProviders.TENANT_PAYMENT_REPOSITORY,

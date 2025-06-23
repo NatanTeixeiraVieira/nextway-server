@@ -7,6 +7,7 @@ import { AuthService } from '@/shared/application/services/auth.service';
 import { CnpjService } from '@/shared/application/services/cnpj.service';
 import { MailService } from '@/shared/application/services/mail.service';
 import { ZipcodeService } from '@/shared/application/services/zipcode.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { AuthServiceModule } from '@/shared/infra/services/auth-service/auth-service.module';
 import { CnpjServiceModule } from '@/shared/infra/services/cnpj-service/cnpj-service.module';
 import { MailServiceModule } from '@/shared/infra/services/mail-service/mail-service.module';
@@ -64,6 +65,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 		{
 			provide: RegisterTenantUseCase,
 			useFactory: (
+				uow: UnitOfWork,
 				tenantRepository: TenantRepository,
 				tenantQuery: TenantQuery,
 				planQuery: PlanQuery,
@@ -75,6 +77,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				mailService: MailService,
 			) => {
 				return new RegisterTenantUseCase(
+					uow,
 					tenantRepository,
 					tenantQuery,
 					planQuery,
@@ -87,6 +90,7 @@ import { WeekdaySchema } from './database/typeorm/schemas/weekday.schema';
 				);
 			},
 			inject: [
+				Providers.UNIT_OF_WORK,
 				TenantProviders.TENANT_REPOSITORY,
 				TenantProviders.TENANT_QUERY,
 				Providers.PLAN_QUERY,

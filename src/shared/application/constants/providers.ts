@@ -16,4 +16,5 @@ export const Providers = {
 	PLAN_PAYMENT_SERVICE: 'PlanPaymentService',
 	CARD_SERVICE: 'CardService',
 	MESSAGING_SERVICE: 'MessagingService',
+	UNIT_OF_WORK: 'UnitOfWork',
 } as const;

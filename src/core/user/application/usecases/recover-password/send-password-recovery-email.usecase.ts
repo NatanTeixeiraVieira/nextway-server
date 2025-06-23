@@ -1,12 +1,12 @@
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
-import { Transactional } from '@/shared/application/database/decorators/transactional.decorator';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { BadRequestError } from '@/shared/application/errors/bad-request-error';
 import { NotFoundError } from '@/shared/application/errors/not-found-error';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { MailService } from '@/shared/application/services/mail.service';
+import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
 import { UseCase } from '@/shared/application/usecases/use-case';
 import { UserOutput, UserOutputMapper } from '../../outputs/user-output';
 
@@ -25,6 +25,7 @@ export class SendPasswordRecoveryEmailUseCase
 	implements UseCase<Input, Output>
 {
 	constructor(
+		private readonly uow: UnitOfWork,
 		private readonly userRepository: UserRepository,
 		private readonly mailService: MailService,
 		private readonly jwtService: JwtService,
@@ -32,27 +33,35 @@ export class SendPasswordRecoveryEmailUseCase
 		private readonly userOutputMapper: UserOutputMapper,
 	) {}
 
-	@Transactional()
 	async execute({ email }: Input): Promise<Output> {
-		this.validateEmail(email);
+		return this.uow.execute(async () => {
+			this.validateEmail(email);
 
-		const user = await this.userRepository.getByEmail(email);
+			const user = await this.userRepository.getByEmail(email);
 
-		if (!user) {
-			throw new NotFoundError(ErrorMessages.userNotFoundByEmail(email));
-		}
+			if (!user) {
+				throw new NotFoundError(ErrorMessages.userNotFoundByEmail(email));
+			}
 
-		await this.validateUserActive(user);
+			await this.validateUserActive(user);
 
-		const recoverPasswordToken = await this.generateRecoverPasswordToken(user);
+			const recoverPasswordToken =
+				await this.generateRecoverPasswordToken(user);
 
-		user.createEmailForgotPasswordEmailVerificationToken(recoverPasswordToken);
+			user.createEmailForgotPasswordEmailVerificationToken(
+				recoverPasswordToken,
+			);
 
-		await this.userRepository.update(user);
+			await this.userRepository.update(user);
 
-		await this.sendRecoverPasswordEmail(user.name, email, recoverPasswordToken);
+			await this.sendRecoverPasswordEmail(
+				user.name,
+				email,
+				recoverPasswordToken,
+			);
 
-		return this.userOutputMapper.toOutput(user);
+			return this.userOutputMapper.toOutput(user);
+		});
 	}
 
 	private validateEmail(email: string): void {

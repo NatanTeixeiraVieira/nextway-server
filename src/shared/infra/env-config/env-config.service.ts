@@ -119,8 +119,16 @@ export class EnvConfigService implements EnvConfig {
 		return Number(this.configService.get<string>('ENCRYPTION_SALTS') as string);
 	}
 
+	getApplicationMailHost(): string {
+		return this.configService.get<string>('APPLICATION_MAIL_HOST') as string;
+	}
+
 	getApplicationMailUser(): string {
 		return this.configService.get<string>('APPLICATION_MAIL_USER') as string;
+	}
+
+	getApplicationMailPort(): number {
+		return Number(this.configService.get<string>('APPLICATION_MAIL_PORT'));
 	}
 
 	getApplicationMailPassword(): string {
@@ -165,5 +173,12 @@ export class EnvConfigService implements EnvConfig {
 
 	getMessagingBrokerQueueName(): string {
 		return this.configService.get<string>('RABBITMQ_QUEUE_NAME') as string;
+	}
+
+	getMessagingUser(): string {
+		return this.configService.get<string>('RABBITMQ_USER') as string;
+	}
+	getMessagingPassword(): string {
+		return this.configService.get<string>('RABBITMQ_PASSWORD') as string;
 	}
 }

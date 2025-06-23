@@ -44,6 +44,10 @@ describe('EnvConfigService unit tests', () => {
 		expect(sut.getDbPort()).toBe(5432);
 	});
 
+	it('should return the variable BASE_URL', () => {
+		expect(sut.getBaseUrl()).toBe('http://localhost:3333');
+	});
+
 	it('should return the variable DB_NAME', () => {
 		expect(sut.getDbName()).toBe('db_test');
 	});
@@ -132,5 +136,61 @@ describe('EnvConfigService unit tests', () => {
 
 	it('should return the variable CLIENT_BASE_URL', () => {
 		expect(sut.getClientBaseUrl()).toBe('http://localhost:3000');
+	});
+
+	it('should return the variable APPLICATION_MAIL_HOST', () => {
+		expect(sut.getApplicationMailHost()).toBe('smtp.gmail.com');
+	});
+
+	it('should return the variable APPLICATION_MAIL_HOST', () => {
+		expect(sut.getApplicationMailPort()).toBe(465);
+	});
+
+	it('should return the variable ZIPCODE_API_BASE_URL', () => {
+		expect(sut.getZipcodeApiBaseUrl()).toBe(
+			'https://zipcode-base-api-test.com.br/json',
+		);
+	});
+
+	it('should return the variable CNPJ_API_BASE_URL', () => {
+		expect(sut.getCnpjApiBaseUrl()).toBe(
+			'https://cnpj-api-test.com.br/v1/cnpj',
+		);
+	});
+
+	it('should return the variable PAYMENT_ACCESS_TOKEN', () => {
+		expect(sut.getPaymentAccessToken()).toBe('payment_test_access_token');
+	});
+
+	it('should return the variable PAYMENT_SECRET_SIGNATURE', () => {
+		expect(sut.getPaymentSecretSignature()).toBe(
+			'payment_test_secret_signature',
+		);
+	});
+
+	it('should return the variable PAYMENT_TEST_PAYER_EMAIL', () => {
+		expect(sut.getPaymentTestPayerEmail()).toBe('user@user.com');
+	});
+
+	it('should return the variable PAYMENT_REDIRECT_URL', () => {
+		expect(sut.getPaymentRedirectUrl()).toBe('https://www.google.com');
+	});
+
+	it('should return the variable RABBITMQ_USER', () => {
+		expect(sut.getMessagingUser()).toBe('rabbitmq_user');
+	});
+
+	it('should return the variable RABBITMQ_PASSWORD', () => {
+		expect(sut.getMessagingPassword()).toBe('rabbitmq_password');
+	});
+
+	it('should return the variable RABBITMQ_URL', () => {
+		expect(sut.getMessagingBrokerUrls()).toEqual([
+			'amqp://admin:admin@localhost:5672',
+		]);
+	});
+
+	it('should return the variable RABBITMQ_QUEUE_NAME', () => {
+		expect(sut.getMessagingBrokerQueueName()).toBe('nextway_queue');
 	});
 });

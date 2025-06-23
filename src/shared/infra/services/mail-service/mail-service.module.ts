@@ -9,8 +9,8 @@ import { MailNestjsService } from './nestjs/mail-nestjs.service';
 		MailerModule.forRootAsync({
 			useFactory: (envConfig: EnvConfig) => ({
 				transport: {
-					host: 'smtp.gmail.com',
-					port: 465,
+					host: envConfig.getApplicationMailHost(),
+					port: envConfig.getApplicationMailPort(),
 					secure: true,
 					auth: {
 						user: envConfig.getApplicationMailUser(),

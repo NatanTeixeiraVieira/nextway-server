@@ -35,6 +35,10 @@ export interface EnvConfig {
 	getPaymentTestPayerEmail(): string;
 	getMessagingBrokerUrls(): string[];
 	getMessagingBrokerQueueName(): string;
+	getMessagingUser(): string;
+	getMessagingPassword(): string;
 	getPaymentSecretSignature(): string;
 	getPaymentRedirectUrl(): string;
+	getApplicationMailHost(): string;
+	getApplicationMailPort(): number;
 }

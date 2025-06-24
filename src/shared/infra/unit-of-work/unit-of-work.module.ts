@@ -1,6 +1,6 @@
 import { Providers } from '@/shared/application/constants/providers';
 import { Global, Module } from '@nestjs/common';
-import { UnitOfWorkTypeOrm } from './unit-of-work-typeorm';
+import { UnitOfWorkTypeOrm } from './typeorm/unit-of-work-typeorm';
 
 @Global()
 @Module({

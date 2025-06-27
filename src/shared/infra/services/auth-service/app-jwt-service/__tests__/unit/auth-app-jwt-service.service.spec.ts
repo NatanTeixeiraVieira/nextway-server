@@ -1,5 +1,3 @@
-import { User } from '@/core/user/domain/entities/user.entity';
-import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { EnvConfigService } from '@/shared/infra/env-config/env-config.service';
 import { AuthAppJwtService } from '../../auth-app-jwt-service.service';
@@ -45,15 +43,10 @@ describe('AuthAppJwtService unit tests', () => {
 	});
 
 	it('should authenticate user', async () => {
-		const user = User.with({
-			...UserDataBuilder(),
+		const user = {
 			id: 'c68ce367-f85b-4da7-a6cb-e9719432f552',
-			audit: {
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				deletedAt: null as Date | null,
-			},
-		});
+			email: 'test@email.com',
+		};
 
 		const result = await sut.authenticate(user);
 		expect(envConfigService.getJwtSecret).toHaveBeenCalledTimes(1);
@@ -166,15 +159,10 @@ describe('AuthAppJwtService unit tests', () => {
 	});
 
 	it('should refresh token', async () => {
-		const user = User.with({
-			...UserDataBuilder(),
+		const user = {
 			id: 'c68ce367-f85b-4da7-a6cb-e9719432f552',
-			audit: {
-				createdAt: new Date(),
-				updatedAt: new Date(),
-				deletedAt: null as Date | null,
-			},
-		});
+			email: 'test@email.com',
+		};
 
 		const result = await sut.refresh(user);
 		expect(envConfigService.getJwtSecret).toHaveBeenCalledTimes(1);

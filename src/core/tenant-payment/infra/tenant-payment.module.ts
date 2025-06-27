@@ -4,7 +4,6 @@ import { LoggedTenantService } from '@/shared/application/services/logged-tenant
 import { MessagingService } from '@/shared/application/services/messaging.service';
 import { PlanPaymentService } from '@/shared/application/services/plan-payment.service';
 import { UnitOfWork } from '@/shared/application/unit-of-work/unit-of-work';
-import { CardServiceModule } from '@/shared/infra/services/card-service/card-service.module';
 import { PlanPaymentServiceModule } from '@/shared/infra/services/plan-payment-service/plan-payment-service.module';
 import { SharedModule } from '@/shared/infra/shared.module';
 import { Module } from '@nestjs/common';
@@ -22,7 +21,6 @@ import { TenantPaymentSchema } from './database/typeorm/schemas/tenant-payment.s
 @Module({
 	imports: [
 		PlanPaymentServiceModule,
-		CardServiceModule,
 		SharedModule,
 		TypeOrmModule.forFeature([TenantPaymentSchema]),
 	],

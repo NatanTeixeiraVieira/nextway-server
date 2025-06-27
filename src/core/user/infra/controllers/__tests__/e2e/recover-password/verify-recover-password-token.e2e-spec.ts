@@ -1,9 +1,9 @@
+import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { JwtService } from '@/shared/application/services/jwt.service';
-import { appFastifyConfigTest } from '@/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';

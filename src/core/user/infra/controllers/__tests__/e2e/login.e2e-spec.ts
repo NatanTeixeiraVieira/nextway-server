@@ -1,4 +1,3 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
@@ -6,6 +5,7 @@ import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-bu
 import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import bcrypt from 'bcrypt';
 import request from 'supertest';

@@ -1,4 +1,3 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { RecoverPasswordPayload } from '@/core/user/application/usecases/recover-password/send-password-recovery-email.usecase';
 import { UserDataBuilder } from '@/core/user/domain/testing/helpers/user-data-builder';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
@@ -9,6 +8,7 @@ import { ErrorMessages } from '@/shared/application/error-messages/error-message
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { Mutable } from '@/shared/application/types/utils';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';

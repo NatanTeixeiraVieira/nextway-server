@@ -1,4 +1,3 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserCookiesName } from '@/core/user/application/constants/cookies';
 import { UserProviders } from '@/core/user/application/constants/providers';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
@@ -7,6 +6,7 @@ import { Providers } from '@/shared/application/constants/providers';
 import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { ErrorMessages } from '@/shared/application/error-messages/error-messages';
 import { JwtService } from '@/shared/application/services/jwt.service';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 import { DataSource, Repository } from 'typeorm';

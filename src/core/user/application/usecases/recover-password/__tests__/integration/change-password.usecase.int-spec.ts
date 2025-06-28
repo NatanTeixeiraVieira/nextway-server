@@ -1,4 +1,3 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserProviders } from '@/core/user/application/constants/providers';
 import { User } from '@/core/user/domain/entities/user.entity';
 import { UserRepository } from '@/core/user/domain/repositories/user.repository';
@@ -9,6 +8,7 @@ import { EnvConfig } from '@/shared/application/env-config/env-config';
 import { HashService } from '@/shared/application/services/hash.service';
 import { JwtService } from '@/shared/application/services/jwt.service';
 import { LoggedUserService } from '@/shared/application/services/logged-user.service';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

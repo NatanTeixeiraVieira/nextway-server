@@ -1,5 +1,5 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserCookiesName } from '@/core/user/application/constants/cookies';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import request from 'supertest';
 

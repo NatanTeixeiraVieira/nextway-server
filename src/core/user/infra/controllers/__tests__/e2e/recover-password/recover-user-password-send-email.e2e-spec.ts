@@ -1,5 +1,5 @@
-import { appFastifyConfigTest } from '@/core/tenant/domain/testing/app-config-test';
 import { UserSchema } from '@/core/user/infra/database/typeorm/schemas/user.schema';
+import { appFastifyConfigTest } from '@/shared/infra/testing/app-config-test';
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DataSource, Repository } from 'typeorm';
 

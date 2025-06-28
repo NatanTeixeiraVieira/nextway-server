@@ -2,7 +2,7 @@ import { ErrorMessages } from '@/shared/application/error-messages/error-message
 import { InternalServerError } from '@/shared/application/errors/internal-server-error';
 import { PlanPaymentMercadopagoService } from '../../plan-payment-mercadopago.service';
 
-jest.mock('PlanPaymentMercadopagoService unit tests', () => {
+jest.mock('mercadopago', () => {
 	const PreApproval = jest.fn().mockImplementation(() => ({
 		create: jest.fn(),
 		get: jest.fn(),
@@ -16,7 +16,7 @@ jest.mock('PlanPaymentMercadopagoService unit tests', () => {
 	};
 });
 
-describe('PlanPaymentMercadopagoService', () => {
+describe('PlanPaymentMercadopagoService unit tests', () => {
 	let sut: PlanPaymentMercadopagoService;
 	let envConfigService: any;
 	let preApprovalMock: any;

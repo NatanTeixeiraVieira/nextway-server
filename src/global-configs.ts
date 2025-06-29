@@ -68,6 +68,7 @@ export async function applyGlobalConfigs(
 	app.useGlobalPipes(
 		new ValidationPipe({
 			errorHttpStatusCode: 422,
+			whitelist: true,
 			forbidNonWhitelisted: true,
 			transform: true,
 		}),

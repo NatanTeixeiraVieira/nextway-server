@@ -7,7 +7,7 @@ import {
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { OpeningHoursProps } from '../entities/opening-hours';
-import { WeekdayRules } from './weekday.validator';
+import { WeekdayRules, WeekdayValidatorFactory } from './weekday.validator';
 
 export class OpeningHoursRules {
 	weekday: WeekdayRules;
@@ -23,11 +23,10 @@ export class OpeningHoursRules {
 	end: string;
 
 	constructor(props: OpeningHoursProps) {
-		this.validateStartBeforeEnd(props.start, props.end);
 		Object.assign(this, props);
 	}
 
-	private validateStartBeforeEnd(start: string, end: string) {
+	validateStartBeforeEnd(start: string, end: string) {
 		const startMinutes = this.convertToMinutes(start);
 		const endMinutes = this.convertToMinutes(end);
 
@@ -47,9 +46,21 @@ export class OpeningHoursRules {
 
 export class OpeningHoursValidator extends ValidatorFields<OpeningHoursRules> {
 	validate(data: OpeningHoursProps | null): boolean {
-		return super.validate(
-			new OpeningHoursRules(data ?? ({} as OpeningHoursProps)),
+		const isWeekdayValid = new WeekdayValidatorFactory()
+			.create()
+			.validate(data?.weekday ?? null);
+
+		const openingHoursRules = new OpeningHoursRules(
+			data ?? ({} as OpeningHoursProps),
 		);
+
+		const isValid = super.validate(openingHoursRules);
+
+		if (isValid && data) {
+			openingHoursRules.validateStartBeforeEnd(data.start, data.end);
+		}
+
+		return isValid;
 	}
 }
 

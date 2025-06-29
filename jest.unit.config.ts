@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { pathsToModuleNameMapper } from 'ts-jest';
 import { compilerOptions } from './tsconfig.json';
 
@@ -17,4 +18,5 @@ export default {
 	// collectCoverageFrom: ['**/*.(t|j)s'],
 	coverageDirectory: '../coverage',
 	testEnvironment: 'node',
+	setupFiles: ['<rootDir>/jest.setup.ts'],
 };

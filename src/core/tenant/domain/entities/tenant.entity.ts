@@ -85,14 +85,7 @@ export type RegisterTenantProps = {
 export type ActivateAccountProps = {
 	nextDueDate: Date;
 };
-jest.mock('@/core/tenant/domain/validators/tenant.validator.ts', () => ({
-	TenantValidatorFactory: jest.fn().mockImplementation(() => ({
-		create: () => ({
-			validate: () => true,
-			errors: [],
-		}),
-	})),
-}));
+
 export interface Tenant extends TenantProps {}
 
 @Data()

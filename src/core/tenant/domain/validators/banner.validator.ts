@@ -2,6 +2,7 @@ import {
 	IsBoolean,
 	IsNotEmpty,
 	IsString,
+	MaxLength,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
 import { BannerProps } from '../entities/banner.entity';
@@ -9,6 +10,7 @@ import { BannerProps } from '../entities/banner.entity';
 export class BannerRules {
 	@IsString()
 	@IsNotEmpty()
+	@MaxLength(255)
 	imagePath: string;
 
 	@IsBoolean()

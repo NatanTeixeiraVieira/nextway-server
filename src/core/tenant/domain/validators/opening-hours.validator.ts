@@ -1,15 +1,19 @@
-import { EntityValidationError } from '@/shared/domain/errors/validation-error';
 import { Regex } from '@/shared/domain/utils/regex';
 import {
 	IsNotEmpty,
 	IsString,
 	Matches,
+	ValidateNested,
 	ValidatorFields,
 } from '@/shared/domain/validators/validator-fields';
+import { Type } from 'class-transformer';
 import { OpeningHoursProps } from '../entities/opening-hours';
 import { WeekdayRules, WeekdayValidatorFactory } from './weekday.validator';
 
 export class OpeningHoursRules {
+	@ValidateNested()
+	@Type(() => WeekdayRules)
+	@IsNotEmpty()
 	weekday: WeekdayRules;
 
 	@IsString()
@@ -25,30 +29,13 @@ export class OpeningHoursRules {
 	constructor(props: OpeningHoursProps) {
 		Object.assign(this, props);
 	}
-
-	validateStartBeforeEnd(start: string, end: string) {
-		const startMinutes = this.convertToMinutes(start);
-		const endMinutes = this.convertToMinutes(end);
-
-		if (startMinutes >= endMinutes) {
-			throw new EntityValidationError({
-				start: ['Start time must be before end time'],
-				end: ['End time must be after start time'],
-			});
-		}
-	}
-
-	private convertToMinutes(time: string): number {
-		const [hours, minutes] = time.split(':').map(Number);
-		return hours * 60 + minutes;
-	}
 }
 
 export class OpeningHoursValidator extends ValidatorFields<OpeningHoursRules> {
 	validate(data: OpeningHoursProps | null): boolean {
-		const isWeekdayValid = new WeekdayValidatorFactory()
-			.create()
-			.validate(data?.weekday ?? null);
+		const weekdayRules = new WeekdayValidatorFactory().create();
+
+		const isWeekdayValid = weekdayRules.validate(data?.weekday ?? null);
 
 		const openingHoursRules = new OpeningHoursRules(
 			data ?? ({} as OpeningHoursProps),
@@ -57,10 +44,32 @@ export class OpeningHoursValidator extends ValidatorFields<OpeningHoursRules> {
 		const isValid = super.validate(openingHoursRules);
 
 		if (isValid && data) {
-			openingHoursRules.validateStartBeforeEnd(data.start, data.end);
+			this.validateStartBeforeEnd(data.start, data.end);
 		}
 
-		return isValid;
+		if (weekdayRules.errors) {
+			this.flattenErrors('weekday', weekdayRules.errors);
+		}
+
+		return isValid && isWeekdayValid && !this.errors;
+	}
+
+	private validateStartBeforeEnd(start: string, end: string) {
+		const startMinutes = this.convertToMinutes(start);
+		const endMinutes = this.convertToMinutes(end);
+
+		if (startMinutes >= endMinutes) {
+			this.errors = {
+				...this.errors,
+				start: ['Start time must be before end time'],
+				end: ['End time must be after start time'],
+			};
+		}
+	}
+
+	private convertToMinutes(time: string): number {
+		const [hours, minutes] = time.split(':').map(Number);
+		return hours * 60 + minutes;
 	}
 }
 

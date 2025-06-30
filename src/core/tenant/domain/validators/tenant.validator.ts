@@ -1,3 +1,6 @@
+import { CityProps } from '@/shared/domain/entities/city.entity';
+import { PlanProps } from '@/shared/domain/entities/plan.entity';
+import { StateProps } from '@/shared/domain/entities/state.entity';
 import { Regex } from '@/shared/domain/utils/regex';
 import {
 	IsArray,
@@ -19,13 +22,28 @@ import {
 } from '@/shared/domain/validators/validator-fields';
 import { IsCNPJ } from '@/shared/infra/decorators/validation/cnpj.decorator';
 import { Type } from 'class-transformer';
-import { CityRules } from '../../../../shared/domain/validators/city.validator';
-import { PlanRules } from '../../../../shared/domain/validators/plan.validator';
-import { StateRules } from '../../../../shared/domain/validators/state.validator';
+import {
+	CityRules,
+	CityValidatorFactory,
+} from '../../../../shared/domain/validators/city.validator';
+import {
+	PlanRules,
+	PlanValidatorFactory,
+} from '../../../../shared/domain/validators/plan.validator';
+import {
+	StateRules,
+	StateValidatorFactory,
+} from '../../../../shared/domain/validators/state.validator';
+import { BannerProps } from '../entities/banner.entity';
+import { DeliveryProps } from '../entities/delivery.entity';
+import { OpeningHoursProps } from '../entities/opening-hours';
 import { TenantProps } from '../entities/tenant.entity';
-import { BannerRules } from './banner.validator';
-import { DeliveryRules } from './delivery.validator';
-import { OpeningHoursRules } from './opening-hours.validator';
+import { BannerRules, BannerValidatorFactory } from './banner.validator';
+import { DeliveryRules, DeliveryValidatorFactory } from './delivery.validator';
+import {
+	OpeningHoursRules,
+	OpeningHoursValidatorFactory,
+} from './opening-hours.validator';
 
 enum PayerDocumentType {
 	CPF = 'CPF',
@@ -40,7 +58,6 @@ export class TenantRules {
 
 	@IsString()
 	@IsNotEmpty()
-	@MaxLength(255)
 	@Length(11, 11)
 	@Matches(Regex.ONLY_DIGITS)
 	@IsCPF()
@@ -137,14 +154,17 @@ export class TenantRules {
 
 	@IsString()
 	@IsOptional()
+	@MaxLength(255)
 	coverImagePath: string | null;
 
 	@IsString()
+	@MaxLength(255)
 	@IsOptional()
 	logoImagePath: string | null;
 
 	@IsString()
 	@IsOptional()
+	@MaxLength(1000)
 	description: string | null;
 
 	@IsArray()
@@ -218,7 +238,119 @@ export class TenantRules {
 
 export class TenantValidator extends ValidatorFields<TenantRules> {
 	validate(data: TenantProps | null): boolean {
-		return super.validate(new TenantRules(data ?? ({} as TenantProps)));
+		const isTenantValid = super.validate(
+			new TenantRules(data ?? ({} as TenantProps)),
+		);
+		const isStateValid = this.validateStateRoles(data?.state ?? null);
+		const isCityValid = this.validateCityRoles(data?.city ?? null);
+		const isDeliveriesValid = this.validateDeliveryRoles(
+			data?.deliveries ?? null,
+		);
+		const isBannersValid = this.validateBannerRoles(data?.banners ?? null);
+		const isOpeningHoursValid = this.validateOpeningHourRoles(
+			data?.openingHours ?? null,
+		);
+
+		const isPlanValid = this.validatePlanRoles(data?.plan ?? null);
+
+		return (
+			isTenantValid &&
+			isStateValid &&
+			isCityValid &&
+			isDeliveriesValid &&
+			isBannersValid &&
+			isOpeningHoursValid &&
+			isPlanValid
+		);
+	}
+
+	private validateStateRoles(stateProps: StateProps | null): boolean {
+		const stateRules = new StateValidatorFactory().create();
+		const isStateValid = stateRules.validate(stateProps);
+
+		if (stateRules.errors) {
+			this.flattenErrors('state', stateRules.errors);
+		}
+
+		return isStateValid;
+	}
+
+	private validateCityRoles(cityProps: CityProps | null): boolean {
+		const cityRules = new CityValidatorFactory().create();
+		const isCityValid = cityRules.validate(cityProps);
+
+		if (cityRules.errors) {
+			this.flattenErrors('city', cityRules.errors);
+		}
+
+		return isCityValid;
+	}
+
+	private validateDeliveryRoles(
+		deliveriesProps: DeliveryProps[] | null = [],
+	): boolean {
+		const deliveryRules = new DeliveryValidatorFactory().create();
+
+		const validatedDeliveries = deliveriesProps?.map((delivery, index) => {
+			const isValid = deliveryRules.validate(delivery);
+
+			if (deliveryRules.errors) {
+				this.flattenErrors(`deliveries.${index}`, deliveryRules.errors);
+			}
+
+			return isValid;
+		});
+
+		return validatedDeliveries?.every((isValid) => isValid) ?? true;
+	}
+
+	private validateBannerRoles(
+		bannersProps: BannerProps[] | null = [],
+	): boolean {
+		const bannerRules = new BannerValidatorFactory().create();
+
+		const validatedBanners = bannersProps?.map((banner, index) => {
+			const isValid = bannerRules.validate(banner);
+
+			if (bannerRules.errors) {
+				this.flattenErrors(`banners.${index}`, bannerRules.errors);
+			}
+
+			return isValid;
+		});
+
+		return validatedBanners?.every((isValid) => isValid) ?? true;
+	}
+
+	private validateOpeningHourRoles(
+		openingHoursProps: OpeningHoursProps[] | null = [],
+	): boolean {
+		const openingHourRules = new OpeningHoursValidatorFactory().create();
+
+		const validatedOpeningHours = openingHoursProps?.map(
+			(openingHour, index) => {
+				const isValid = openingHourRules.validate(openingHour);
+
+				if (openingHourRules.errors) {
+					this.flattenErrors(`openingHours.${index}`, openingHourRules.errors);
+				}
+
+				return isValid;
+			},
+		);
+
+		return validatedOpeningHours?.every((isValid) => isValid) ?? true;
+	}
+
+	private validatePlanRoles(planProps: PlanProps | null): boolean {
+		const planRules = new PlanValidatorFactory().create();
+		const isPlanValid = planRules.validate(planProps);
+
+		if (planRules.errors) {
+			this.flattenErrors('plan', planRules.errors);
+		}
+
+		return isPlanValid;
 	}
 }
 

@@ -26,4 +26,19 @@ export abstract class ValidatorFields<PropsValidated extends object>
 		this.validatedData = data;
 		return true;
 	}
+
+	protected flattenErrors(
+		prefix: string,
+		errors: Record<string, string[]>,
+	): void {
+		const result: Record<string, string[]> = {};
+		for (const key in errors) {
+			result[`${prefix}.${key}`] = errors[key];
+		}
+
+		this.errors = {
+			...this.errors,
+			...result,
+		};
+	}
 }

@@ -19,7 +19,7 @@ jest.mock('@/core/tenant/domain/entities/tenant.entity.ts', () => ({
 	},
 }));
 
-describe('RegisterTenantUseCase', () => {
+describe('RegisterTenantUseCase unit tests', () => {
 	let sut: RegisterTenantUseCase;
 	let uow: UnitOfWork;
 	let tenantRepository: TenantRepository;
